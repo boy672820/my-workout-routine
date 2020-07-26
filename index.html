@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>달력</title>
+
+    <!-- Stylesheet normalize -->
+    <link rel="stylesheet" href="./stylesheets/normalize.minify.css">
+
+    <!-- Calendar stylesheet -->
+    <link rel="stylesheet" href="./stylesheets/calendar.css">
+
+</head>
+
+<body>
+
+    <div class="calendar_wrap">
+
+        <h1 class="month">7월</h1>
+
+        <table class="calendar">
+            <thead class="week">
+                <tr>
+                    <td class="sunday">일</td>
+                    <td>월</td>
+                    <td>화</td>
+                    <td>수</td>
+                    <td>목</td>
+                    <td>금</td>
+                    <td class="saturday">토</td>
+                </tr>
+            </thead>
+            <tbody class="days">
+                <tr>
+                    <td class="day sunday">1</td>
+                    <td class="day">2</td>
+                    <td class="day">3</td>
+                    <td class="day">4</td>
+                    <td class="day">5</td>
+                    <td class="day">6</td>
+                    <td class="day saturday">7</td>
+                </tr>
+                <tr>
+                    <td class="day sunday">8</td>
+                    <td class="day">9</td>
+                    <td class="day">10</td>
+                    <td class="day">11</td>
+                    <td class="day">12</td>
+                    <td class="day">13</td>
+                    <td class="day saturday">14</td>
+                </tr>
+                <tr>
+                    <td class="day sunday">15</td>
+                    <td class="day">16</td>
+                    <td class="day">17</td>
+                    <td class="day">18</td>
+                    <td class="day">19</td>
+                    <td class="day">20</td>
+                    <td class="day saturday">21</td>
+                </tr>
+                <tr>
+                    <td class="day sunday">22</td>
+                    <td class="day">23</td>
+                    <td class="day">24</td>
+                    <td class="day">25</td>
+                    <td class="day">26</td>
+                    <td class="day">27</td>
+                    <td class="day saturday">28</td>
+                </tr>
+                <tr>
+                    <td class="day sunday">29</td>
+                    <td class="day">30</td>
+                    <td class="day">31</td>
+                </tr>
+            </tbody><!-- //.days -->
+        </table><!-- //.calendar -->
+
+    </div><!-- //.calendar_wrap -->
+
+    <!-- DOM Library -->
+    <script src="./libraries/dom.js "></script>
+
+    <script>
+        ( function ( $ ) {
+
+            var screen_height = window.screen.height;
+
+            screen_height -= 100;
+
+            $( '.calendar' )
+                .height( screen_height + 'px' );
+                // .marginTop( '40px' );
+
+        } )( dom );
+    </script>
+
+</body>
+</html>

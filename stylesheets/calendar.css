@@ -1,0 +1,36 @@
+.calendar_wrap {
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+}
+
+.month {
+    padding: 15px 0 10px 0;
+    font-size: 15px;
+    text-align: center;
+}
+
+.calendar {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    border-collapse: collapse;
+}
+.calendar .week {
+    border: 1px solid #000;
+}
+.calendar .week td {
+    font-weight: bold;
+}
+.calendar > .days > tr > td {
+    border: 1px solid black;
+}
+
+/** Elements */
+.sunday {
+    color: red;
+}
+
+.saturday {
+    color: blue;
+}
