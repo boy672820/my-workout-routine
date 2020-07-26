@@ -2,8 +2,10 @@
 
 let DOM = function () {
 
+    this.elements = {};
+
     /** Get html elements */
-    DOM.prototype._$ = function ( name ) {
+    this._$ = function ( name ) {
         var prefix = name.charAt( 0 ),
             element_name = name.slice( 1 ),
             elements;
@@ -26,48 +28,37 @@ let DOM = function () {
         return this;
     };
 
+
     /** Set style height to html elements */
-    DOM.prototype.height = function ( value ) {
-
-        var elements = this.elements;
-
-        // class
-        if ( elements.length >= 1 ) {
-            var i = 0;
-
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-                element.style.height = value;
-            }
-        }
-
-        // id
-        else elements.style.height = value;
+    this.height = function ( value ) {
+        this._applyElements( 'style', 'height', value );
 
         return this;
     };
 
-    DOM.prototype.marginTop = function ( value ) {
 
-        var elements = this.elements;
-
-        if ( elements.length >= 1 ) {
-            var i = 0;
-            
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-                element.style.marginTop = value;
-            }
-        }
-
-        else elements.style.marginTop = value;
-
+    /** Set style margin-top */
+    this.marginTop = function ( value ) {
+        this._applyElements( 'style', 'marginTop', value );
     };
 
 
-    // Develop function
-    DOM.prototype._propile = function() {
-    }
+    /** Apply elements */
+    this._applyElements = function ( func, func2, value ) {
+        var elements = this.elements,
+            i = 0;
+
+        
+
+        if ( elements.length >= 1 ) {
+            for ( i; i < elements.length; i += 1 ) {
+                var element = elements[ i ];
+
+                element[ func ][ func2 ] = value;
+            }
+        }
+        else elements[ func ][ func2 ] = value;
+    };
 
 }, _dom = new DOM();
 
@@ -76,4 +67,14 @@ let dom = function ( name ) { return _dom._$( name ) };
 
 
 
-// _dom._propile();
+function executeFunctionByName( functionName, context ) {
+    var args = Array.prototype.slice.call( arguments, 2),
+        namespaces = functionName.split( '.' ),
+        func = namespaces.pop(),
+        i = 0;
+
+        for ( i; i < namespaces.length; i += 1 )
+            context = context[ namespaces[ i ] ];
+
+        return context[ func ].apply( context, args );
+}
