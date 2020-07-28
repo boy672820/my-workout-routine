@@ -6,22 +6,29 @@ let DOM = function () {
 
     /** Get html elements */
     this._$ = function ( name ) {
-        var prefix = name.charAt( 0 ),
-            element_name = name.slice( 1 ),
-            elements;
+        var elements;
 
-        switch ( prefix ) {
-            case '.':
-                elements = document.getElementsByClassName( element_name );
-                break;
-
-            case '#':
-                elements = document.getElementById( element_name );
-                break;
-
-            default:
-                return false;
+        if ( typeof name === 'object' ) {
+            elements = name;
         }
+        else {
+            var prefix = name.charAt( 0 ),
+                element_name = name.slice( 1 );
+
+            switch ( prefix ) {
+                case '.':
+                    elements = document.getElementsByClassName( element_name );
+                    break;
+    
+                case '#':
+                    elements = document.getElementById( element_name );
+                    break;
+    
+                default:
+                    return false;
+            }
+        }
+
 
         this.elements = elements;
 
@@ -50,30 +57,38 @@ let DOM = function () {
             var i = 0;
             for ( i; i < elements.length; i += 1 ) {
                 var element = elements[ i ];
-                element.addEventListener( 'click', func( element ) );
+                element.addEventListener( 'click', func );
             }
         }
-        else elements.addEventListener( 'click', func( elements ) );
+        else elements.addEventListener( 'click', func );
     };
 
+    /**
+     * Set display to..
+     * @param {*} bool 
+     */
+    this.display = function ( value ) {
+        this._applyElements( 'style', 'display', value );
+    }
+
     /** Get data by Html object */
-    // this.data = function ( name ) {
-    //     var elements = this.elements,
-    //         data;
+    this.data = function ( name ) {
+        var elements = this.elements,
+            data;
 
-    //     if ( elements.length >= 1 ) {
-    //         var i = 0;
+        if ( elements.length >= 1 ) {
+            var i = 0;
 
-    //         for ( i; i < elements.length; i += 1 ) {
-    //             var element = elements[ i ];
+            for ( i; i < elements.length; i += 1 ) {
+                var element = elements[ i ];
 
-    //             data = element.dataset[ name ];
-    //         }
-    //     }
-    //     else data = elements.dataset[ name ];
+                data = element.dataset[ name ];
+            }
+        }
+        else data = elements.dataset[ name ];
 
-    //     return data;
-    // }
+        return data;
+    }
 
 
     /** Apply elements */
