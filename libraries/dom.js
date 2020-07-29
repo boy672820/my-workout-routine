@@ -107,6 +107,25 @@ let DOM = function () {
         else elements[ func ][ func2 ] = value;
     };
 
+    /**
+     * Set value to input html object
+     */
+    this.value = function( value ) {
+        var elements = this.elements,
+            elements_length = elements.length;
+
+        if ( elements_length >= 1 ) {
+            var i = 0;
+
+            for ( i; i < elements_length; i += 1 ) {
+                var element = elements[ i ];
+
+                element.value = value;
+            }
+        }
+        else elements.value = value;
+    };
+
 
     /**
      * Modal UI
@@ -120,11 +139,14 @@ let DOM = function () {
 
             // Activate modal when an event(Click) occurs.
             this._$( modalEventlistener ).click( function () {
-                var data = this.data();
+                var dataEntries = Object.entries( this.dataset );
 
+                // Set input by modal
+                for ( const [ key, value ] of dataEntries ) {
+                    _this._$( '#' + key ).value( value );
+                }
                 
-                document.getElementById( 'reps' ).value = data.reps;
-
+                // Display modal
                 _this._$( '.modal' ).display( 'block' );
             } );
 
