@@ -1,7 +1,6 @@
-( function ( $ ) {
+let DOMUI = function () {
+    // Inheritance to DOM
+    DOMUI.prototype = new DOM();
 
-    'use strict';
-
-    
-
-} )( dom );
+    // DOMUI.prototype._$( '.modal' ).display( 'block' );
+}, _domui = new DOMUI();
