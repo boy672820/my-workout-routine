@@ -1,15 +1,17 @@
 'use strict';
 
-let DOM = function () {
+function DOM () {
 
     this.elements = {};
+    this.selector = '';
 
     /** Get html elements */
     this._$ = function ( name ) {
-        var elements;
+        var elements, selector;
 
         if ( typeof name === 'object' ) {
             elements = name;
+            selector = 'class';
         }
         else {
             var prefix = name.charAt( 0 ),
@@ -18,10 +20,12 @@ let DOM = function () {
             switch ( prefix ) {
                 case '.':
                     elements = document.getElementsByClassName( element_name );
+                    selector = 'class';
                     break;
     
                 case '#':
                     elements = document.getElementById( element_name );
+                    selector = 'id';
                     break;
     
                 default:
@@ -31,6 +35,7 @@ let DOM = function () {
 
 
         this.elements = elements;
+        this.selector = selector;
 
         return this;
     };
@@ -53,14 +58,27 @@ let DOM = function () {
     this.click = function ( func ) {
         var elements = this.elements;
 
-        if ( elements.length >= 1 ) {
+        if ( this.selector === 'class' ) {
             var i = 0;
             for ( i; i < elements.length; i += 1 ) {
                 var element = elements[ i ];
                 element.addEventListener( 'click', func );
             }
         }
-        else elements.addEventListener( 'click', func );
+        else if ( this.selector === 'id' ) elements.addEventListener( 'click', func );
+    };
+
+    this.submit = function ( func ) {
+        var elements = this.elements;
+
+        if ( this.selector === 'class' ) {
+            var i = 0;
+            for ( i; i < elements.length; i += 1 ) {
+                var element = elements[ i ];
+                element.addEventListener( 'submit', func );
+            }
+        }
+        else if ( this.selector === 'id' ) elements.addEventListener( 'submit', func );
     };
 
     /**
@@ -95,7 +113,7 @@ let DOM = function () {
     this._applyElements = function ( func, func2, value ) {
         var elements = this.elements;
 
-        if ( elements.length >= 1 ) {
+        if ( this.selector === 'class' ) {
             var i = 0;
 
             for ( i; i < elements.length; i += 1 ) {
@@ -104,7 +122,7 @@ let DOM = function () {
                 element[ func ][ func2 ] = value;
             }
         }
-        else elements[ func ][ func2 ] = value;
+        else if ( this.selector === 'id' ) elements[ func ][ func2 ] = value;
     };
 
     /**
@@ -125,6 +143,10 @@ let DOM = function () {
         }
         else elements.value = value;
     };
+
+
+    // Inheritance by DOM-UI
+    // DOM.prototype = new DOMUI( this );
 
 
     /**
@@ -159,9 +181,10 @@ let DOM = function () {
         else if ( typeof isModal === 'undefined' ) console.log( 'DOM Error: Modal is not undefined.' );
     };
 
-}, _dom = new DOM();
+};
 
-let dom = function ( name ) { return _dom._$( name ) };
+let _dom = new DOM(),
+    dom = function ( name ) { return _dom._$( name ) };
 
 
 
