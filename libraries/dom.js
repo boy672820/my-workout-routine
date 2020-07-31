@@ -54,6 +54,54 @@ function DOM () {
         this._applyElements( 'style', 'marginTop', value );
     };
 
+
+    /**
+     * Set display to..
+     * @param {*} bool 
+     */
+    this.display = function ( value ) {
+        this._applyElements( 'style', 'display', value );
+    }
+
+
+    /**
+     * inner html.
+     * @param {*} text 
+     */
+    this.text = function ( text ) {
+        var elements = this.elements;
+
+        if ( this.selector === 'class' ) {
+            var i = 0;
+            for ( i; i < elements.length; i += 1 ) {
+                var element = elements[ i ];
+                element.innerHTML = text;
+            }
+        }
+        else if ( this.selector === 'id' ) elements.innerHTML = text;
+    };
+
+    
+    /**
+     * Get value from input box.
+     */
+    this.value = function () {
+        var elements = this.elements,
+            value = '';
+
+        // if ( this.selector === 'class' ) {
+        //     var i = 0;
+        //     for ( i; i < elements.length; i += 1 ) {
+        //         var element = elements[ i ];
+        //         value = element.value;
+        //     }
+        // }
+        // else if ( this.selector === 'id' ) value = elements.value;
+
+        return 'test';
+    };
+
+
     /** Add event listener to Click */
     this.click = function ( func ) {
         var elements = this.elements;
@@ -68,6 +116,11 @@ function DOM () {
         else if ( this.selector === 'id' ) elements.addEventListener( 'click', func );
     };
 
+
+    /**
+     * Add event listener to Submit.
+     * @param {*} func 
+     */
     this.submit = function ( func ) {
         var elements = this.elements;
 
@@ -81,13 +134,6 @@ function DOM () {
         else if ( this.selector === 'id' ) elements.addEventListener( 'submit', func );
     };
 
-    /**
-     * Set display to..
-     * @param {*} bool 
-     */
-    this.display = function ( value ) {
-        this._applyElements( 'style', 'display', value );
-    }
 
     /** Get data by Html object */
     this.data = function ( name ) {
@@ -143,10 +189,6 @@ function DOM () {
         }
         else elements.value = value;
     };
-
-
-    // Inheritance by DOM-UI
-    // DOM.prototype = new DOMUI( this );
 
 
     /**
