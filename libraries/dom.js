@@ -7,15 +7,18 @@ function DOM () {
 
     /** Get html elements */
     this._$ = function ( name ) {
-        var elements, selector;
+        var elements,
+            selector = '',
+            prefix = '',
+            element_name = '';
 
         if ( typeof name === 'object' ) {
-            elements = name;
-            selector = 'class';
+            prefix = 'object';
         }
         else {
-            var prefix = name.charAt( 0 ),
-                element_name = name.slice( 1 );
+            prefix = name.charAt( 0 ),
+            element_name = name.slice( 1 );
+        }
 
             switch ( prefix ) {
                 case '.':
@@ -27,10 +30,17 @@ function DOM () {
                     elements = document.getElementById( element_name );
                     selector = 'id';
                     break;
+
+                case 'object':
+                    elements = name; // The name parameter is HTML Collection.
+
+                    if ( typeof name.id !== 'undefined' ) selector = 'id';
+                    else selector = 'class';
+
+                    break;
     
                 default:
                     return false;
-            }
         }
 
 
@@ -38,6 +48,23 @@ function DOM () {
         this.selector = selector;
 
         return this;
+    };
+
+
+    /** Apply elements */
+    this._applyElements = function ( func, func2, value ) {
+        var elements = this.elements;
+
+        if ( this.selector === 'class' ) {
+            var i = 0;
+
+            for ( i; i < elements.length; i += 1 ) {
+                var element = elements[ i ];
+
+                element[ func ][ func2 ] = value;
+            }
+        }
+        else if ( this.selector === 'id' ) elements[ func ][ func2 ] = value;
     };
 
 
@@ -82,26 +109,6 @@ function DOM () {
     };
 
     
-    /**
-     * Get value from input box.
-     */
-    this.value = function () {
-        var elements = this.elements,
-            value = '';
-
-        // if ( this.selector === 'class' ) {
-        //     var i = 0;
-        //     for ( i; i < elements.length; i += 1 ) {
-        //         var element = elements[ i ];
-        //         value = element.value;
-        //     }
-        // }
-        // else if ( this.selector === 'id' ) value = elements.value;
-
-        return 'test';
-    };
-
-
     /** Add event listener to Click */
     this.click = function ( func ) {
         var elements = this.elements;
@@ -155,39 +162,48 @@ function DOM () {
     }
 
 
-    /** Apply elements */
-    this._applyElements = function ( func, func2, value ) {
-        var elements = this.elements;
-
-        if ( this.selector === 'class' ) {
-            var i = 0;
-
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-
-                element[ func ][ func2 ] = value;
-            }
-        }
-        else if ( this.selector === 'id' ) elements[ func ][ func2 ] = value;
-    };
-
     /**
-     * Set value to input html object
+     * Set value to input html object.
+     * Get value if value is undefined.
      */
     this.value = function( value ) {
-        var elements = this.elements,
-            elements_length = elements.length;
+        var elements = this.elements;
 
-        if ( elements_length >= 1 ) {
-            var i = 0;
-
-            for ( i; i < elements_length; i += 1 ) {
-                var element = elements[ i ];
-
-                element.value = value;
-            }
+        if ( typeof value === 'undefined' ) {
+            return elements.value;
         }
-        else elements.value = value;
+        else {
+            if ( this.selector === 'class' ) {
+                var i = 0;
+
+                for ( i; i < elements.length; i += 1 ) {
+                    var element = elements[ i ];
+
+                    element.value = value;
+                }
+            }
+            else if ( this.selector === 'id' ) elements.value = value;
+
+            return this;
+        }
+    };
+
+
+    /**
+     * Get data from form.
+     */
+    this.formData = function() {
+        var elements = this.elements;
+
+        if ( this.selector === 'id' ) {
+            var nodelist = elements.childNodes;
+
+            // for ( var i = 0; i < nodelist.length; i += 1 ) {
+            //     var node = nodelist[ i ];
+            //     console.log( typeof node, node );
+            // }
+        }
+        else if ( this.selector === 'class' ) console.log( 'DOM.js Error: formData cannot use class selector.' );
     };
 
 
@@ -220,7 +236,7 @@ function DOM () {
             } );
 
         }
-        else if ( typeof isModal === 'undefined' ) console.log( 'DOM Error: Modal is not undefined.' );
+        else if ( typeof isModal === 'undefined' ) console.log( 'DOM.js Error: Modal is not undefined.' );
     };
 
 };
