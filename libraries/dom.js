@@ -12,9 +12,7 @@ function DOM () {
             prefix = '',
             element_name = '';
 
-        if ( typeof name === 'object' ) {
-            prefix = 'object';
-        }
+        if ( typeof name === 'object' ) prefix = 'object';
         else {
             prefix = name.charAt( 0 ),
             element_name = name.slice( 1 );
@@ -196,12 +194,37 @@ function DOM () {
         var elements = this.elements;
 
         if ( this.selector === 'id' ) {
-            var nodelist = elements.childNodes;
+            var nodelist = elements.childNodes,
+                data = {},
+                i = 0;
 
-            // for ( var i = 0; i < nodelist.length; i += 1 ) {
-            //     var node = nodelist[ i ];
-            //     console.log( typeof node, node );
-            // }
+            for ( i; i < nodelist.length; i += 1 ) {
+                if ( nodelist[ i ].nodeType != 1 ) continue;
+
+                var item = nodelist.item( i ); 
+
+                console.log( item );
+
+                if ( item.name !== '' ) data[ item.name ] = item.value;
+
+                else {
+                    var itemNodelist = item.childNodes,
+                        j = i;
+
+                    // for ( j; j < itemNodelist.length; j += 1 ) {
+                    for ( j; j > 0; j += 1 ) {
+                        // if ( itemNodelist[ j ].nodeType != 1 ) continue;
+
+                        var itemChildren = itemNodelist.item( j );
+
+                        console.log( itemChildren );
+
+                        // if ( typeof itemChildren !== 'object' ) break;
+                    }
+                }
+            }
+
+            return data;
         }
         else if ( this.selector === 'class' ) console.log( 'DOM.js Error: formData cannot use class selector.' );
     };
