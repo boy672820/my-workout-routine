@@ -66,6 +66,9 @@ function DOM () {
     };
 
 
+
+
+
     /** Set style height to html elements */
     this.height = function ( value ) {
         this._applyElements( 'style', 'height', value );
@@ -88,6 +91,10 @@ function DOM () {
         this._applyElements( 'style', 'display', value );
     }
 
+    // this.display = function ( value ) {
+    //     this._applyElements( 'style.display', value );
+    // }
+
 
     /**
      * inner html.
@@ -105,6 +112,10 @@ function DOM () {
         }
         else if ( this.selector === 'id' ) elements.innerHTML = text;
     };
+
+    // this.text = function ( text ) {
+    //     this._applyElements( 'innerHTML', value );
+    // }
 
     
     /** Add event listener to Click */
@@ -145,18 +156,44 @@ function DOM () {
         var elements = this.elements,
             data;
 
-        if ( elements.length >= 1 ) {
-            var i = 0;
+        if ( typeof name === 'object' ) {
 
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
+            var dataEntires = Object.entries( name );
 
-                data = name === undefined ? element.dataset : element.dataset[ name ];
+            if ( this.selector === 'class' ) {
+                var i = 0;
+                for ( i; i < elements.length; i += 1 ) {
+                    var element = elements[ i ];
+                    for ( const [ key, value ] of dataEntires ) {
+                        element.dataset[ key ] = value;
+                    }
+                }
             }
-        }
-        else data = name === undefined ? elements.dataset : elements.dataset[ name ];
+            else if ( this.selector === 'id' ) {
+                for ( const [ key, value ] of dataEntires ) {
+                    elements.dataset[ key ] = value;
+                }
+            }
 
-        return data;
+            
+
+        }
+        else if ( typeof name === 'string' ) {
+
+            if ( this.selector === 'class' ) {
+                var i = 0;
+
+                for ( i; i < elements.length; i += 1 ) {
+                    var element = elements[ i ];
+
+                    data = name === undefined ? element.dataset : element.dataset[ name ];
+                }
+            }
+            else if ( this.selector === 'id' ) data = name === undefined ? elements.dataset : elements.dataset[ name ];
+
+            return data;
+        }
+
     }
 
 
@@ -191,42 +228,24 @@ function DOM () {
      * Get data from form.
      */
     this.formData = function() {
-        var elements = this.elements;
+        if ( this.selector === 'class' ) {
+            console.log( 'DOM.js Error: formData cannot use class selector.' );
+            return false;
+        } 
 
-        if ( this.selector === 'id' ) {
-            var nodelist = elements.childNodes,
-                data = {},
-                i = 0;
+        var elements = this.elements,
+            fields = elements.querySelectorAll( '[name]' ),
+            fields_length = fields.length,
+            i = 0,
+            data = {};
 
-            for ( i; i < nodelist.length; i += 1 ) {
-                if ( nodelist[ i ].nodeType != 1 ) continue;
+        for ( i; i < fields_length; i += 1 ) {
+            var field = fields[ i ];
 
-                var item = nodelist.item( i ); 
-
-                console.log( item );
-
-                if ( item.name !== '' ) data[ item.name ] = item.value;
-
-                else {
-                    var itemNodelist = item.childNodes,
-                        j = i;
-
-                    // for ( j; j < itemNodelist.length; j += 1 ) {
-                    for ( j; j > 0; j += 1 ) {
-                        // if ( itemNodelist[ j ].nodeType != 1 ) continue;
-
-                        var itemChildren = itemNodelist.item( j );
-
-                        console.log( itemChildren );
-
-                        // if ( typeof itemChildren !== 'object' ) break;
-                    }
-                }
-            }
-
-            return data;
+            data[ field.name ] = field.value;
         }
-        else if ( this.selector === 'class' ) console.log( 'DOM.js Error: formData cannot use class selector.' );
+
+        return data;
     };
 
 
