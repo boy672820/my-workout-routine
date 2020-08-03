@@ -66,7 +66,44 @@ function DOM () {
     };
 
 
+    this.__applyElements = function ( function_name ) {
 
+        var elements = this.elements,
+            args = Array.prototype.slice.call( arguments, 1 ),
+            namespaces = function_name.split( '.' ),
+            func = namespaces.pop(),
+            namespace_length = namespaces.length,
+            i = 0,
+            j = 0;
+
+        if ( this.selector === 'class' ) {
+            var i = 0,
+                elements_length = elements.length;
+
+            for ( i; i < elements_length; i += 1 ) {
+                var element = elements[ i ];
+
+                for ( j; j < namespace_length; j += 1 ) {
+                    var namespace = namespaces[ i ];
+        
+                    element = element[ namespace ];
+                }
+
+                // element[ func ].apply( element, args );
+                element[ func ] = args;
+            }
+        }
+        else {
+            for ( j; j < namespace_length; j += 1 ) {
+                var namespace = namespaces[ i ];
+    
+                elements = elements[ namespace ];
+            }
+
+            // elements[ func ].apply( elements, args );
+            elements[ func ] = args;
+        }
+    };
 
 
     /** Set style height to html elements */
@@ -88,7 +125,8 @@ function DOM () {
      * @param {*} bool 
      */
     this.display = function ( value ) {
-        this._applyElements( 'style', 'display', value );
+        // this._applyElements( 'style', 'display', value );
+        this.__applyElements( 'style.display', value );
     }
 
     // this.display = function ( value ) {
