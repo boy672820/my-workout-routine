@@ -49,31 +49,17 @@ function DOM () {
     };
 
 
-    /** Apply elements */
-    this._applyElements = function ( func, func2, value ) {
-        var elements = this.elements;
-
-        if ( this.selector === 'class' ) {
-            var i = 0;
-
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-
-                element[ func ][ func2 ] = value;
-            }
-        }
-        else if ( this.selector === 'id' ) elements[ func ][ func2 ] = value;
-    };
-
-
-    this.__applyElements = function ( function_name ) {
+    /**
+     * Apply DOM APIs in namespace format.
+     * @param {*} function_name 
+     */
+    this._applyElements = function ( function_name ) {
 
         var elements = this.elements,
             args = Array.prototype.slice.call( arguments, 1 ),
             namespaces = function_name.split( '.' ),
             func = namespaces.pop(),
             namespace_length = namespaces.length,
-            i = 0,
             j = 0;
 
         if ( this.selector === 'class' ) {
@@ -89,26 +75,32 @@ function DOM () {
                     element = element[ namespace ];
                 }
 
-                // element[ func ].apply( element, args );
-                element[ func ] = args;
+                // Function or String
+                if ( typeof element[ func ] === 'function' )
+                    element[ func ].apply( element, args );
+                else if ( typeof element[ func ] === 'string' )
+                    element[ func ] = args;
             }
         }
-        else {
+        else if ( this.selector === 'id' ) {
             for ( j; j < namespace_length; j += 1 ) {
                 var namespace = namespaces[ i ];
     
                 elements = elements[ namespace ];
             }
 
-            // elements[ func ].apply( elements, args );
-            elements[ func ] = args;
-        }
+            // Function or String
+            if ( typeof elements[ func ] === 'function' )
+                elements[ func ].apply( elements, args );
+            else if ( typeof elements[ func ] === 'string' )
+                elements[ func ] = args;
+    }
     };
 
 
     /** Set style height to html elements */
     this.height = function ( value ) {
-        this._applyElements( 'style', 'height', value );
+        this._applyElements( 'style.height', value );
 
         return this;
     };
@@ -116,7 +108,7 @@ function DOM () {
 
     /** Set style margin-top */
     this.marginTop = function ( value ) {
-        this._applyElements( 'style', 'marginTop', value );
+        this._applyElements( 'style.marginTop', value );
     };
 
 
@@ -125,13 +117,8 @@ function DOM () {
      * @param {*} bool 
      */
     this.display = function ( value ) {
-        // this._applyElements( 'style', 'display', value );
-        this.__applyElements( 'style.display', value );
+        this._applyElements( 'style.display', value );
     }
-
-    // this.display = function ( value ) {
-    //     this._applyElements( 'style.display', value );
-    // }
 
 
     /**
@@ -139,35 +126,13 @@ function DOM () {
      * @param {*} text 
      */
     this.text = function ( text ) {
-        var elements = this.elements;
-
-        if ( this.selector === 'class' ) {
-            var i = 0;
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-                element.innerHTML = text;
-            }
-        }
-        else if ( this.selector === 'id' ) elements.innerHTML = text;
+        this._applyElements( 'innerHTML', text );
     };
-
-    // this.text = function ( text ) {
-    //     this._applyElements( 'innerHTML', value );
-    // }
 
     
     /** Add event listener to Click */
     this.click = function ( func ) {
-        var elements = this.elements;
-
-        if ( this.selector === 'class' ) {
-            var i = 0;
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-                element.addEventListener( 'click', func );
-            }
-        }
-        else if ( this.selector === 'id' ) elements.addEventListener( 'click', func );
+        this._applyElements( 'addEventListener', 'click', func );
     };
 
 
@@ -176,16 +141,7 @@ function DOM () {
      * @param {*} func 
      */
     this.submit = function ( func ) {
-        var elements = this.elements;
-
-        if ( this.selector === 'class' ) {
-            var i = 0;
-            for ( i; i < elements.length; i += 1 ) {
-                var element = elements[ i ];
-                element.addEventListener( 'submit', func );
-            }
-        }
-        else if ( this.selector === 'id' ) elements.addEventListener( 'submit', func );
+        this._applyElements( 'addEventListener', 'submit', func );
     };
 
 
@@ -196,24 +152,22 @@ function DOM () {
 
         if ( typeof name === 'object' ) {
 
-            var dataEntires = Object.entries( name );
+            var dataEntries = Object.entries( name );
 
             if ( this.selector === 'class' ) {
                 var i = 0;
                 for ( i; i < elements.length; i += 1 ) {
                     var element = elements[ i ];
-                    for ( const [ key, value ] of dataEntires ) {
+                    for ( const [ key, value ] of dataEntries ) {
                         element.dataset[ key ] = value;
                     }
                 }
             }
             else if ( this.selector === 'id' ) {
-                for ( const [ key, value ] of dataEntires ) {
+                for ( const [ key, value ] of dataEntries ) {
                     elements.dataset[ key ] = value;
                 }
             }
-
-            
 
         }
         else if ( typeof name === 'string' ) {
@@ -242,23 +196,10 @@ function DOM () {
     this.value = function( value ) {
         var elements = this.elements;
 
-        if ( typeof value === 'undefined' ) {
+        if ( typeof value === 'undefined' )
             return elements.value;
-        }
-        else {
-            if ( this.selector === 'class' ) {
-                var i = 0;
-
-                for ( i; i < elements.length; i += 1 ) {
-                    var element = elements[ i ];
-
-                    element.value = value;
-                }
-            }
-            else if ( this.selector === 'id' ) elements.value = value;
-
-            return this;
-        }
+        else
+            this._applyElements( 'value', value );
     };
 
 
@@ -340,3 +281,5 @@ let _dom = new DOM(),
 
 //         return context[ func ].apply( context, args );
 // }
+
+
