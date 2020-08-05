@@ -94,7 +94,7 @@ function DOM () {
                 elements[ func ].apply( elements, args );
             else if ( typeof elements[ func ] === 'string' )
                 elements[ func ] = args;
-    }
+        }
     };
 
 
@@ -225,6 +225,36 @@ function DOM () {
         }
 
         return data;
+    };
+
+
+    /**
+     * Added HTML element from parent container.
+     * @param {string} html 
+     */
+    this.add = function ( html ) {
+        var elements = this.elements,
+            container = document.createElement( 'div' );
+
+        container.innerHTML = html;
+
+        if ( this.selector === 'class' ) {
+            var i = 0,
+                elements_length = elements.length;
+
+            for ( i; i < elements_length; i += 1 ) {
+                var element = elements[ i ];
+
+                while ( container.children.length > 0 )
+                    element.appendChild( container.children[ 0 ] );
+            }
+        }
+        else if ( this.selector === 'id' ) {
+            while ( container.children.length > 0 )
+                element.appendChild( container.chidlren[ 0 ] );
+        }
+
+        return this;
     };
 
 

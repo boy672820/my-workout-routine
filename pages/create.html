@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동루틴 작성</title>
+
+    <!-- Stylesheet normalize -->
+    <link rel="stylesheet" href="../stylesheets/normalize.minify.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <form action="#" id="create">
+            <fieldset>
+                <legend>운동루틴</legend>
+                <p>
+                    <label for="exercise">운동 이름</label>
+                    <input type="text" name="exercise" id="exercise" value="">
+                </p>
+                <div class="reps-container">
+                    <p>
+                        <span>
+                            <input type="text" name="kg" id="kg" value="">
+                            <label for="kg">kg</label>
+                        </span>
+                        <span>
+                            <input type="text" name="reps" id="reps" value="">
+                            <label for="reps">회</label>
+                        </span>
+                    </p>
+                </div>
+                <p>
+                    <button type="button" class="adding-sets">세트 추가</button>
+                </p>
+                <p>
+                    <button type="submit">완료</button>
+                </p>
+            </fieldset>
+        </form><!-- //#create -->
+
+    </div><!-- //.container -->
+
+
+    <!-- DOM library -->
+    <script src="../libraries/dom.js"></script>
+
+    <!-- Page scripting -->
+    <script>
+        ( function ( $ ) {
+
+            $( '.adding-sets' ).click( function () {
+
+                $( '.reps-container' ).add( "<p><span><input type='text' name='kg' id='kg' value=''><label for='kg'>kg</label></span><span><input type='text' name='reps' id='reps' value=''><label for='reps'>회</label></span></p>" );
+
+            } );
+
+        } )( dom );
+    </script>
+
+</body>
+</html>
