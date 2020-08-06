@@ -7,39 +7,91 @@
 
     <!-- Stylesheet normalize -->
     <link rel="stylesheet" href="../stylesheets/normalize.minify.css">
+
+    <!-- Common stylesheet -->
+    <link rel="stylesheet" href="../stylesheets/common.css">
+
+    <!-- This page stylesheet -->
+    <link rel="stylesheet" href="../stylesheets/create.css">
 </head>
 
 <body>
 
     <div class="container">
 
-        <form action="#" id="create">
-            <fieldset>
-                <legend>운동루틴</legend>
-                <p>
-                    <label for="exercise">운동 이름</label>
-                    <input type="text" name="exercise" id="exercise" value="">
-                </p>
-                <div class="reps-container">
+        <div class="create-container">
+
+            <form action="#" id="create" onsubmit="return false;">
+                <fieldset>
+                    <legend>Workout routine</legend>
                     <p>
-                        <span>
-                            <input type="text" name="kg" id="kg" value="">
-                            <label for="kg">kg</label>
-                        </span>
-                        <span>
-                            <input type="text" name="reps" id="reps" value="">
-                            <label for="reps">회</label>
-                        </span>
+                        <label for="exercise">Exercise</label>
+                        <input type="text" name="exercise" id="exercise" value="">
                     </p>
-                </div>
-                <p>
-                    <button type="button" class="adding-sets">세트 추가</button>
-                </p>
-                <p>
-                    <button type="submit">완료</button>
-                </p>
-            </fieldset>
-        </form><!-- //#create -->
+                    <div class="set-container">
+                        <div class="create set create-set">
+                            <div class="inline left">
+                                <p class="inline">1&nbsp;Set</p>
+                            </div><!-- //.inline .left -->
+                            <div class="inline right">
+                                <p class="inline">
+                                    <input type="text" name="kg" class="input" value=""><label for="kg">Kg</label>
+                                </p><!-- //.inline -->
+                                <p class="inline">
+                                    <input type="text" name="reps" class="input" value=""><label for="reps">Reps</label>
+                                </p><!-- //.inline -->
+                                
+                            </div><!-- //.inline .right -->
+                        </div><!-- //.set -->
+                    </div><!-- //.set-container -->
+                    <p>
+                        <button type="button" class="adding-sets">Add set</button>
+                    </p>
+                    <p>
+                        <button type="submit">Submit</button>
+                    </p>
+                </fieldset>
+            </form><!-- //#create -->
+
+        </div><!-- //.create-container -->
+
+
+        <div class="routine-container">
+
+            <ul class="exercise routine">
+                <!-- <li class="exercise item">
+                    <h4 class="exercise name">Over Head shoulder Press</h4>
+                    <ul class="exercise sets">
+                        <li class="exercise set">
+                            <span>1Set</span>
+                            <span>90Kg</span>
+                            <span>5Reps</span>
+                        </li>
+                        <li class="exercise set">
+                            <span>2Set</span>
+                            <span>90Kg</span>
+                            <span>5Reps</span>
+                        </li>
+                        <li class="exercise set">
+                            <span>3Set</span>
+                            <span>90Kg</span>
+                            <span>5Reps</span>
+                        </li>
+                        <li class="exercise set">
+                            <span>4Set</span>
+                            <span>90Kg</span>
+                            <span>5Reps</span>
+                        </li>
+                        <li class="exercise set">
+                            <span>5Set</span>
+                            <span>90Kg</span>
+                            <span>5Reps</span>
+                        </li>
+                    </ul>
+                </li> -->
+            </ul><!-- //.exercise.routine -->
+
+        </div><!-- //.list-container -->
 
     </div><!-- //.container -->
 
@@ -50,10 +102,17 @@
     <!-- Page scripting -->
     <script>
         ( function ( $ ) {
+            var set_count = 1;
 
             $( '.adding-sets' ).click( function () {
+                set_count += 1;
 
-                $( '.reps-container' ).add( "<p><span><input type='text' name='kg' id='kg' value=''><label for='kg'>kg</label></span><span><input type='text' name='reps' id='reps' value=''><label for='reps'>회</label></span></p>" );
+                var createSet = document.getElementsByClassName( 'create-set' );
+
+                var createSetClone = createSet[0].cloneNode( true );
+
+                var set_html = createSetClone;
+                $( '.set-container' ).add( set_html );
 
             } );
 

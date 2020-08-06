@@ -258,6 +258,11 @@ function DOM () {
     };
 
 
+    this.clone = function() {
+        
+    };
+
+
     /**
      * Modal UI
      */
