@@ -2,8 +2,12 @@
 
 function DOM () {
 
+    // DOM Properties.
     this.elements = {};
     this.selector = '';
+
+    this.clone = {};
+
 
     /** Get html elements */
     this._$ = function ( name ) {
@@ -233,25 +237,46 @@ function DOM () {
      * @param {string} html 
      */
     this.add = function ( html ) {
-        var elements = this.elements,
-            container = document.createElement( 'div' );
+        var elements = this.elements;
+        
+        if ( typeof html === 'string' ) {
+            var container = document.createElement( 'div' );
 
-        container.innerHTML = html;
+            container.innerHTML = html;
 
-        if ( this.selector === 'class' ) {
-            var i = 0,
-                elements_length = elements.length;
-
-            for ( i; i < elements_length; i += 1 ) {
-                var element = elements[ i ];
-
+            if ( this.selector === 'class' ) {
+                var i = 0,
+                    elements_length = elements.length;
+    
+                for ( i; i < elements_length; i += 1 ) {
+                    var element = elements[ i ];
+    
+                    while ( container.children.length > 0 )
+                        element.appendChild( container.children[ 0 ] );
+                }
+            }
+            else if ( this.selector === 'id' ) {
                 while ( container.children.length > 0 )
-                    element.appendChild( container.children[ 0 ] );
+                    elements.appendChild( container.chidlren[ 0 ] );
             }
         }
-        else if ( this.selector === 'id' ) {
-            while ( container.children.length > 0 )
-                element.appendChild( container.chidlren[ 0 ] );
+
+        else if ( typeof html === 'object' ) {
+
+            if ( this.selector === 'class' ) {
+                var i = 0,
+                    elements_length = elements.length;
+
+                for ( i; i < elements_length; i += 1 ) {
+                    var element = elements[ i ];
+
+                    element.appendChild( html );
+                }
+            }
+            else if ( this.selecotr === 'id' ) {
+                elements.appendChild( html );
+            }
+
         }
 
         return this;
@@ -259,7 +284,27 @@ function DOM () {
 
 
     this.clone = function() {
+        var elements = this.elements;
+
+        if ( this.selector === 'class' ) {
+
+            var i = 0,
+                elements_length = elements.length;
+
+            for ( i; i < elements_length; i += 1 ) {
+                var element = elements[ i ];
+
+                this.clone = element.cloneNode( true );
+            }
+
+        }
+        else if ( this.selector === 'id' ) {
+            this.clone = elements.cloneNode( true );
+        }
+
+        console.log( this.clone );
         
+        return this;
     };
 
 

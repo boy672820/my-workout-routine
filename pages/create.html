@@ -107,11 +107,11 @@
             $( '.adding-sets' ).click( function () {
                 set_count += 1;
 
-                var createSet = document.getElementsByClassName( 'create-set' );
+                var createSet = document.getElementsByClassName( 'create-set' ),
+                    createSetClone = createSet[0].cloneNode( true ),
+                    set_html = createSetClone;
 
-                var createSetClone = createSet[0].cloneNode( true );
-
-                var set_html = createSetClone;
+                $( '.create-set' ).clone();
                 $( '.set-container' ).add( set_html );
 
             } );
