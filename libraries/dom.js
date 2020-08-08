@@ -1,12 +1,49 @@
 'use strict';
 
+function DOM_HTMLCollection ( nodes ) {
+    var i = 0,
+        nodes_length = nodes.length;
+
+    for ( i; i < nodes_length; i += 1 ) {
+        this[ i ] = nodes[ i ];
+    }
+
+    // length is readonly
+    Object.defineProperty( this, 'length', {
+        get: function () {
+            return nodes.length;
+        }
+    } );
+
+    // This cannot be changed.
+    Object.freeze( this );
+}
+
+DOM_HTMLCollection.prototype = {
+    item: function ( i ) {
+        return this[ i ] != null ? this[ i ] : null;
+    },
+    namedItem: function ( name ) {
+        for ( var i = 0; i < this.length; i += 1 ) {
+            if ( this[ i ].id === name || this[ i ].name === name )
+                return this[ i ];
+        }
+
+        return null;
+    }
+};
+
+
 function DOM () {
 
     // DOM Properties.
     this.elements = {};
     this.selector = '';
 
-    this.clone = {};
+    this.cloneProperty = {
+        'elements': undefined,
+        'selector': undefined
+    };
 
 
     /** Get html elements */
@@ -283,28 +320,67 @@ function DOM () {
     };
 
 
-    this.clone = function() {
+    /**
+     * 
+     * @param {String, Object(HTML Element)} container 
+     */
+    this.appendTo = function ( parent ) {
+        var _this = this;
+
+        ( function ( resolve ) {
+            // Save property to parent element from dom.
+            var property = new Object();
+
+            if ( _this.cloneProperty.elements === undefined ) {
+                property.elements = _this.elements;
+                property.selector = _this.selector;
+            }
+            else {
+                property.elements = _this.cloneProperty.elements;
+                property.selector = _this.cloneProperty.selector;
+            }
+
+            _this._$( parent );
+
+            resolve( property );
+        } )(
+            function ( domProperties ) {
+
+                
+
+            }
+        );
+        
+
+    };
+
+
+    /**
+     * Save the duplicated element to a property.
+     */
+    this.clone = function () {
         var elements = this.elements;
 
         if ( this.selector === 'class' ) {
-
             var i = 0,
-                elements_length = elements.length;
+                elements_length = elements.length,
+                cloneNodes = [];
 
             for ( i; i < elements_length; i += 1 ) {
                 var element = elements[ i ];
 
-                this.clone = element.cloneNode( true );
+                cloneNodes.push( element.cloneNode( true ) );
             }
 
-        }
-        else if ( this.selector === 'id' ) {
-            this.clone = elements.cloneNode( true );
+            this.cloneProperty.elements = new DOM_HTMLCollection( cloneNodes );
         }
 
-        console.log( this.clone );
-        
-        return this;
+        else if ( this.selector === 'id' ) {
+            this.cloneProperty.elements = elements;
+        }
+
+        this.cloneProperty.selector = selector;
+
     };
 
 

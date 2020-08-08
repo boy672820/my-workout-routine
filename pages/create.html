@@ -111,8 +111,8 @@
                     createSetClone = createSet[0].cloneNode( true ),
                     set_html = createSetClone;
 
-                $( '.create-set' ).clone();
-                $( '.set-container' ).add( set_html );
+                $( '.create-set' ).clone().appendTo( '.set-container' );
+                // $( '.set-container' ).add( set_html );
 
             } );
 
