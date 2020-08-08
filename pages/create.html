@@ -31,7 +31,7 @@
                     <div class="set-container">
                         <div class="create set create-set">
                             <div class="inline left">
-                                <p class="inline">1&nbsp;Set</p>
+                                <p class="inline set-count">1&nbsp;Set</p>
                             </div><!-- //.inline .left -->
                             <div class="inline right">
                                 <p class="inline">
@@ -105,15 +105,15 @@
             var set_count = 1;
 
             $( '.adding-sets' ).click( function () {
+                var callback = function ( clone ) {
+                    var setCount = clone.querySelector( '.set-count' );
+
+                    $( setCount ).text( String( set_count ) + '&nbsp;Set' );
+                };
+
+                $( '.create-set' ).clone( 0, callback ).appendTo( '.set-container' );
+
                 set_count += 1;
-
-                var createSet = document.getElementsByClassName( 'create-set' ),
-                    createSetClone = createSet[0].cloneNode( true ),
-                    set_html = createSetClone;
-
-                $( '.create-set' ).clone().appendTo( '.set-container' );
-                // $( '.set-container' ).add( set_html );
-
             } );
 
         } )( dom );

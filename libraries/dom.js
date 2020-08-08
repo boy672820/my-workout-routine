@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * 
+ * @param {Object(HTML Element)} nodes 
+ */
 function DOM_HTMLCollection ( nodes ) {
     var i = 0,
         nodes_length = nodes.length;
@@ -342,34 +346,85 @@ function DOM () {
 
             _this._$( parent );
 
+            // Callback.
             resolve( property );
         } )(
+            // Callback function.
             function ( domProperties ) {
+                var parents = _this.elements,
 
-                
+                    appendElement = function ( parent ) {
+                    var elements = domProperties.elements;
 
+                    if ( domProperties.selector === 'class' ) {
+                        var i = 0,
+                            elements_length = elements.length;
+
+                        for ( i; i < elements_length; i += 1) {
+                            var element = elements[ i ];
+
+                            parent.appendChild( element );
+                        }
+                    }
+
+                    else if ( domProperties.selector === 'id' ) {
+                        parent.appendChild( elements );
+                    }
+                };
+
+                if ( _this.selector === 'class' ) {
+                    var i = 0,
+                        parents_length = parents.length;
+
+                    for ( i; i < parents_length; i += 1 ) {
+                        var parent = parents[ i ];
+
+                        appendElement( parent );
+                    }
+                }
+
+                else if ( _this.selector === 'id' ) {
+                    appendElement( parents );
+                }
             }
-        );
-        
 
+        );
+
+        return this;
     };
 
 
     /**
      * Save the duplicated element to a property.
      */
-    this.clone = function () {
+    this.clone = function ( index, callback ) {
         var elements = this.elements;
 
         if ( this.selector === 'class' ) {
-            var i = 0,
-                elements_length = elements.length,
-                cloneNodes = [];
 
-            for ( i; i < elements_length; i += 1 ) {
-                var element = elements[ i ];
+            var cloneNodes = [],
+                i = 0;
 
-                cloneNodes.push( element.cloneNode( true ) );
+            // The parameter index if is null.
+            if ( index == null ) {
+                var elements_length = elements.length;
+
+                for ( i; i < elements_length; i += 1 ) {
+                    var element = elements[ i ],
+                        cloneElement = element.cloneNode( true );
+
+                    if ( typeof callback === 'object' ) callback( cloneElement );
+
+                    cloneNodes.push( cloneElement );
+                }
+            }
+            // Else if is number.
+            else if ( typeof index === 'number' ) {
+                var cloneElement = elements[ index ].cloneNode( true );
+
+                if ( typeof callback === 'object' ) callback( cloneElement );
+
+                cloneNodes[ i ] = cloneElement;
             }
 
             this.cloneProperty.elements = new DOM_HTMLCollection( cloneNodes );
@@ -379,8 +434,9 @@ function DOM () {
             this.cloneProperty.elements = elements;
         }
 
-        this.cloneProperty.selector = selector;
+        this.cloneProperty.selector = this.selector;
 
+        return this;
     };
 
 
