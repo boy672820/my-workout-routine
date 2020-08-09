@@ -35,10 +35,10 @@
                             </div><!-- //.inline .left -->
                             <div class="inline right">
                                 <p class="inline">
-                                    <input type="text" name="kg" class="input" value=""><label for="kg">Kg</label>
+                                    <input type="text" name="kg" class="set-kg input" value=""><label for="kg">Kg</label>
                                 </p><!-- //.inline -->
                                 <p class="inline">
-                                    <input type="text" name="reps" class="input" value=""><label for="reps">Reps</label>
+                                    <input type="text" name="reps" class="set-reps input" value=""><label for="reps">Reps</label>
                                 </p><!-- //.inline -->
                                 
                             </div><!-- //.inline .right -->
@@ -58,37 +58,17 @@
 
         <div class="routine-container">
 
-            <ul class="exercise routine">
-                <!-- <li class="exercise item">
-                    <h4 class="exercise name">Over Head shoulder Press</h4>
-                    <ul class="exercise sets">
-                        <li class="exercise set">
-                            <span>1Set</span>
-                            <span>90Kg</span>
-                            <span>5Reps</span>
-                        </li>
-                        <li class="exercise set">
-                            <span>2Set</span>
-                            <span>90Kg</span>
-                            <span>5Reps</span>
-                        </li>
-                        <li class="exercise set">
-                            <span>3Set</span>
-                            <span>90Kg</span>
-                            <span>5Reps</span>
-                        </li>
-                        <li class="exercise set">
-                            <span>4Set</span>
-                            <span>90Kg</span>
-                            <span>5Reps</span>
-                        </li>
-                        <li class="exercise set">
-                            <span>5Set</span>
-                            <span>90Kg</span>
-                            <span>5Reps</span>
+            <ul class="exercise routine exercise-list">
+                <li class="exercise item hidden exercise-item">
+                    <h4 class="exercise name exercise-name"></h4>
+                    <ul class="exercise sets exercise-sets-list">
+                        <li class="exercise set exercise-sets-item">
+                            <span class="sets-data"></span>
+                            <span class="kg-data"></span>
+                            <span class="reps-data"></span>
                         </li>
                     </ul>
-                </li> -->
+                </li>
             </ul><!-- //.exercise.routine -->
 
         </div><!-- //.list-container -->
@@ -101,22 +81,59 @@
 
     <!-- Page scripting -->
     <script>
-        ( function ( $ ) {
+        ( function ( $, _$ ) {
             var set_count = 1;
 
+            // Add set.
             $( '.adding-sets' ).click( function () {
-                var callback = function ( clone ) {
-                    var setCount = clone.querySelector( '.set-count' );
+                var callback = function ( element ) {
+                    element.querySelector( '.set-count' ).innerText = String( set_count ) + ' Set';
 
-                    $( setCount ).text( String( set_count ) + '&nbsp;Set' );
+                    element.querySelector( '[name=kg]' ).value = $( '.set-kg' ).last().value();
+                    element.querySelector( '[name=reps]' ).value = $( '.set-reps' ).last().value();
                 };
 
-                $( '.create-set' ).clone( 0, callback ).appendTo( '.set-container' );
-
                 set_count += 1;
+
+                $( '.create-set' )
+                    .clone( 0, callback )
+                    .appendTo( '.set-container' );
             } );
 
-        } )( dom );
+            // Create routine form.
+            $( '#create' ).submit( function () {
+                var formData = $( this ).formData(),
+                    callback = function ( element ) {
+
+                        var itemCallback = function ( element ) {
+                            $( element );
+
+                            for ( var i = 0; i < formData.kg.length; i += 1 ) {
+                                var kg = formData.kg[ i ],
+                                    reps = formData.reps[ i ];
+
+                                _$.find( '.sets-data' ).text( String( i + 1 ) + 'Set' );
+                                _$.find( '.kg-data' ).text( String( kg ) + 'Set' );
+                                _$.find( '.reps-data' ).text( String( reps ) + 'Set' );
+                            }
+                        };
+
+                        element.classList.remove( 'hidden' );
+
+                        $( element );
+
+                        _$.find( '.exercise-name' ).text( formData.exercise );
+
+                        _$.find( '.exercise-sets-item' ).clone( 0, itemCallback );
+                        _$.appendTo( '.exercise-sets-list' );
+                    };
+
+                $( '.exercise-item' )
+                    .clone( 0, callback )
+                    .appendTo( '.exercise-list' );
+            } );
+
+        } )( dom, _dom );
     </script>
 
 </body>

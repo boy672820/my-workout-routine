@@ -49,6 +49,11 @@ function DOM () {
         'selector': undefined
     };
 
+    this.findProperty = {
+        'elements': undefined,
+        'selector': undefined
+    };
+
 
     /** Get html elements */
     this._$ = function ( name ) {
@@ -77,7 +82,7 @@ function DOM () {
                 case 'object':
                     elements = name; // The name parameter is HTML Collection.
 
-                    if ( typeof name.id !== 'undefined' ) selector = 'id';
+                    if ( name.id != '' ) selector = 'id';
                     else selector = 'class';
 
                     break;
@@ -95,19 +100,33 @@ function DOM () {
 
 
     /**
+     * Set the last element to filtering elements property.
+     */
+    this.last = function () {
+        var elements = this.elements,
+            elements_length = elements.length;
+
+        this.elements = elements[ elements_length - 1 ];
+
+        return this;
+    };
+
+
+    /**
      * Apply DOM APIs in namespace format.
      * @param {*} function_name 
      */
     this._applyElements = function ( function_name ) {
 
-        var elements = this.elements,
+        var elements = this.findProperty.elements === undefined ? this.elements : this.findProperty.elements,
+            selector = this.findProperty.selector === undefined ? this.selector : this.findProperty.selector,
             args = Array.prototype.slice.call( arguments, 1 ),
             namespaces = function_name.split( '.' ),
             func = namespaces.pop(),
             namespace_length = namespaces.length,
             j = 0;
 
-        if ( this.selector === 'class' ) {
+        if ( selector === 'class' ) {
             var i = 0,
                 elements_length = elements.length;
 
@@ -127,7 +146,7 @@ function DOM () {
                     element[ func ] = args;
             }
         }
-        else if ( this.selector === 'id' ) {
+        else if ( selector === 'id' ) {
             for ( j; j < namespace_length; j += 1 ) {
                 var namespace = namespaces[ i ];
     
@@ -171,7 +190,7 @@ function DOM () {
      * @param {*} text 
      */
     this.text = function ( text ) {
-        this._applyElements( 'innerHTML', text );
+        this._applyElements( 'innerText', text );
     };
 
     
@@ -266,7 +285,16 @@ function DOM () {
         for ( i; i < fields_length; i += 1 ) {
             var field = fields[ i ];
 
-            data[ field.name ] = field.value;
+            // Multiple names.
+            if ( data.hasOwnProperty( field.name ) ) {
+
+                if ( Array.isArray( data[ field.name ] ) )
+                    data[ field.name ].push( field.value );
+                else
+                    data[ field.name ] = [ data[ field.name ], field.value ];
+            }
+            else
+                data[ field.name ] = field.value;
         }
 
         return data;
@@ -398,9 +426,10 @@ function DOM () {
      * Save the duplicated element to a property.
      */
     this.clone = function ( index, callback ) {
-        var elements = this.elements;
+        var elements = this.findProperty.elements === undefined ? this.elements : this.findProperty.elements,
+            selector = this.findProperty.selector === undefined ? this.selector : this.findProperty.selector;
 
-        if ( this.selector === 'class' ) {
+        if ( selector === 'class' ) {
 
             var cloneNodes = [],
                 i = 0;
@@ -413,7 +442,7 @@ function DOM () {
                     var element = elements[ i ],
                         cloneElement = element.cloneNode( true );
 
-                    if ( typeof callback === 'object' ) callback( cloneElement );
+                    if ( typeof callback != null ) callback( cloneElement );
 
                     cloneNodes.push( cloneElement );
                 }
@@ -422,7 +451,7 @@ function DOM () {
             else if ( typeof index === 'number' ) {
                 var cloneElement = elements[ index ].cloneNode( true );
 
-                if ( typeof callback === 'object' ) callback( cloneElement );
+                if ( typeof callback != null ) callback( cloneElement );
 
                 cloneNodes[ i ] = cloneElement;
             }
@@ -430,11 +459,34 @@ function DOM () {
             this.cloneProperty.elements = new DOM_HTMLCollection( cloneNodes );
         }
 
-        else if ( this.selector === 'id' ) {
+        else if ( selector === 'id' ) {
             this.cloneProperty.elements = elements;
         }
 
         this.cloneProperty.selector = this.selector;
+
+        return this;
+    };
+
+
+    /**
+     * Find children from element.
+     * @param {String} name 
+     */
+    this.find = function ( children ) {
+        var element = this.elements;
+
+        if ( element.length < 1 ) {
+            console.log( 'DOM Error: Only one element is possible.' );
+            return false;
+        }
+
+        var children = element.querySelectorAll( children );
+
+        // this.elements = children;
+
+        this.findProperty.elements = children;
+        this.findProperty.selector = 'class';
 
         return this;
     };
@@ -476,22 +528,3 @@ function DOM () {
 
 let _dom = new DOM(),
     dom = function ( name ) { return _dom._$( name ) };
-
-
-
-// 메서드 체인 문자열로 실행
-// arguments: 해당 함수 인수의 배열 / 모든 함수에서 사용 가능한 지역 변수
-// function executeFunctionByName( functionName, context ) {
-    
-//     var args = Array.prototype.slice.call( arguments, 2 ),
-//         namespaces = functionName.split( '.' ),
-//         func = namespaces.pop(),
-//         i = 0;
-
-//         for ( i; i < namespaces.length; i += 1 )
-//             context = context[ namespaces[ i ] ];
-
-//         return context[ func ].apply( context, args );
-// }
-
-
