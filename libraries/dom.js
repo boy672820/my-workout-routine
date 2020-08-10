@@ -118,8 +118,8 @@ function DOM () {
      */
     this._applyElements = function ( function_name ) {
 
-        var elements = this.findProperty.elements === undefined ? this.elements : this.findProperty.elements,
-            selector = this.findProperty.selector === undefined ? this.selector : this.findProperty.selector,
+        var elements = this.elements,
+            selector = this.selector,
             args = Array.prototype.slice.call( arguments, 1 ),
             namespaces = function_name.split( '.' ),
             func = namespaces.pop(),
@@ -274,7 +274,7 @@ function DOM () {
         if ( this.selector === 'class' ) {
             console.log( 'DOM.js Error: formData cannot use class selector.' );
             return false;
-        } 
+        }
 
         var elements = this.elements,
             fields = elements.querySelectorAll( '[name]' ),
@@ -317,11 +317,18 @@ function DOM () {
                 var i = 0,
                     elements_length = elements.length;
     
-                for ( i; i < elements_length; i += 1 ) {
-                    var element = elements[ i ];
-    
+                if ( elements_length === undefined ) {
                     while ( container.children.length > 0 )
-                        element.appendChild( container.children[ 0 ] );
+                        elements.appendChild( container.children[ 0 ] );
+                }
+
+                else {
+                    for ( i; i < elements_length; i += 1 ) {
+                        var element = elements[ i ];
+        
+                        while ( container.children.length > 0 )
+                            element.appendChild( container.children[ 0 ] );
+                    }
                 }
             }
             else if ( this.selector === 'id' ) {
@@ -336,13 +343,19 @@ function DOM () {
                 var i = 0,
                     elements_length = elements.length;
 
-                for ( i; i < elements_length; i += 1 ) {
-                    var element = elements[ i ];
+                if ( elements_length === undefined ) {
+                    elements.appendChild( html );
+                }
 
-                    element.appendChild( html );
+                else {
+                    for ( i; i < elements_length; i += 1 ) {
+                        var element = elements[ i ];
+
+                        element.appendChild( html );
+                    }
                 }
             }
-            else if ( this.selecotr === 'id' ) {
+            else if ( this.selector === 'id' ) {
                 elements.appendChild( html );
             }
 
@@ -422,12 +435,28 @@ function DOM () {
     };
 
 
+    this.parent = function ( parent ) {
+        var element = this.elements;
+
+        this.elements = element.closest( parent );
+        
+        return this;
+    };
+
+
+    this.remove = function () {
+        var elements = this.elements;
+
+        elements.remove();
+    };
+
+
     /**
      * Save the duplicated element to a property.
      */
     this.clone = function ( index, callback ) {
-        var elements = this.findProperty.elements === undefined ? this.elements : this.findProperty.elements,
-            selector = this.findProperty.selector === undefined ? this.selector : this.findProperty.selector;
+        var elements = this.elements,
+            selector = this.selector;
 
         if ( selector === 'class' ) {
 
@@ -483,10 +512,7 @@ function DOM () {
 
         var children = element.querySelectorAll( children );
 
-        // this.elements = children;
-
-        this.findProperty.elements = children;
-        this.findProperty.selector = 'class';
+        this.elements = children;
 
         return this;
     };

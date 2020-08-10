@@ -36,11 +36,13 @@
                             <div class="inline right">
                                 <p class="inline">
                                     <input type="text" name="kg" class="set-kg input" value=""><label for="kg">Kg</label>
-                                </p><!-- //.inline -->
+                                </p>
                                 <p class="inline">
                                     <input type="text" name="reps" class="set-reps input" value=""><label for="reps">Reps</label>
-                                </p><!-- //.inline -->
-                                
+                                </p>
+                                <p class="inline remove-container">
+                                    
+                                </p>
                             </div><!-- //.inline .right -->
                         </div><!-- //.set -->
                     </div><!-- //.set-container -->
@@ -91,6 +93,31 @@
 
                     element.querySelector( '[name=kg]' ).value = $( '.set-kg' ).last().value();
                     element.querySelector( '[name=reps]' ).value = $( '.set-reps' ).last().value();
+
+                    // Create remove button.
+                    var removeButton = document.createElement( 'button' );
+
+                    removeButton.classList.add( 'remove' );
+                    removeButton.classList.add( 'button' );
+
+                    //Remove button add event to click.
+                    removeButton.addEventListener( 'click', function () {
+                        $( this ).parent( '.create-set' ).remove();
+
+                        var setCount = $( '.set-count' ).elements,
+                            setCount_length = setCount.length,
+                            i = 0;
+
+                        for ( i; i < setCount_length; i += 1 ) {
+                            var item = setCount[ i ];
+
+                            item.innerText = String( i + 1 ) + ' Set';
+                        }
+
+                        set_count = $( '.set-count' ).elements.length;
+                    } );
+
+                    $( element.querySelector( '.remove-container' ) ).add( removeButton );
                 };
 
                 set_count += 1;
@@ -100,36 +127,19 @@
                     .appendTo( '.set-container' );
             } );
 
+
             // Create routine form.
             $( '#create' ).submit( function () {
-                var formData = $( this ).formData(),
-                    callback = function ( element ) {
-
-                        var itemCallback = function ( element ) {
-                            $( element );
-
-                            for ( var i = 0; i < formData.kg.length; i += 1 ) {
-                                var kg = formData.kg[ i ],
-                                    reps = formData.reps[ i ];
-
-                                _$.find( '.sets-data' ).text( String( i + 1 ) + 'Set' );
-                                _$.find( '.kg-data' ).text( String( kg ) + 'Set' );
-                                _$.find( '.reps-data' ).text( String( reps ) + 'Set' );
-                            }
-                        };
-
-                        element.classList.remove( 'hidden' );
-
-                        $( element );
-
-                        _$.find( '.exercise-name' ).text( formData.exercise );
-
-                        _$.find( '.exercise-sets-item' ).clone( 0, itemCallback );
-                        _$.appendTo( '.exercise-sets-list' );
-                    };
+                var formData = $( this ).formData();
 
                 $( '.exercise-item' )
-                    .clone( 0, callback )
+                    .clone( 0, function ( element ) {
+                        element.classList.remove( 'hidden' );
+
+                        // element.querySelector( '.exercise-name' ).innerText = formData.exercise;
+                        $( element ).find( '.exercise-name' ).text( formData.exercise );
+                        // $( element ).find( '.set-kg' )
+                    } )
                     .appendTo( '.exercise-list' );
             } );
 
