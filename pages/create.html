@@ -64,7 +64,7 @@
                 <li class="exercise item hidden exercise-item">
                     <h4 class="exercise name exercise-name"></h4>
                     <ul class="exercise sets exercise-sets-list">
-                        <li class="exercise set exercise-sets-item">
+                        <li class="exercise set exercise-sets-item hidden">
                             <span class="sets-data"></span>
                             <span class="kg-data"></span>
                             <span class="reps-data"></span>
@@ -134,11 +134,28 @@
 
                 $( '.exercise-item' )
                     .clone( 0, function ( element ) {
+                        var i = 0;
+
+                        // element is exercise-item.
                         element.classList.remove( 'hidden' );
 
-                        // element.querySelector( '.exercise-name' ).innerText = formData.exercise;
                         $( element ).find( '.exercise-name' ).text( formData.exercise );
-                        // $( element ).find( '.set-kg' )
+
+                        for ( i in formData.kg ) {
+                            var kg = String( formData.kg[ i ] ),
+                                reps = String( formData.reps[ i ] ),
+                                set = Number( i ) + 1;
+
+                            var item = element.querySelector( '.exercise-sets-item' ).cloneNode( true );
+
+                            item.classList.remove( 'hidden' );
+
+                            item.querySelector( '.sets-data' ).innerText = set + 'SET';
+                            item.querySelector( '.kg-data' ).innerText = kg + 'Kg';
+                            item.querySelector( '.reps-data' ).innerText = reps + 'Reps';
+
+                            element.querySelector( '.exercise-sets-list' ).appendChild( item );
+                        }
                     } )
                     .appendTo( '.exercise-list' );
             } );
