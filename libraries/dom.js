@@ -526,26 +526,6 @@ function DOM () {
             isModal = this._$( '.modal' ).elements.length === 0 ? undefined : this._$( '.modal' ).elements;
 
         if ( typeof isModal === 'object' ) {
-            var _this = this;
-
-            // Activate modal when an event(Click) occurs.
-            this._$( modalEventlistener ).click( function () {
-                var dataEntries = Object.entries( this.dataset );
-
-                // Set input by modal
-                for ( const [ key, value ] of dataEntries ) {
-                    _this._$( '#' + key ).value( value );
-                }
-
-                // Display modal
-                _this._$( '.modal' ).display( 'block' );
-            } );
-
-            // 클릭 이벤트에서 이미 .modal객체를 elements로 할당했기 때문에 _this로 사용
-            this._$( '.close' ).click( function () {
-                _this.display( 'none' );
-            } );
-
         }
         else if ( typeof isModal === 'undefined' ) console.log( 'DOM.js Error: Modal is not undefined.' );
     };
