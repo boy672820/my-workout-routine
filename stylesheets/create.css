@@ -41,5 +41,16 @@
     margin: 5px 0;
 }
 .exercise.item {
+    position: relative;
     padding-bottom: 15px;
+}
+.remove.exercise.set {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0;
+}
+.remove.exercise.set:before {
+    content: "X";
+    font-size: 12px;
 }

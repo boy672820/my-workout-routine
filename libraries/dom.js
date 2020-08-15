@@ -536,7 +536,7 @@ function DOM () {
                 for ( const [ key, value ] of dataEntries ) {
                     _this._$( '#' + key ).value( value );
                 }
-                
+
                 // Display modal
                 _this._$( '.modal' ).display( 'block' );
             } );

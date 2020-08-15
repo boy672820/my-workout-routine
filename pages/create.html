@@ -70,7 +70,10 @@
                             <span class="reps-data"></span>
                         </li>
                     </ul>
-                </li>
+                    <p>
+                        <button class="remove exercise set remove-exercise-item">close</button>
+                    </p>
+                </li><!-- .exercise.item.hidden.exercise-item -->
             </ul><!-- //.exercise.routine -->
 
         </div><!-- //.list-container -->
@@ -150,15 +153,21 @@
 
                             item.classList.remove( 'hidden' );
 
-                            item.querySelector( '.sets-data' ).innerText = set + 'SET';
-                            item.querySelector( '.kg-data' ).innerText = kg + 'Kg';
-                            item.querySelector( '.reps-data' ).innerText = reps + 'Reps';
+                            $( item ).find( '.sets-data' ).text( set + 'SET' );
+                            $( item ).find( '.kg-data' ).text( kg + 'Kg' );
+                            $( item ).find( '.reps-data' ).text( reps + 'Reps' );
 
-                            element.querySelector( '.exercise-sets-list' ).appendChild( item );
+                            $( element ).find( '.exercise-sets-list' ).add( item );
                         }
+
+                        // Remove exercise.
+                        $( element ).find( '.remove-exercise-item' ).click( function () {
+                            $( this ).parent( '.exercise-item' ).remove();
+                        } );
                     } )
                     .appendTo( '.exercise-list' );
             } );
+
 
         } )( dom, _dom );
     </script>
