@@ -205,10 +205,17 @@
     <script>
         ( function ( $ ) {
 
-            // $( '.modal' ).display( 'none' );
+            $( '.init-current-set' ).modal( function () {
 
-            $( '.init-current-set' ).modal();
+                var exerciseEntries = Object.entries( this.dataset );
 
+                for ( const [ key, value ] of exerciseEntries ) {
+                    $( '#' + key ).value( value );
+                }
+            } );
+
+
+            // Form submit.
             $( '#form-set' ).submit( function () {
 
                 var data = $( this ).formData();

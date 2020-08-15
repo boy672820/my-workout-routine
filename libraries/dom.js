@@ -395,23 +395,23 @@ function DOM () {
                 var parents = _this.elements,
 
                     appendElement = function ( parent ) {
-                    var elements = domProperties.elements;
+                        var elements = domProperties.elements;
 
-                    if ( domProperties.selector === 'class' ) {
-                        var i = 0,
-                            elements_length = elements.length;
+                        if ( domProperties.selector === 'class' ) {
+                            var i = 0,
+                                elements_length = elements.length;
 
-                        for ( i; i < elements_length; i += 1) {
-                            var element = elements[ i ];
+                            for ( i; i < elements_length; i += 1) {
+                                var element = elements[ i ];
 
-                            parent.appendChild( element );
+                                parent.appendChild( element );
+                            }
                         }
-                    }
 
-                    else if ( domProperties.selector === 'id' ) {
-                        parent.appendChild( elements );
-                    }
-                };
+                        else if ( domProperties.selector === 'id' ) {
+                            parent.appendChild( elements );
+                        }
+                    };
 
                 if ( _this.selector === 'class' ) {
                     var i = 0,
@@ -521,15 +521,15 @@ function DOM () {
     /**
      * Modal UI
      */
-    this.modal = function () {
+    this.modal = function ( callback ) {
         var modalEventListener = this.elements,
             modal = document.getElementsByClassName( 'modal' )[ 0 ],
             closeButton = document.getElementsByClassName( 'close-modal' )[ 0 ];
 
         this._applyElements( 'addEventListener', 'click', function () {
-
             modal.style.display = 'block';
 
+            if ( callback != null ) callback.apply( this );
         } );
 
         closeButton.addEventListener( 'click', function () {
