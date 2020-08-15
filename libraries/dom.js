@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * 
+ * DOM HTMLCollection function.
  * @param {Object(HTML Element)} nodes 
  */
 function DOM_HTMLCollection ( nodes ) {
@@ -522,12 +522,19 @@ function DOM () {
      * Modal UI
      */
     this.modal = function () {
-        var modalEventlistener = this.elements,
-            isModal = this._$( '.modal' ).elements.length === 0 ? undefined : this._$( '.modal' ).elements;
+        var modalEventListener = this.elements,
+            modal = document.getElementsByClassName( 'modal' )[ 0 ],
+            closeButton = document.getElementsByClassName( 'close-modal' )[ 0 ];
 
-        if ( typeof isModal === 'object' ) {
-        }
-        else if ( typeof isModal === 'undefined' ) console.log( 'DOM.js Error: Modal is not undefined.' );
+        this._applyElements( 'addEventListener', 'click', function () {
+
+            modal.style.display = 'block';
+
+        } );
+
+        closeButton.addEventListener( 'click', function () {
+            modal.style.display = 'none';
+        } );
     };
 
 };
