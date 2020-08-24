@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import './stylesheets/calendar.css'
+import './calendar.css'
 
 const Month = () => {
     return (

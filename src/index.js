@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import './stylesheets/normalize.minify.css'
-import './stylesheets/common.css'
+import './common/normalize.minify.css'
+import './common/common.css'
 
 ReactDOM.render( <App />, document.getElementById( 'root' ) )
