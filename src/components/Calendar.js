@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import './calendar.css'
 
+
 const Month = () => {
     return (
         <h1 className="month">7월</h1>
@@ -24,70 +25,46 @@ const TableHeader = () => {
 }
 
 const TableBody = () => {
+    const init = {
+        month: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+        day: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
+        today: new Date()
+    }
+
+    let rows = [],
+        i = 1;
+
+    for ( i; i <= init.today.getDate(); i += 1 ) {
+        let last_week = 7;
+
+        if ( i === last_week ) {
+        }
+    }
+
     return (
         <tbody className="days">
-            <tr>
-                <td className="day sunday">1</td>
-                <td className="day">2</td>
-                <td className="day">3</td>
-                <td className="day">4</td>
-                <td className="day">5</td>
-                <td className="day">6</td>
-                <td className="day saturday">7</td>
-            </tr>
-            <tr>
-                <td className="day sunday">8</td>
-                <td className="day">9</td>
-                <td className="day">10</td>
-                <td className="day">11</td>
-                <td className="day">12</td>
-                <td className="day">13</td>
-                <td className="day saturday">14</td>
-            </tr>
-            <tr>
-                <td className="day sunday">15</td>
-                <td className="day">16</td>
-                <td className="day">17</td>
-                <td className="day">18</td>
-                <td className="day">19</td>
-                <td className="day">20</td>
-                <td className="day saturday">21</td>
-            </tr>
-            <tr>
-                <td className="day sunday">22</td>
-                <td className="day">23</td>
-                <td className="day">24</td>
-                <td className="day">25</td>
-                <td className="day">26</td>
-                <td className="day">27</td>
-                <td className="day saturday">28</td>
-            </tr>
-            <tr>
-                <td className="day sunday">29</td>
-                <td className="day">30</td>
-                <td className="day">31</td>
-            </tr>
+            {rows}
         </tbody>
     )
 }
 
 const Calendar = () => {
-        return (
+    return (
 
-            <div className="calendar_wrap">
+        <div className="calendar_wrap">
 
-                <Month />
+            <Month />
 
-                <table className="calendar">
+            <table className="calendar">
 
-                    <TableHeader />
-                    <TableBody />
+                <TableHeader />
+                <TableBody />
 
-                </table>
+            </table>
 
-            </div>
+        </div>
 
-        )
+    )
 }
 
 export default Calendar
