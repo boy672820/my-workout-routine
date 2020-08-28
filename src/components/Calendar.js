@@ -2,9 +2,16 @@ import React, {Component} from 'react'
 import './calendar.css'
 
 
+const init = {
+    month: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+    day: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
+    today: new Date()
+}
+
+
 const Month = () => {
     return (
-        <h1 className="month">7월</h1>
+        <h1 className="month">{init.today.getMonth() + 1}월</h1>
     )
 }
 
@@ -25,21 +32,13 @@ const TableHeader = () => {
 }
 
 const TableBody = () => {
-    const init = {
-        month: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
-        day: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
-        today: new Date()
-    }
 
-    let rows = [],
-        i = 1;
+    // let rows = [],
+    //     new Date( init.today.getUTCFullYear(), init.today.getUTCMonth(), 1 ).getDay() - 1,
+    //     total_date = new Date( init.today.getUTCFullYear(), init.today.getUTCMonth(), 0 ).getUTCDate() + 1
 
-    for ( i; i <= init.today.getDate(); i += 1 ) {
-        let last_week = 7;
-
-        if ( i === last_week ) {
-        }
-    }
+    // for ( i; i <= total_date; i += 1, loop_count += 1 ) {
+    // }
 
     return (
         <tbody className="days">
