@@ -35,7 +35,7 @@ const CalendarDays = ( props ) => {
     return (
         props.items.map(
             ( item, index ) => {
-                return <td key={index}>{item === 0 ? '' : item}</td>
+                return <td className="day" key={index}>{item === 0 ? '' : item}</td>
             }
         )
     )
@@ -67,6 +67,7 @@ const TableBody = () => {
     calendar_total_date = calendar_total_date / 7
     calendar_total_date = Math.ceil( calendar_total_date )
 
+    // Create week rows to calendarData.
     for ( let i = 0; i < calendar_total_date; i += 1 ) {
         calendarData.push( new Array() )
     }
@@ -106,13 +107,18 @@ const TableBody = () => {
 }
 
 const Calendar = () => {
+
+    const style = {
+        height: window.screen.height - 100
+    }
+
     return (
 
         <div className="calendar_wrap">
 
             <Month />
 
-            <table className="calendar">
+            <table className="calendar" style={style}>
 
                 <TableHeader />
                 <TableBody />
