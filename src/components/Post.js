@@ -1,21 +1,32 @@
 import React, {Component} from 'react'
+import Modal from './Modal'
 import './post.css'
 
 const ExerciseSet = ( props ) => {
-    return props.set.map( ( row, index ) => {
-        return (
-            <li className="set">
-                <p className="reps"><span className="1set-squat-reps">10</span>Reps</p>
-                <p className="weight"><span className="1set-squat-weight">150</span>Kg</p>
-                <button className="init-current-set 1set-squat-init hidden">1세트 수정</button>
-            </li>
-        )
-    } )
+
+    const displayModal = () => {
+        document.getElementById( 'modal' ).style.display = 'block'
+    }
+
+    return props.set.map(
+        ( row, index ) => {
+
+            return (
+                <li className="set">
+                    <p className="reps"><span>{row.reps}</span>Reps</p>
+                    <p className="weight"><span>{row.weight}</span>Kg</p>
+                    <button onClick={displayModal}>1세트 수정</button>
+                </li>
+            )
+
+        }
+    )
 }
 
 const ExerciseItem = ( props ) => {
     return props.data.map(
         ( row, index ) => {
+
             return (
                 <li className="item" key={index}>
                     <div className="main">
@@ -30,15 +41,15 @@ const ExerciseItem = ( props ) => {
                     </div>
                 </li>
             )
+
         }
     )
 }
 
 class Post extends Component {
 
-    render() {
-
-        const data = [
+    state = {
+        routine: [
             {
                 exercise: 'Squat',
                 sets: [
@@ -68,12 +79,19 @@ class Post extends Component {
                 memo: 'Stop set.'
             },
         ]
+    }
+
+    render() {
+        const { routine } = this.state
     
         return (
-            <div>
+            <div className="post-container">
                 <ul className="list">
-                    <ExerciseItem data={data} />
+                    <ExerciseItem data={routine} />
                 </ul>
+
+                <Modal />
+
             </div>
         )
     }
