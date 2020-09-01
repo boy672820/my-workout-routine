@@ -2,20 +2,16 @@ import React, {Component} from 'react'
 import Modal from './Modal'
 import './post.css'
 
-const ExerciseSet = ( props ) => {
+const ExerciseSet = ( { sets, isModal } ) => {
 
-    const displayModal = () => {
-        document.getElementById( 'modal' ).style.display = 'block'
-    }
-
-    return props.set.map(
+    return sets.map(
         ( row, index ) => {
 
             return (
-                <li className="set">
+                <li className="set" key={index}>
                     <p className="reps"><span>{row.reps}</span>Reps</p>
                     <p className="weight"><span>{row.weight}</span>Kg</p>
-                    <button onClick={displayModal}>1세트 수정</button>
+                    <button onClick={isModal} data-reps={row.reps} data-weight={row.weight}>1세트 수정</button>
                 </li>
             )
 
@@ -23,8 +19,8 @@ const ExerciseSet = ( props ) => {
     )
 }
 
-const ExerciseItem = ( props ) => {
-    return props.data.map(
+const ExerciseItem = ( { data, isModal } ) => {
+    return data.map(
         ( row, index ) => {
 
             return (
@@ -32,12 +28,12 @@ const ExerciseItem = ( props ) => {
                     <div className="main">
                         <h6 className="excercise">{row.exercise}</h6>
                         <ul className="sets">
-                            <ExerciseSet set={row.sets} />
+                            <ExerciseSet sets={row.sets} isModal={isModal} />
                         </ul>
                     </div>
 
                     <div className="sub">
-                        <textarea name="memo" className="memo">{row.memo}</textarea>
+                        <textarea name="memo" className="memo" defaultValue={row.memo} />
                     </div>
                 </li>
             )
@@ -78,7 +74,26 @@ class Post extends Component {
                 ],
                 memo: 'Stop set.'
             },
-        ]
+        ],
+
+        modalDisplay: false,
+
+        formData: {
+            reps: '',
+            weight: ''
+        }
+    }
+
+    isModal = ( e ) => {
+        const { reps, weight } = e.target.dataset
+
+        this.setState( {
+            modalDisplay: this.state.modalDisplay ? false : true,
+            formData: {
+                reps: reps,
+                weight: weight
+            }
+        } )
     }
 
     render() {
@@ -87,10 +102,10 @@ class Post extends Component {
         return (
             <div className="post-container">
                 <ul className="list">
-                    <ExerciseItem data={routine} />
+                    <ExerciseItem data={routine} isModal={this.isModal} />
                 </ul>
 
-                <Modal />
+                <Modal display={this.state.modalDisplay} isModal={this.isModal} formData={this.state.formData} />
 
             </div>
         )
