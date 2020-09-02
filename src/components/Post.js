@@ -11,7 +11,7 @@ const ExerciseSet = ( { sets, isModal } ) => {
                 <li className="set" key={index}>
                     <p className="reps"><span>{row.reps}</span>Reps</p>
                     <p className="weight"><span>{row.weight}</span>Kg</p>
-                    <button onClick={isModal} data-reps={row.reps} data-weight={row.weight}>1세트 수정</button>
+                    <button onClick={isModal} data-reps={row.reps} data-weight={row.weight} data-keep={true}>1세트 수정</button>
                 </li>
             )
 
@@ -85,10 +85,14 @@ class Post extends Component {
     }
 
     isModal = ( e ) => {
-        const { reps, weight } = e.target.dataset
+        const { reps, weight, keep } = e.target.dataset
+        
+        let modalDisplay = this.state.modalDisplay ? false : true
+
+        if ( keep ) modalDisplay = true
 
         this.setState( {
-            modalDisplay: this.state.modalDisplay ? false : true,
+            modalDisplay: modalDisplay,
             formData: {
                 reps: reps,
                 weight: weight
@@ -105,7 +109,7 @@ class Post extends Component {
                     <ExerciseItem data={routine} isModal={this.isModal} />
                 </ul>
 
-                <Modal display={this.state.modalDisplay} isModal={this.isModal} formData={this.state.formData} />
+                <Modal display={this.state.modalDisplay} formData={this.state.formData} isModal={this.isModal} />
 
             </div>
         )
