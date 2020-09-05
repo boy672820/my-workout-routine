@@ -14,15 +14,11 @@ class Modal extends Component {
     submitForm = ( e ) => {
         e.preventDefault()
 
-        this.setState( {
-            index: this.props.formData.index,
-            set: this.props.formData.set,
-        } )
-
         this.props.handleSubmit( this.state )
     }
 
     render() {
+
         const style = {
             display: this.props.display ? 'block' : 'none'
         }
