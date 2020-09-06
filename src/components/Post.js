@@ -36,127 +36,124 @@ const ROUTINES = [
     },
 ]
 
-const ExerciseSet = ( { sets, index, isModal } ) => {
-
-    return(
-        <ul className="sets">
-        {
-            sets.map(
-                ( row, i ) => {
-
-                    return (
-                        <li className="set" key={i}>
-                            <p className="reps"><span>{row.reps}</span>Reps</p>
-                            <p className="weight"><span>{row.weight}</span>Kg</p>
-                            <button
-                                onClick={isModal}
-                                data-index={index}
-                                data-set={row.set}
-                                data-reps={row.reps}
-                                data-weight={row.weight}
-                                data-keep={true}>1세트 수정</button>
-                        </li>
-                    )
-
-                }
-            )
-        }
-        </ul>
-    )
-}
-
-const ExerciseItem = ( { data, isModal } ) => {
-    return (
-        <ul className="list">
-        {
-            data.map(
-                ( row, index ) => {
-
-                    return (
-                        <li className="item" key={index}>
-                            <div className="main">
-                                <h6 className="excercise">{row.exercise}</h6>
-
-                                <ExerciseSet
-                                    sets={row.sets}
-                                    index={row.index}
-                                    isModal={isModal} />
-
-                            </div>
-
-                            <div className="sub">
-                                <textarea name="memo" className="memo" defaultValue={row.memo} />
-                            </div>
-                        </li>
-                    )
-
-                }
-            )
-        }
-        </ul>
-    )
-}
 
 class Post extends Component {
 
     state = {
         JSON: ROUTINES,
-
-        modalDisplay: false,
-
-        formData: {
-            index: undefined,
-            set: undefined,
-            reps: undefined,
-            weight: undefined
+        modal_display: false,
+        editSetData: {
+            reps: 0,
+            weight: 0,
         }
     }
 
-    // Modal activate.
-    isModal = ( e ) => {
-        const { index, set, reps, weight, keep } = e.target.dataset
-
-        let modalDisplay = this.state.modalDisplay ? false : true
-
-        if ( keep ) modalDisplay = true
+    editSet = ( e ) => {
+        const { reps, weight } = e.target.dataset
 
         this.setState( {
-            modalDisplay: modalDisplay,
-            formData: {
-                index: index,
-                set: set,
+            modal_display: true,
+            editSetData: {
                 reps: reps,
-                weight: weight
+                weight: weight,
             }
         } )
     }
 
-    handleSubmit = ( data ) => {
-        const { reps, weight } = data
+    ExerciseSet = ( {sets } ) => {
+        return(
+            <ul className="sets">
+            {
+                sets.map(
+                    ( row, i ) => {
+    
+                        return (
+                            <li className="set" key={i}>
+                                <p className="reps"><span>{row.reps}</span>Reps</p>
+                                <p className="weight"><span>{row.weight}</span>Kg</p>
+                                <button
+                                    onClick={this.editSet}
+                                    data-reps={row.reps}
+                                    data-weight={row.weight}>1세트 수정</button>
+                            </li>
+                        )
+    
+                    }
+                )
+            }
+            </ul>
+        )
+    }
 
-        const { JSON, formData } = this.state
+    ExerciseItem = ( { data } ) => {
+        return (
+            <ul className="list">
+            {
+                data.map(
+                    ( row, index ) => {
+    
+                        return (
+                            <li className="item" key={index}>
+                                <div className="main">
+                                    <h6 className="excercise">{row.exercise}</h6>
+    
+                                    <this.ExerciseSet
+                                        sets={row.sets} />
+    
+                                </div>
+    
+                                <div className="sub">
+                                    <textarea name="memo" className="memo" defaultValue={row.memo} />
+                                </div>
+                            </li>
+                        )
+    
+                    }
+                )
+            }
+            </ul>
+        )
+    }
 
-        JSON[ formData.index - 1 ].sets[ formData.set - 1 ].reps = parseInt( data.reps )
-        JSON[ formData.index - 1 ].sets[ formData.set - 1 ].weight = parseInt( data.weight )
+    Form = ( { data } ) => {
 
-        // Modal display none.
-        this.setState( {
-            JSON: JSON,
-            modalDisplay: false,
-        } )
+        const closeModal = () => {
+            this.setState( {
+                modal_display: false
+            } )
+        }
+
+        return (
+            <div className="form-container">
+                <form action="#" method="post" id="form-set">
+                    <fieldset>
+                        <p>
+                            <label htmlFor="reps">Reps</label>
+                            <input type="text" name="reps" id="reps" defaultValue={data.reps} />
+                        </p>
+                        <p>
+                            <label htmlFor="weight">Weight</label>
+                            <input type="text" name="weight" id="weight" defaultValue={data.weight} />
+                        </p>
+                        <button type="submit">update</button>
+                    </fieldset>
+                </form>
+                <p className="close">
+                    <button className="close-modal" onClick={closeModal}>Close</button>
+                </p>
+            </div>
+        )
     }
 
     render() {
         return (
             <div className="post-container">
 
-                <ExerciseItem data={this.state.JSON} isModal={this.isModal} />
+                <this.ExerciseItem data={this.state.JSON} />
 
-                <Modal
-                    display={this.state.modalDisplay}
-                    isModal={this.isModal}
-                    formData={this.state.formData}
-                    handleSubmit={this.handleSubmit} />
+                <Modal display={this.state.modal_display}>
+                    <this.Form data={this.state.editSetData} />
+                </Modal>
 
             </div>
         )
