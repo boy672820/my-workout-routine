@@ -37,15 +37,58 @@ const ROUTINES = [
 ]
 
 
+class Form extends Component {
+
+    state = {
+        reps: 0,
+        weight: 0,
+    }
+
+    handleChange = ( e ) => {
+        const { name, value } = e.target
+
+        this.setState( {
+            [ name ]: value
+        } )
+    }
+
+    render() {
+        const { reps, weight } = this.props
+
+        console.log( reps, weight )
+
+        return (
+            <div className="form-container">
+                <form action="#" method="post" id="form-set">
+                    <fieldset>
+                        <p>
+                            <label htmlFor="reps">Reps</label>
+                            <input type="text" name="reps" id="reps" value={this.state.reps} onChange={this.handleChange} />
+                        </p>
+                        <p>
+                            <label htmlFor="weight">Weight</label>
+                            <input type="text" name="weight" id="weight" value={this.state.weight} onChange={this.handleChange} />
+                        </p>
+                        <button type="submit">update</button>
+                    </fieldset>
+                </form>
+                <p className="close">
+                    <button className="close-modal">Close</button>
+                </p>
+            </div>
+        )
+    }
+}
+
+
 class Post extends Component {
 
     state = {
         JSON: ROUTINES,
+
         modal_display: false,
-        editSetData: {
-            reps: 0,
-            weight: 0,
-        }
+
+        formData: { reps: 0, weight: 0, }
     }
 
     editSet = ( e ) => {
@@ -53,10 +96,7 @@ class Post extends Component {
 
         this.setState( {
             modal_display: true,
-            editSetData: {
-                reps: reps,
-                weight: weight,
-            }
+            formData: { reps: reps, weight: weight }
         } )
     }
 
@@ -115,36 +155,6 @@ class Post extends Component {
         )
     }
 
-    Form = ( { data } ) => {
-
-        const closeModal = () => {
-            this.setState( {
-                modal_display: false
-            } )
-        }
-
-        return (
-            <div className="form-container">
-                <form action="#" method="post" id="form-set">
-                    <fieldset>
-                        <p>
-                            <label htmlFor="reps">Reps</label>
-                            <input type="text" name="reps" id="reps" defaultValue={data.reps} />
-                        </p>
-                        <p>
-                            <label htmlFor="weight">Weight</label>
-                            <input type="text" name="weight" id="weight" defaultValue={data.weight} />
-                        </p>
-                        <button type="submit">update</button>
-                    </fieldset>
-                </form>
-                <p className="close">
-                    <button className="close-modal" onClick={closeModal}>Close</button>
-                </p>
-            </div>
-        )
-    }
-
     render() {
         return (
             <div className="post-container">
@@ -152,7 +162,7 @@ class Post extends Component {
                 <this.ExerciseItem data={this.state.JSON} />
 
                 <Modal display={this.state.modal_display}>
-                    <this.Form data={this.state.editSetData} />
+                    <Form data={this.state.formData} />
                 </Modal>
 
             </div>
