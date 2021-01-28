@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import Post from './components/Post'
+import Create from './components/Create/Create'
 
 class App extends Component {
     render() {
         return (
             <div className="container">
-                <Post />
+                <Create />
             </div>
         )
     }

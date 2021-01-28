@@ -8,3 +8,12 @@
 fieldset {
     padding: 0;
 }
+
+.container {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text.align.center {
+    text-align: center;
+}
