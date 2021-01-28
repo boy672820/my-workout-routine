@@ -8,35 +8,57 @@ import {
 class RepsControl extends Component {
 
     state = {
-        disableRange: true,
-        defaultReps: 1,
-        maxReps: 0
+        disableRange: this.props.defaultValue.disableRange,
+        reps: this.props.defaultValue.reps,
+        maxReps: this.props.defaultValue.maxReps
     }
 
-    handleDefaultReps = ( e ) => {
+    handleReps = ( e ) => {
         const value = Number( e.target.value ),
-              update = { defaultReps: value }
+              update = { reps: value }
 
-        if ( value >= this.state.maxReps ) update[ 'maxReps' ] = value + 2
+        // When reps is higher than the maxReps.
+        if ( value >= this.state.maxReps )
+            update[ 'maxReps' ] = value + 2
 
+        // Update current state.
         this.setState( update )
+
+        // Update parent state.
+        this.props.handleChild( update )
     }
 
     handleMaxReps = ( e ) => {
-        const value = Number( e.target.value )
+        const value = Number( e.target.value ),
+              update = { maxReps: value }
 
-        this.setState( {
-            maxReps: value
-        } )
+        // When reps is higher than the maxReps.
+        if ( value <= this.state.reps )
+            update[ 'reps' ] = value - 2
+
+        // Update current state.
+        this.setState( update )
+
+        // Update parent state.
+        this.props.handleChild( update )
     }
 
     handleCheckbox = ( e ) => {
-        const checked = e.target.checked
+        const checked = e.target.checked,
+              update = { disableRange: !checked }
 
-        this.setState( {
-            disableRange: !checked,
-            maxReps: ( this.state.defaultReps + 2 )
-        } )
+        // When reps is higher than the maxReps.
+        if ( this.state.reps >= this.state.maxReps )
+            update[ 'maxReps' ] = this.state.reps + 2
+
+        // Update current state.
+        this.setState( update )
+
+        /**
+         * Update current state.
+         * If not checked, returns 0.
+         */
+        this.props.handleChild( update )
     }
 
     render() {
@@ -48,7 +70,7 @@ class RepsControl extends Component {
                 <Form.Row className="align-items-center">
 
                     <Col xs="auto">
-                        <Form.Control as="select" name="defaultReps" id="defaultReps" onChange={this.handleDefaultReps}>
+                        <Form.Control as="select" name="reps" id="reps" onChange={this.handleReps} value={this.state.reps}>
                             {[...Array(100)].map((n, index) => {
                                 return (
                                     <option key={index}>{index + 1}</option>

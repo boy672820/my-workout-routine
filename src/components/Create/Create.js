@@ -7,6 +7,7 @@ import {
     Container
 } from 'react-bootstrap'
 
+import ExerciseControl from './ExerciseControl'
 import WeightControl from './WeightControl'
 import SetsControl from './SetsControl'
 import RepsControl from './RepsControl'
@@ -18,8 +19,12 @@ class Create extends Component {
 
     
     state = {
+        exercise: '',
         weight: 10,
-        sets: 1
+        sets: 1,
+        reps: 1,
+        maxReps: 0,
+        disableRange: true
     }
 
 
@@ -46,16 +51,21 @@ class Create extends Component {
 
                             <Form>
 
-                                <Form.Group controlId="formBasicEmail">
-                                    <Form.Label>Exercise</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter exercise." />
-                                </Form.Group>
+                                <ExerciseControl defaultValue={this.state.exercise} handleChild={this.handleChild} />
 
                                 <WeightControl defaultValue={this.state.weight} handleChild={this.handleChild} />
 
                                 <SetsControl defaultValue={this.state.sets} handleChild={this.handleChild} />
 
-                                <RepsControl />
+                                <RepsControl
+                                    defaultValue={
+                                        {
+                                            reps: this.state.reps,
+                                            maxReps: this.state.maxReps,
+                                            disableRange: this.state.disableRange
+                                        }
+                                    }
+                                    handleChild={this.handleChild} />
 
                                 <Button variant="primary" type="submit">Submit</Button>
 

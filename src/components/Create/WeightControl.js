@@ -95,7 +95,7 @@ class WeightControl extends Component {
                 </InputGroup>
 
                 <Form.Text className="text-muted">
-                    숫자만 입력할 수 있습니다.
+                    Enter only numbers.
                 </Form.Text>
             </Form.Group>
 
