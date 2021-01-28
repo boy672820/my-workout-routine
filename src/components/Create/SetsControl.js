@@ -43,7 +43,7 @@ class SetsControl extends Component {
     render() {
         return (
             <Form.Group>
-                <Form.Label>Set</Form.Label>
+                <Form.Label htmlFor="set">Set</Form.Label>
                 
                 <InputGroup>
                     <InputGroup.Prepend>

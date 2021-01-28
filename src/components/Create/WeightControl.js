@@ -76,7 +76,7 @@ class WeightControl extends Component {
     render() {
         return (
             <Form.Group>
-                <Form.Label>Weight(kg)</Form.Label>
+                <Form.Label htmlFor="weight">Weight(kg)</Form.Label>
 
                 <Form.Group>
                     <this.RadioToggleButton />

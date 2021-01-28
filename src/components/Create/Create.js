@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
     Button,
     Form,
-    Col,
     Card,
     Table,
     Container
@@ -10,6 +9,7 @@ import {
 
 import WeightControl from './WeightControl'
 import SetsControl from './SetsControl'
+import RepsControl from './RepsControl'
 
 import './create.css'
 
@@ -55,34 +55,7 @@ class Create extends Component {
 
                                 <SetsControl defaultValue={this.state.sets} handleChild={this.handleChild} />
 
-                                <Form.Group>
-                                    <Form.Label>Reps</Form.Label>
-                                    <Form.Row className="align-items-center">
-                                        <Col xs="auto">
-                                            <Form.Control as="select">
-                                                {[...Array(100)].map((n, index) => {
-                                                    return (
-                                                        <option key={index}>{index + 1}</option>
-                                                    )
-                                                })}
-                                            </Form.Control>
-                                        </Col>
-
-                                        <Col xs="auto">
-                                            <Form.Check type="checkbox" label="Add range." />
-                                        </Col>
-
-                                        <Col xs="auto">
-                                            <Form.Control as="select">
-                                                {[...Array(100)].map((n, index) => {
-                                                    return (
-                                                        <option key={index}>{index + 1}</option>
-                                                    )
-                                                })}
-                                            </Form.Control>
-                                        </Col>
-                                    </Form.Row>
-                                </Form.Group>
+                                <RepsControl />
 
                                 <Button variant="primary" type="submit">Submit</Button>
 
