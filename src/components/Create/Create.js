@@ -2,37 +2,62 @@ import React, { Component } from 'react'
 import {
     Button,
     Form,
-    Card,
-    Table,
-    Container
+    Card
 } from 'react-bootstrap'
 
 import ExerciseControl from './ExerciseControl'
 import WeightControl from './WeightControl'
 import SetsControl from './SetsControl'
 import RepsControl from './RepsControl'
+import ExerciseList from './ExerciseList'
 
 import './create.css'
 
 
 class Create extends Component {
 
-    
+
     state = {
+        // The form data of create exercise.
         exercise: '',
         weight: 10,
         sets: 1,
         reps: 1,
         maxReps: 0,
-        disableRange: true
+        disableRange: true,
+        // The result list of create form.
+        exerciseList: []
     }
 
 
     /**
      * Control from child component.
+     * @param {Object} res
      */
     handleChild = ( res ) => {
         this.setState( res );
+    }
+
+
+    /**
+     * Handle submit.
+     * @param {*} e 
+     */
+    handleSubmit = ( e ) => {
+        const update = Object.assign( {}, this.state ) // Copy state object.
+
+        // Remove exerciseList element of update.
+        delete update.exerciseList
+
+        // Update this state.
+        this.setState( prevState => ( {
+            // Add element from exerciseList state.
+            exerciseList: [
+                ...prevState.exerciseList, update
+            ]
+        } ) )
+
+        e.preventDefault()
     }
 
 
@@ -49,7 +74,7 @@ class Create extends Component {
 
                             <h2>Create routine</h2>
 
-                            <Form>
+                            <Form onSubmit={this.handleSubmit}>
 
                                 <ExerciseControl defaultValue={this.state.exercise} handleChild={this.handleChild} />
 
@@ -75,211 +100,7 @@ class Create extends Component {
                     </Card>
                 </div>
 
-                <div className="container">
-
-                    <hr />
-
-                    <Container>
-
-                        <h3>Squat</h3>
-
-                        <Table className="exercise-volum-table" striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Preview</th>
-                                    <th>Set</th>
-                                    <th>weight(kg)</th>
-                                    <th>Reps</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1Set / 82.5kg / 8~10Reps</td>
-                                    <td>1</td>
-                                    <td>82.5</td>
-                                    <td>8~10</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>2Set / 82.5kg / 8~10Reps</td>
-                                    <td>2</td>
-                                    <td>82.5</td>
-                                    <td>8~10</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>3Set / 82.5kg / 8~10Reps</td>
-                                    <td>3</td>
-                                    <td>82.5</td>
-                                    <td>8~10</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                    </Container>
-
-                    <Container>
-
-                        <h3>Hip thrust</h3>
-
-                        <Table className="exercise-volum-table" striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Preview</th>
-                                    <th>Set</th>
-                                    <th>weight(kg)</th>
-                                    <th>Reps</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1Set / 50kg / 10~12Reps</td>
-                                    <td>1</td>
-                                    <td>50</td>
-                                    <td>10~12</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>2Set / 50kg / 10~12Reps</td>
-                                    <td>2</td>
-                                    <td>50</td>
-                                    <td>10~12</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>3Set / 50kg / 10~12Reps</td>
-                                    <td>3</td>
-                                    <td>50</td>
-                                    <td>10~12</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                    </Container>
-
-                    <Container>
-
-                        <h3>Leg curl</h3>
-
-                        <Table className="exercise-volum-table" striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Preview</th>
-                                    <th>Set</th>
-                                    <th>weight(kg)</th>
-                                    <th>Reps</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1Set / 45kg / 12~14Reps</td>
-                                    <td>1</td>
-                                    <td>45</td>
-                                    <td>12~14</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>2Set / 45kg / 12~14Reps</td>
-                                    <td>2</td>
-                                    <td>45</td>
-                                    <td>12~14</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>3Set / 45kg / 12~14Reps</td>
-                                    <td>3</td>
-                                    <td>45</td>
-                                    <td>12~14</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>4Set / 45kg / 12~14Reps</td>
-                                    <td>4</td>
-                                    <td>45</td>
-                                    <td>12~14</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                    </Container>
-
-                    <Container>
-
-                        <h3>Calves</h3>
-
-                        <Table className="exercise-volum-table" striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Preview</th>
-                                    <th>Set</th>
-                                    <th>weight(kg)</th>
-                                    <th>Reps</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1Set / 45kg / 13~15Reps</td>
-                                    <td>1</td>
-                                    <td>52.5</td>
-                                    <td>13~15</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>2Set / 45kg / 13~15Reps</td>
-                                    <td>2</td>
-                                    <td>52.5</td>
-                                    <td>13~15</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>3Set / 45kg / 13~15Reps</td>
-                                    <td>3</td>
-                                    <td>52.5</td>
-                                    <td>13~15</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>4Set / 45kg / 13~15Reps</td>
-                                    <td>4</td>
-                                    <td>52.5</td>
-                                    <td>13~15</td>
-                                    <td className="text align center"><Button variant="outline-danger" size="sm">X</Button></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                    </Container>
-
-                </div>
+                <ExerciseList data={this.state.exerciseList} />
 
             </div> //.create-container
 

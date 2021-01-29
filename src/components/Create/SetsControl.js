@@ -52,9 +52,9 @@ class SetsControl extends Component {
 
                     <Form.Control type="text" id="set" name="set" value={this.state.sets} onChange={this.handleChange} />
 
-                    <InputGroup.Prepend>
+                    <InputGroup.Append>
                         <Button variant="outline-secondary" data-calc={1} onClick={this.handleClick}>+</Button>
-                    </InputGroup.Prepend>
+                    </InputGroup.Append>
                 </InputGroup>
 
                 <Form.Text className="text-muted">
