@@ -87,7 +87,13 @@ class WeightControl extends Component {
                         <Button variant="outline-secondary" onClick={this.handleClick} data-calc={-1}>-</Button>
                     </InputGroup.Prepend>
 
-                    <Form.Control type="text" id="weight" name="weight" value={this.state.weight} onChange={this.handleChange} />
+                    <Form.Control
+                        type="text"
+                        id="weight"
+                        name="weight"
+                        value={this.state.weight}
+                        onChange={this.handleChange}
+                        ref={this.props.controlRef} />
 
                     <InputGroup.Append>
                         <Button variant="outline-secondary" onClick={this.handleClick} data-calc={1}>+</Button>

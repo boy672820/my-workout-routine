@@ -44,12 +44,11 @@ class ExerciseList extends Component {
                                 <tbody>
                                     {
                                         ( ( row ) => {
-                                            let result = []
-                                            let i = 0
+                                            let result = [], i = 0
 
                                             for ( i; i <= row.sets - 1; i += 1 ) {
                                                 result.push(
-                                                    <tr>
+                                                    <tr key={i}>
                                                         <td>
                                                             {i + 1}Set
                                                             &nbsp;/&nbsp;

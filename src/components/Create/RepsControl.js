@@ -17,6 +17,10 @@ class RepsControl extends Component {
         const value = Number( e.target.value ),
               update = { reps: value }
 
+        // Disable the range checkbox when Reps is the maximum.
+        if ( value <= 100 )
+            this.checkboxRef.disabled = true
+
         // When reps is higher than the maxReps.
         if ( value >= this.state.maxReps )
             update[ 'maxReps' ] = value + 2
@@ -70,7 +74,14 @@ class RepsControl extends Component {
                 <Form.Row className="align-items-center">
 
                     <Col xs="auto">
-                        <Form.Control as="select" name="reps" id="reps" onChange={this.handleReps} value={this.state.reps}>
+                        <Form.Control
+                            as="select"
+                            name="reps"
+                            id="reps"
+                            onChange={this.handleReps}
+                            value={this.state.reps}
+                            ref={this.props.controlRef}
+                        >
                             {[...Array(100)].map((n, index) => {
                                 return (
                                     <option key={index}>{index + 1}</option>
@@ -81,11 +92,24 @@ class RepsControl extends Component {
                     </Col>
 
                     <Col xs="auto">
-                        <Form.Check type="checkbox" id="rep-range-enable" label="Enable range." onChange={this.handleCheckbox} />
+                        <Form.Check
+                            type="checkbox"
+                            id="rep-range-enable"
+                            label="Enable range."
+                            onChange={this.handleCheckbox}
+                            ref={ ( ref ) => this.checkboxRef = ref }
+                        />
                     </Col>
 
                     <Col xs="auto">
-                        <Form.Control as="select" name="maxReps" id="maxReps" disabled={this.state.disableRange} onChange={this.handleMaxReps} value={this.state.maxReps}>
+                        <Form.Control
+                            as="select"
+                            name="maxReps"
+                            id="maxReps"
+                            disabled={this.state.disableRange}
+                            onChange={this.handleMaxReps}
+                            value={this.state.maxReps}
+                        >
                             {[...Array(100)].map((n, index) => {
                                 return (
                                     <option key={index}>{index + 1}</option>

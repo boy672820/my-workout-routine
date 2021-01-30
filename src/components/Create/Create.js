@@ -44,7 +44,13 @@ class Create extends Component {
      * @param {*} e 
      */
     handleSubmit = ( e ) => {
-        const update = Object.assign( {}, this.state ) // Copy state object.
+        e.preventDefault()
+
+        // Form validation.
+        if ( ! this.formValidation() ) return;
+
+        // Copy state object.
+        const update = Object.assign( {}, this.state )
 
         // Remove exerciseList element of update.
         delete update.exerciseList
@@ -56,8 +62,35 @@ class Create extends Component {
                 ...prevState.exerciseList, update
             ]
         } ) )
+    }
 
-        e.preventDefault()
+
+    /**
+     * Check form validation.
+     */
+    formValidation = () => {
+        const state = this.state
+
+        const targets = Object.entries( {
+                            exercise: this.exerciseRef,
+                            weight: this.weightRef,
+                            sets: this.setsRef,
+                            reps: this.repsRef,
+                        } )
+
+        let res = true
+
+        for ( const [ key, ref ] of targets ) {
+            const state_target = state[ key ]
+
+            if ( ! state_target ) {
+                ref.style.borderColor = 'red'
+                ref.placeholder = 'Please enter your ' + ref.title + '.'
+                res = false
+            }
+        }
+
+        return res
     }
 
 
@@ -76,11 +109,20 @@ class Create extends Component {
 
                             <Form onSubmit={this.handleSubmit}>
 
-                                <ExerciseControl defaultValue={this.state.exercise} handleChild={this.handleChild} />
+                                <ExerciseControl
+                                    defaultValue={this.state.exercise}
+                                    handleChild={this.handleChild}
+                                    controlRef={ ( ref ) => this.exerciseRef = ref } />
 
-                                <WeightControl defaultValue={this.state.weight} handleChild={this.handleChild} />
+                                <WeightControl
+                                    defaultValue={this.state.weight}
+                                    handleChild={this.handleChild}
+                                    controlRef={ ( ref ) => this.weightRef = ref } />
 
-                                <SetsControl defaultValue={this.state.sets} handleChild={this.handleChild} />
+                                <SetsControl
+                                    defaultValue={this.state.sets}
+                                    handleChild={this.handleChild}
+                                    controlRef={ ( ref ) => this.setsRef = ref } />
 
                                 <RepsControl
                                     defaultValue={
@@ -90,7 +132,8 @@ class Create extends Component {
                                             disableRange: this.state.disableRange
                                         }
                                     }
-                                    handleChild={this.handleChild} />
+                                    handleChild={this.handleChild}
+                                    controlRef={ ( ref ) => this.repsRef = ref } />
 
                                 <Button variant="primary" type="submit">Submit</Button>
 

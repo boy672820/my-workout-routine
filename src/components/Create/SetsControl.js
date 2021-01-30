@@ -50,7 +50,13 @@ class SetsControl extends Component {
                         <Button variant="outline-secondary" data-calc={-1} onClick={this.handleClick}>-</Button>
                     </InputGroup.Prepend>
 
-                    <Form.Control type="text" id="set" name="set" value={this.state.sets} onChange={this.handleChange} />
+                    <Form.Control
+                        type="text"
+                        id="set"
+                        name="set"
+                        value={this.state.sets}
+                        onChange={this.handleChange}
+                        ref={this.props.controlRef} />
 
                     <InputGroup.Append>
                         <Button variant="outline-secondary" data-calc={1} onClick={this.handleClick}>+</Button>

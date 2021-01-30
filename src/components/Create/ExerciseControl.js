@@ -20,12 +20,18 @@ class ExerciseControl extends Component {
             exercise: value
         } )
     }
-    
+
     render() {
         return (
             <Form.Group>
                 <Form.Label>Exercise</Form.Label>
-                <Form.Control type="text" placeholder="Enter exercise." onChange={this.handleChange} value={this.state.exercise} />
+                <Form.Control
+                    type="text"
+                    title="exercise"
+                    placeholder="Enter exercise."
+                    onChange={this.handleChange}
+                    value={this.state.exercise}
+                    ref={this.props.controlRef} />
             </Form.Group>
         )
     }
