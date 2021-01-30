@@ -17,13 +17,24 @@ class RepsControl extends Component {
         const value = Number( e.target.value ),
               update = { reps: value }
 
-        // Disable the range checkbox when Reps is the maximum.
-        if ( value <= 100 )
-            this.checkboxRef.disabled = true
+        // maxReps increase value.
+        let increase = 2
 
-        // When reps is higher than the maxReps.
-        if ( value >= this.state.maxReps )
-            update[ 'maxReps' ] = value + 2
+        switch ( value ) {
+            case 100:
+                increase = 0
+                break
+
+            case 99:
+                increase = 1
+                break
+
+            default:
+                increase = 2
+                break
+        }
+
+        update[ 'maxReps' ] = value + increase
 
         // Update current state.
         this.setState( update )
@@ -36,9 +47,24 @@ class RepsControl extends Component {
         const value = Number( e.target.value ),
               update = { maxReps: value }
 
-        // When reps is higher than the maxReps.
-        if ( value <= this.state.reps )
-            update[ 'reps' ] = value - 2
+        // reps decrease value.
+        let decrease = 2
+
+        switch ( value ) {
+            case 1:
+                decrease = 0
+                break
+
+            case 2:
+                decrease = 1
+                break
+
+            default:
+                decrease = 2
+                break
+        }
+    
+        update[ 'reps' ] = value - decrease
 
         // Update current state.
         this.setState( update )
@@ -50,10 +76,6 @@ class RepsControl extends Component {
     handleCheckbox = ( e ) => {
         const checked = e.target.checked,
               update = { disableRange: !checked }
-
-        // When reps is higher than the maxReps.
-        if ( this.state.reps >= this.state.maxReps )
-            update[ 'maxReps' ] = this.state.reps + 2
 
         // Update current state.
         this.setState( update )

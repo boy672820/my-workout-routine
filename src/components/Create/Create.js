@@ -71,6 +71,7 @@ class Create extends Component {
     formValidation = () => {
         const state = this.state
 
+        // Checked to be form controls.
         const targets = Object.entries( {
                             exercise: this.exerciseRef,
                             weight: this.weightRef,
@@ -78,19 +79,47 @@ class Create extends Component {
                             reps: this.repsRef,
                         } )
 
+        // Results of validation.
         let res = true
 
+        // Check form control in state.
         for ( const [ key, ref ] of targets ) {
             const state_target = state[ key ]
 
+            // Check null.
             if ( ! state_target ) {
-                ref.style.borderColor = 'red'
-                ref.placeholder = 'Please enter your ' + ref.title + '.'
+                const input = ref.querySelector( '#' + key ), // Form control.
+                      message = ref.querySelector( '#valid-' + key ) // Worning message.
+
+                input.style.borderColor = 'red'
+                message.style.display = 'block'
+
+                // Validation failed.
                 res = false
             }
         }
 
         return res
+    }
+
+
+    /**
+     * Dynamic validation.
+     * @param {*} key Ref prefix name.
+     * @param {*} value Value to check.
+     */
+    CheckedForm = ( key, value ) => {
+        // Check state.
+        if ( ! value ) return false
+
+        const ref = this[ key + 'Ref' ]
+        const refInput = ref.querySelector( '#' + key )
+        const refMessage = ref.querySelector( '#valid-' + key )
+
+        refInput.style.borderColor = '#ced4da'
+        refMessage.style.display = 'none'
+
+        return true
     }
 
 
@@ -112,17 +141,20 @@ class Create extends Component {
                                 <ExerciseControl
                                     defaultValue={this.state.exercise}
                                     handleChild={this.handleChild}
-                                    controlRef={ ( ref ) => this.exerciseRef = ref } />
+                                    controlRef={ ( ref ) => this.exerciseRef = ref }
+                                    validate={this.CheckedForm} />
 
                                 <WeightControl
                                     defaultValue={this.state.weight}
                                     handleChild={this.handleChild}
-                                    controlRef={ ( ref ) => this.weightRef = ref } />
+                                    controlRef={ ( ref ) => this.weightRef = ref }
+                                    validate={this.CheckedForm} />
 
                                 <SetsControl
                                     defaultValue={this.state.sets}
                                     handleChild={this.handleChild}
-                                    controlRef={ ( ref ) => this.setsRef = ref } />
+                                    controlRef={ ( ref ) => this.setsRef = ref }
+                                    validate={this.CheckedForm} />
 
                                 <RepsControl
                                     defaultValue={

@@ -33,6 +33,15 @@ class SetsControl extends Component {
     handleChange = ( e ) => {
         const value = Number( e.target.value )
 
+        // Check NaN.
+        if ( isNaN( value ) ) {
+            this.setState( { sets: 1 } )
+            return false
+        }
+
+        // Check form control in state.
+        if ( this.props.validate( 'sets', value ) ) return false
+
         // Control component from parent.
         this.props.handleChild( { sets: value } )
 
@@ -42,7 +51,7 @@ class SetsControl extends Component {
 
     render() {
         return (
-            <Form.Group>
+            <Form.Group ref={this.props.controlRef}>
                 <Form.Label htmlFor="set">Set</Form.Label>
                 
                 <InputGroup>
@@ -52,16 +61,22 @@ class SetsControl extends Component {
 
                     <Form.Control
                         type="text"
-                        id="set"
-                        name="set"
+                        id="sets"
+                        name="sets"
                         value={this.state.sets}
                         onChange={this.handleChange}
-                        ref={this.props.controlRef} />
+                        title="Please enter at least 1 set." />
 
                     <InputGroup.Append>
                         <Button variant="outline-secondary" data-calc={1} onClick={this.handleClick}>+</Button>
                     </InputGroup.Append>
                 </InputGroup>
+
+                <Form.Text id="valid-sets" className="text-muted" style={ { display: 'none' } }>
+                    <span style={ { color: 'red' } }>
+                        Please enter at least 1 set.
+                    </span>
+                </Form.Text>
 
                 <Form.Text className="text-muted">
                     Enter only numbers.

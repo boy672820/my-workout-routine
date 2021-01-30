@@ -10,6 +10,9 @@ class ExerciseControl extends Component {
     handleChange = ( e ) => {
         const value = e.target.value
 
+        // Check form control in state.
+        this.props.validate( 'exercise', value )
+
         // Update state this.
         this.setState( {
             exercise: value
@@ -23,15 +26,21 @@ class ExerciseControl extends Component {
 
     render() {
         return (
-            <Form.Group>
+            <Form.Group ref={this.props.controlRef}>
                 <Form.Label>Exercise</Form.Label>
                 <Form.Control
                     type="text"
-                    title="exercise"
+                    id="exercise"
+                    title="Please enter your exercise."
                     placeholder="Enter exercise."
                     onChange={this.handleChange}
-                    value={this.state.exercise}
-                    ref={this.props.controlRef} />
+                    value={this.state.exercise} />
+                
+                <Form.Text id="valid-exercise" className="text-muted" style={ { display: 'none' } }>
+                    <span style={ { color: 'red' } }>
+                        Please enter your exercise.
+                    </span>
+                </Form.Text>
             </Form.Group>
         )
     }

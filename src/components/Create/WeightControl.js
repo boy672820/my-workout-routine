@@ -66,6 +66,15 @@ class WeightControl extends Component {
     handleChange = ( e ) => {
         const value = Number( e.target.value )
 
+        // Check NaN.
+        if ( isNaN( value ) ) {
+            this.setState( { weight: 1 } )
+            return false
+        }
+
+        // Check form control in state.
+        if ( ! this.props.validate( 'weight', value ) ) return false
+
         // Control component from parent.
         this.props.handleChild( { weight: value } )
 
@@ -75,7 +84,7 @@ class WeightControl extends Component {
 
     render() {
         return (
-            <Form.Group>
+            <Form.Group ref={this.props.controlRef}>
                 <Form.Label htmlFor="weight">Weight(kg)</Form.Label>
 
                 <Form.Group>
@@ -93,12 +102,18 @@ class WeightControl extends Component {
                         name="weight"
                         value={this.state.weight}
                         onChange={this.handleChange}
-                        ref={this.props.controlRef} />
+                        title="Please enter at least 1 weight." />
 
                     <InputGroup.Append>
                         <Button variant="outline-secondary" onClick={this.handleClick} data-calc={1}>+</Button>
                     </InputGroup.Append>
                 </InputGroup>
+
+                <Form.Text id="valid-weight" className="text-muted" style={ { display: 'none' } }>
+                    <span style={ { color: 'red' } }>
+                        Please enter at least 1 weight.
+                    </span>
+                </Form.Text>
 
                 <Form.Text className="text-muted">
                     Enter only numbers.
