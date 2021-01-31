@@ -9,6 +9,7 @@ import ExerciseControl from './ExerciseControl'
 import WeightControl from './WeightControl'
 import SetsControl from './SetsControl'
 import RepsControl from './RepsControl'
+import RirControl from './RirControl'
 import ExerciseList from './ExerciseList'
 
 import './create.css'
@@ -25,8 +26,72 @@ class Create extends Component {
         reps: 1,
         maxReps: 0,
         disableRange: true,
+        rir: 0,
         // The result list of create form.
-        exerciseList: []
+        exerciseList: [
+            {
+                exercise: 'Squat',
+                sets: [
+                    { set: 1, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
+                    { set: 2, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
+                    { set: 3, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
+                    { set: 4, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Hip thrust',
+                sets: [
+                    { set: 1, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 2, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 3, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 4, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Leg curl',
+                sets: [
+                    { set: 1, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 2, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 3, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 4, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Calves',
+                sets: [
+                    { set: 1, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
+                    { set: 2, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
+                    { set: 3, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
+                    { set: 4, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Barbel curl',
+                sets: [
+                    { set: 1, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 2, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 3, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
+                    { set: 4, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Lying triceps extension',
+                sets: [
+                    { set: 1, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 2, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 3, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
+                    { set: 4, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 }
+                ]
+            },
+            {
+                exercise: 'Reverse back extension',
+                sets: [
+                    { set: 1, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
+                    { set: 2, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
+                    { set: 3, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
+                ]
+            }
+        ]
     }
 
 
@@ -50,10 +115,29 @@ class Create extends Component {
         if ( ! this.formValidation() ) return;
 
         // Copy state object.
-        const update = Object.assign( {}, this.state )
+        const data = Object.assign( {}, this.state )
 
-        // Remove exerciseList element of update.
-        delete update.exerciseList
+        // Remove exerciseList element in data.
+        delete data.exerciseList
+
+        // Create state data.
+        const update = {
+            exercise: data.exercise,
+            sets: []
+        }
+
+        let i = 1
+        // Set standard.
+        for ( i; i <= data.sets; i += 1 ) {
+            update.sets.push( {
+                set: i,
+                weight: data.weight,
+                reps: data.reps,
+                maxReps: data.maxReps,
+                disableRange: data.disableRange,
+                rir: data.rir
+            } )
+        }
 
         // Update this state.
         this.setState( prevState => ( {
@@ -76,7 +160,7 @@ class Create extends Component {
                             exercise: this.exerciseRef,
                             weight: this.weightRef,
                             sets: this.setsRef,
-                            reps: this.repsRef,
+                            reps: this.repsRef
                         } )
 
         // Results of validation.
@@ -167,6 +251,10 @@ class Create extends Component {
                                     handleChild={this.handleChild}
                                     controlRef={ ( ref ) => this.repsRef = ref } />
 
+                                <RirControl
+                                    defaultValue={this.state.rir}
+                                    handleChild={this.handleChild} />
+
                                 <Button variant="primary" type="submit">Submit</Button>
 
                             </Form>
@@ -175,7 +263,7 @@ class Create extends Component {
                     </Card>
                 </div>
 
-                <ExerciseList data={this.state.exerciseList} />
+                <ExerciseList data={this.state.exerciseList} handleChild={this.handleChild} />
 
             </div> //.create-container
 

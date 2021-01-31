@@ -32,7 +32,7 @@ class ExerciseControl extends Component {
                     type="text"
                     id="exercise"
                     title="Please enter your exercise."
-                    placeholder="Enter exercise."
+                    placeholder="Please enter your exercise."
                     onChange={this.handleChange}
                     value={this.state.exercise} />
                 
