@@ -102,11 +102,10 @@ class RepsControl extends Component {
                             id="reps"
                             onChange={this.handleReps}
                             value={this.state.reps}
-                            ref={this.props.controlRef}
                         >
                             {[...Array(100)].map((n, index) => {
                                 return (
-                                    <option key={index}>{index + 1}</option>
+                                    <option value={index + 1} key={index}>{index + 1}</option>
                                 )
                             })}
                         </Form.Control>
@@ -119,7 +118,6 @@ class RepsControl extends Component {
                             id="rep-range-enable"
                             label="Enable range."
                             onChange={this.handleCheckbox}
-                            ref={ ( ref ) => this.checkboxRef = ref }
                         />
                     </Col>
 

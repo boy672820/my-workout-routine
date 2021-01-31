@@ -4,11 +4,18 @@ import {
     Table,
     Container,
     Row,
-    Col
+    Col,
 } from 'react-bootstrap'
+
+import EditSetModal from './EditSetModal'
 
 
 class ExerciseList extends Component {
+
+    state = {
+        is_modal: false,
+        editSetData: 0
+    }
 
     /**
      * Remove exercise.
@@ -29,14 +36,39 @@ class ExerciseList extends Component {
     /**
      * Remove set in exercise.
      */
-    handleRemoveSet = ( { dataset } ) => {
-        const idx = dataset.idx
-        const exercise_idx = dataset.exercise_idx
-        const res = this.props.data.slice()
+    handleRemoveSet = ( e ) => {
+        const dataset = e.target.dataset
+        const idx = dataset.idx // Set index.
+        const exercise_idx = dataset.exercise // Parent index.
+        const res = this.props.data.slice() // Copy props data.
 
-        
+        // Remove set.
+        res[ exercise_idx ].sets.splice( idx, 1 )
+
+        // Reset column set in exercise sets.
+        for ( const [ key, value ] of Object.entries( res[ exercise_idx ].sets ) ) {
+            value.set = Number( key ) + 1
+        }
+
+        // Lifting state up.
+        this.props.handleChild( {
+            exerciseList: res
+        } )
     }
-    
+
+    handleModal = () => {
+        this.setState( {
+            is_modal: ! this.state.is_modal
+        } )
+    }
+
+    handleEditSet = ( e ) => {
+        this.setState( {
+            is_modal: true, // Open modal popup.
+            editSetData: e.target.dataset
+        } )
+    }
+
     render() {
 
         return (
@@ -66,6 +98,7 @@ class ExerciseList extends Component {
                                         <th className="text align center">Reps</th>
                                         <th className="text align center">RIR</th>
                                         <th className="text align center"></th>
+                                        <th className="text align center"></th>
                                     </tr>
                                 </thead>
 
@@ -74,7 +107,7 @@ class ExerciseList extends Component {
                                         row.sets.map( ( set, i ) => {
                                             return (
                                                 <tr key={i}>
-                                                    <td>
+                                                    <td >
                                                         {set.set}Set
                                                         &nbsp;&#47;&nbsp;
                                                         {set.weight}Kg
@@ -90,11 +123,25 @@ class ExerciseList extends Component {
                                                     <td width={50} className="text align center">{set.rir}</td>
                                                     <td width={50} className="text align center">
                                                         <Button
+                                                            variant="outline-info"
+                                                            size="sm"
+                                                            onClick={this.handleEditSet}
+                                                            data-exercise={index}
+                                                            data-set={i}
+                                                            data-weight={set.weight}
+                                                            data-reps={set.reps}
+                                                            data-maxreps={set.maxReps}
+                                                            data-disablerange={set.disableRange}
+                                                            data-rir={set.rir}
+                                                        >Edit</Button>
+                                                    </td>
+                                                    <td width={50} className="text align center">
+                                                        <Button
                                                             variant="outline-danger"
                                                             size="sm"
                                                             onClick={this.handleRemoveSet}
-                                                            data-idx={set.i}
-                                                            data-exercise-idx={row.index}>X</Button>
+                                                            data-idx={i}
+                                                            data-exercise={index}>X</Button>
                                                     </td>
                                                 </tr>
                                             )
@@ -106,7 +153,13 @@ class ExerciseList extends Component {
         
                         </Container>
                     )
-                } )}
+                } ) }
+
+                <EditSetModal
+                    data={this.state.editSetData}
+                    handleChild={this.props.handleChild}
+                    handleModal={this.handleModal}
+                    is_modal={this.state.is_modal} />
 
             </div> //.container
         )
