@@ -6,7 +6,8 @@ import {
     Modal,
     InputGroup,
     ButtonGroup,
-    ToggleButton
+    DropdownButton,
+    Dropdown,
 } from 'react-bootstrap'
 
 
@@ -135,31 +136,33 @@ class EditSetModal extends Component {
      */
     RadioToggleButton = () => {
         const radios = [
-            { name: '2.5kg', value: 2.5 },
-            { name: '5kg', value: 5 },
-            { name: '10kg', value: 10 },
-            { name: '15kg', value: 15 },
-            { name: '20kg', value: 20 },
-            { name: '25kg', value: 25 }
+            { name: '2.5kg', value: '2.5' },
+            { name: '5kg', value: '5' },
+            { name: '10kg', value: '10' },
+            { name: '15kg', value: '15' },
+            { name: '20kg', value: '20' },
+            { name: '25kg', value: '25' }
         ]
     
         return (
-            <ButtonGroup toggle>
-                {
-                    radios.map( ( radio, index ) => (
-                        <ToggleButton
-                            key={ index }
-                            type="radio"
-                            variant="secondary"
-                            name="weight-increase-value"
-                            value={ radio.value }
-                            checked={ this.state.plate_weight === radio.value }
-                            onChange={ ( e ) => this.setState( { plate_weight: Number( e.target.value ) } ) }
-                        >
-                            { radio.name }
-                        </ToggleButton>
-                    ) )
-                }
+            <ButtonGroup>
+                <DropdownButton title={'Select plate(' + this.state.plate_weight + 'kg)'} variant="secondary">
+                    {
+                        radios.map( ( radio, index ) => (
+                            <Dropdown.Item
+                                key={ index }
+                                type="radio"
+                                variant="secondary"
+                                name="weight-increase-value"
+                                size="sm"
+                                onSelect={ ( eKey ) => this.setState( { plate_weight: eKey } ) }
+                                eventKey={ radio.value }
+                            >
+                                { radio.name }
+                            </Dropdown.Item>
+                        ) )
+                    }
+                </DropdownButton>
             </ButtonGroup>
         )
     }

@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
     Button,
     Form,
-    Card
+    Card,
+    Container
 } from 'react-bootstrap'
 
 import ExerciseControl from './ExerciseControl'
@@ -16,7 +17,6 @@ import './create.css'
 
 
 class Create extends Component {
-
 
     state = {
         // The form data of create exercise.
@@ -112,7 +112,7 @@ class Create extends Component {
         e.preventDefault()
 
         // Form validation.
-        if ( ! this.formValidation() ) return;
+        if ( ! this.formValidation() ) return
 
         // Copy state object.
         const data = Object.assign( {}, this.state )
@@ -210,9 +210,7 @@ class Create extends Component {
 
         return (
 
-            <div className="create-container">
-
-                <div className="container">
+                <Container>
 
                     <Card>
                         <Card.Body>
@@ -260,12 +258,10 @@ class Create extends Component {
 
                         </Card.Body>
                     </Card>
-                </div>
 
                 <ExerciseList data={this.state.exerciseList} handleChild={this.handleChild} />
 
-            </div> //.create-container
-
+            </Container>
         )
     }
 }

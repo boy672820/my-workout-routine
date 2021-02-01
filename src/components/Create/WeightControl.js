@@ -4,7 +4,8 @@ import {
     Form,
     InputGroup,
     ButtonGroup,
-    ToggleButton,
+    DropdownButton,
+    Dropdown,
 } from 'react-bootstrap'
 
 
@@ -26,22 +27,24 @@ class WeightControl extends Component {
         ]
     
         return (
-            <ButtonGroup toggle>
-                {
-                    radios.map( ( radio, index ) => (
-                        <ToggleButton
-                            key={ index }
-                            type="radio"
-                            variant="secondary"
-                            name="weight-increase-value"
-                            value={ radio.value }
-                            checked={ this.state.plate_weight === radio.value }
-                            onChange={ ( e ) => this.setState( { plate_weight: e.target.value } ) }
-                        >
-                            { radio.name }
-                        </ToggleButton>
-                    ) )
-                }
+            <ButtonGroup>
+                <DropdownButton title={'Select plate(' + this.state.plate_weight + 'kg)'} variant="secondary">
+                    {
+                        radios.map( ( radio, index ) => (
+                            <Dropdown.Item
+                                key={ index }
+                                type="radio"
+                                variant="secondary"
+                                name="weight-increase-value"
+                                size="sm"
+                                onSelect={ ( eKey ) => this.setState( { plate_weight: eKey } ) }
+                                eventKey={ radio.value }
+                            >
+                                { radio.name }
+                            </Dropdown.Item>
+                        ) )
+                    }
+                </DropdownButton>
             </ButtonGroup>
         )
     }

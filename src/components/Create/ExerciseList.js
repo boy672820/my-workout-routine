@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
     Button,
     Table,
-    Container,
     Row,
     Col,
 } from 'react-bootstrap'
@@ -82,24 +81,28 @@ class ExerciseList extends Component {
     render() {
 
         return (
-            <div className="container">
+            <div>
 
                 <hr />
 
                 {this.props.data.map( ( row, index ) => {
                     return (
-                        <Container key={index}>
+                        <div key={index}>
 
                             <Row>
                                 <Col>
                                     <h3>{row.exercise}</h3>
                                 </Col>
                                 <Col className="text align right">
-                                    <Button variant="danger" size="sm" onClick={this.handleRemoveExercise} data-idx={index}>Delete</Button>
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={this.handleRemoveExercise}
+                                        data-idx={index}>Delete</Button>
                                 </Col>
                             </Row>
-        
-                            <Table className="exercise-volum-table" striped bordered hover size="sm">
+
+                            <Table className="exercise-volum-table" striped bordered hover size="sm" responsive>
                                 <thead>
                                     <tr>
                                         <th>Preview</th>
@@ -129,7 +132,10 @@ class ExerciseList extends Component {
                                                     </td>
                                                     <td width={50} className="text align center">{set.set}</td>
                                                     <td width={100} className="text align center">{set.weight}</td>
-                                                    <td width={80} className="text align center">{set.reps}{ ! set.disableRange ? '~' + set.maxReps : '' }</td>
+                                                    <td width={80} className="text align center">
+                                                        {set.reps}
+                                                        { ! set.disableRange ? '~' + set.maxReps : '' }
+                                                    </td>
                                                     <td width={50} className="text align center">{set.rir}</td>
                                                     <td width={50} className="text align center">
                                                         <Button
@@ -160,8 +166,8 @@ class ExerciseList extends Component {
                                 </tbody>
         
                             </Table>
-        
-                        </Container>
+
+                        </div>
                     )
                 } ) }
 
