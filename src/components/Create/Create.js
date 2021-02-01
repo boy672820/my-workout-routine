@@ -182,6 +182,8 @@ class Create extends Component {
             }
         }
 
+        if ( ! res ) window.scrollTo( 0, 0 )
+
         return res
     }
 
@@ -210,7 +212,7 @@ class Create extends Component {
 
         return (
 
-                <Container>
+                <Container id="createContainer" ref={ ( ref ) => this.createContainerRef = ref }>
 
                     <Card>
                         <Card.Body>
