@@ -52,7 +52,9 @@ class WeightControl extends Component {
         const calc_weight = Number( this.state.plate_weight ) * calc,
               state_weight = this.state.weight
 
-        const res = state_weight + calc_weight
+        let res = state_weight + calc_weight
+
+        if ( res <= 0 ) res = 0
               
         // Control component from parent.
         this.props.handleChild( { weight: res } )
@@ -68,7 +70,7 @@ class WeightControl extends Component {
 
         // Check NaN.
         if ( isNaN( value ) ) {
-            this.setState( { weight: 1 } )
+            this.setState( { weight: 0 } )
             return false
         }
 

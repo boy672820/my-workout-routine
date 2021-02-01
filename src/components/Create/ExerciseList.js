@@ -63,9 +63,19 @@ class ExerciseList extends Component {
     }
 
     handleEditSet = ( e ) => {
+        const dataset = e.target.dataset
+
         this.setState( {
             is_modal: true, // Open modal popup.
-            editSetData: e.target.dataset
+            editSetData: {
+                exercise_idx: Number( dataset.exercise ),
+                set_idx: Number( dataset.set ),
+                reps: Number( dataset.reps ),
+                maxReps: Number( dataset.maxreps ),
+                disableRange: dataset.disablerange === 'true' ? true : false,
+                rir: Number( dataset.rir ),
+                weight: Number( dataset.weight )
+            }
         } )
     }
 
