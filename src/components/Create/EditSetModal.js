@@ -15,7 +15,7 @@ class EditSetModal extends Component {
     state = {
         is_derived: false, // Check init.
         plate_weight: 2.5,
-
+        // Form state.
         exercise_idx: null,
         set_idx: null,
         reps: 1,
@@ -227,9 +227,18 @@ class EditSetModal extends Component {
      * @param {*} e 
      */
     handleSubmit = ( e ) => {
-        const update = {}
+        const update = this.props.exerciseListData.slice()
+        const updateItem = update[ this.state.exercise_idx ].sets[ this.state.set_idx ]
+
+        updateItem.weight = this.state.weight
+        updateItem.reps = this.state.reps
+        updateItem.maxReps = this.state.maxReps
+        updateItem.disableRange = this.state.disableRange
+        updateItem.rir = this.state.rir
         
         this.props.handleChild( update )
+
+        this.props.handleModal()
         
         e.preventDefault()
     }

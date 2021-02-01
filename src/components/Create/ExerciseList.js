@@ -117,7 +117,7 @@ class ExerciseList extends Component {
                                         row.sets.map( ( set, i ) => {
                                             return (
                                                 <tr key={i}>
-                                                    <td >
+                                                    <td>
                                                         {set.set}Set
                                                         &nbsp;&#47;&nbsp;
                                                         {set.weight}Kg
@@ -167,6 +167,7 @@ class ExerciseList extends Component {
 
                 <EditSetModal
                     data={this.state.editSetData}
+                    exerciseListData={this.props.data}
                     handleChild={this.props.handleChild}
                     handleModal={this.handleModal}
                     is_modal={this.state.is_modal} />

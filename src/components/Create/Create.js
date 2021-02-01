@@ -21,7 +21,7 @@ class Create extends Component {
     state = {
         // The form data of create exercise.
         exercise: '',
-        weight: 10,
+        weight: 0,
         sets: 1,
         reps: 1,
         maxReps: 0,
@@ -158,7 +158,6 @@ class Create extends Component {
         // Checked to be form controls.
         const targets = Object.entries( {
                             exercise: this.exerciseRef,
-                            weight: this.weightRef,
                             sets: this.setsRef,
                             reps: this.repsRef
                         } )
