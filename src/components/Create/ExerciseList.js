@@ -98,7 +98,7 @@ class ExerciseList extends Component {
                                     <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={ this.handleRemoveExercise }
+                                        onClick={this.handleRemoveExercise}
                                         data-idx={index}
                                     >Delete</Button>
                                 </Col>
