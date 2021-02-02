@@ -5,6 +5,7 @@ import {
     Row,
     Col,
 } from 'react-bootstrap'
+import { Motion, spring } from 'react-motion'
 
 import EditSetModal from './EditSetModal'
 
@@ -13,7 +14,8 @@ class ExerciseList extends Component {
 
     state = {
         is_modal: false,
-        editSetData: 0
+        editSetData: 0,
+        deleteFade: null
     }
 
     /**
@@ -27,9 +29,15 @@ class ExerciseList extends Component {
         res.splice( idx, 1 )
 
         // Lifting state up.
-        this.props.handleChild( {
-            exerciseList: res
-        } )
+        this.props.handleChild(
+            { exerciseList: res },
+            () => {
+                // Set fade out animtion.
+                this.setState( {
+                    deleteFade: Number( idx )
+                } )
+            }
+        )
     }
 
     /**
@@ -87,87 +95,94 @@ class ExerciseList extends Component {
 
                 {this.props.data.map( ( row, index ) => {
                     return (
-                        <div key={index}>
 
-                            <Row>
-                                <Col>
-                                    <h3>{row.exercise}</h3>
-                                </Col>
-                                <Col className="text align right">
-                                    <Button
-                                        variant="danger"
-                                        size="sm"
-                                        onClick={this.handleRemoveExercise}
-                                        data-idx={index}>Delete</Button>
-                                </Col>
-                            </Row>
+                        <Motion style={
+                            { opacity: spring( this.state.deleteFade === index ? 0 : 1 ) }
+                        } key={index}>
 
-                            <Table className="exercise-volum-table" striped bordered hover size="sm" responsive>
-                                <thead>
-                                    <tr>
-                                        <th>Preview</th>
-                                        <th className="text align center">Set</th>
-                                        <th className="text align center">Weight(kg)</th>
-                                        <th className="text align center">Reps</th>
-                                        <th className="text align center">RIR</th>
-                                        <th className="text align center"></th>
-                                        <th className="text align center"></th>
-                                    </tr>
-                                </thead>
+                            { style => <div style={style}>
 
-                                <tbody>
-                                    {
-                                        row.sets.map( ( set, i ) => {
-                                            return (
-                                                <tr key={i}>
-                                                    <td>
-                                                        {set.set}Set
-                                                        &nbsp;&#47;&nbsp;
-                                                        {set.weight}Kg
-                                                        &nbsp;&#47;&nbsp;
-                                                        {set.reps}Reps
-                                                        { ! set.disableRange ? '~' + set.maxReps + 'Reps' : '' }
-                                                        &nbsp;&#47;&nbsp;
-                                                        {set.rir}RIR
-                                                    </td>
-                                                    <td width={50} className="text align center">{set.set}</td>
-                                                    <td width={100} className="text align center">{set.weight}</td>
-                                                    <td width={80} className="text align center">
-                                                        {set.reps}
-                                                        { ! set.disableRange ? '~' + set.maxReps : '' }
-                                                    </td>
-                                                    <td width={50} className="text align center">{set.rir}</td>
-                                                    <td width={50} className="text align center">
-                                                        <Button
-                                                            variant="outline-info"
-                                                            size="sm"
-                                                            onClick={this.handleEditSet}
-                                                            data-exercise={index}
-                                                            data-set={i}
-                                                            data-weight={set.weight}
-                                                            data-reps={set.reps}
-                                                            data-maxreps={set.maxReps}
-                                                            data-disablerange={set.disableRange}
-                                                            data-rir={set.rir}
-                                                        >Edit</Button>
-                                                    </td>
-                                                    <td width={50} className="text align center">
-                                                        <Button
-                                                            variant="outline-danger"
-                                                            size="sm"
-                                                            onClick={this.handleRemoveSet}
-                                                            data-idx={i}
-                                                            data-exercise={index}>X</Button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        } )
-                                    }
-                                </tbody>
-        
-                            </Table>
+                                <Row>
+                                    <Col>
+                                        <h3>{row.exercise}</h3>
+                                    </Col>
+                                    <Col className="text align right">
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            onClick={this.handleRemoveExercise}
+                                            data-idx={index}>Delete</Button>
+                                    </Col>
+                                </Row>
 
-                        </div>
+                                <Table className="exercise-volum-table" striped bordered hover size="sm" responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Preview</th>
+                                            <th className="text align center">Set</th>
+                                            <th className="text align center">Weight(kg)</th>
+                                            <th className="text align center">Reps</th>
+                                            <th className="text align center">RIR</th>
+                                            <th className="text align center"></th>
+                                            <th className="text align center"></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {
+                                            row.sets.map( ( set, i ) => {
+                                                return (
+                                                    <tr key={i}>
+                                                        <td>
+                                                            {set.set}Set
+                                                            &nbsp;&#47;&nbsp;
+                                                            {set.weight}Kg
+                                                            &nbsp;&#47;&nbsp;
+                                                            {set.reps}Reps
+                                                            { ! set.disableRange ? '~' + set.maxReps + 'Reps' : '' }
+                                                            &nbsp;&#47;&nbsp;
+                                                            {set.rir}RIR
+                                                        </td>
+                                                        <td width={50} className="text align center">{set.set}</td>
+                                                        <td width={100} className="text align center">{set.weight}</td>
+                                                        <td width={80} className="text align center">
+                                                            {set.reps}
+                                                            { ! set.disableRange ? '~' + set.maxReps : '' }
+                                                        </td>
+                                                        <td width={50} className="text align center">{set.rir}</td>
+                                                        <td width={50} className="text align center">
+                                                            <Button
+                                                                variant="outline-info"
+                                                                size="sm"
+                                                                onClick={this.handleEditSet}
+                                                                data-exercise={index}
+                                                                data-set={i}
+                                                                data-weight={set.weight}
+                                                                data-reps={set.reps}
+                                                                data-maxreps={set.maxReps}
+                                                                data-disablerange={set.disableRange}
+                                                                data-rir={set.rir}
+                                                            >Edit</Button>
+                                                        </td>
+                                                        <td width={50} className="text align center">
+                                                            <Button
+                                                                variant="outline-danger"
+                                                                size="sm"
+                                                                onClick={this.handleRemoveSet}
+                                                                data-idx={i}
+                                                                data-exercise={index}>X</Button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            } )
+                                        }
+                                    </tbody>
+                                </Table>
+
+                            </div>}
+
+                        </Motion>
+
                     )
                 } ) }
 

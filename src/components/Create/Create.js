@@ -99,8 +99,11 @@ class Create extends Component {
      * Control from child component.
      * @param {Object} res
      */
-    handleChild = ( res ) => {
-        this.setState( res );
+    handleChild = ( res, callback ) => {
+        if ( typeof callback === 'function' )
+            this.setState( res, callback )
+        else
+            this.setState( res )
     }
 
 
