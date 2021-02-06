@@ -28,70 +28,7 @@ class Create extends Component {
         disableRange: true,
         rir: 0,
         // The result list of create form.
-        exerciseList: [
-            {
-                exercise: 'Squat',
-                sets: [
-                    { set: 1, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
-                    { set: 2, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
-                    { set: 3, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 },
-                    { set: 4, weight: 85, reps: 8, maxReps: 10, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Hip thrust',
-                sets: [
-                    { set: 1, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 2, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 3, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 4, weight: 50, reps: 10, maxReps: 12, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Leg curl',
-                sets: [
-                    { set: 1, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 2, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 3, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 4, weight: 60, reps: 12, maxReps: 14, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Calves',
-                sets: [
-                    { set: 1, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
-                    { set: 2, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
-                    { set: 3, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 },
-                    { set: 4, weight: 55, reps: 13, maxReps: 15, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Barbel curl',
-                sets: [
-                    { set: 1, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 2, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 3, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 },
-                    { set: 4, weight: 20, reps: 10, maxReps: 12, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Lying triceps extension',
-                sets: [
-                    { set: 1, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 2, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 3, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 },
-                    { set: 4, weight: 20, reps: 12, maxReps: 14, disableRange: false, rir: 2 }
-                ]
-            },
-            {
-                exercise: 'Reverse back extension',
-                sets: [
-                    { set: 1, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
-                    { set: 2, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
-                    { set: 3, weight: 0, reps: 15, maxReps: 0, disableRange: true, rir: 0 },
-                ]
-            }
-        ]
+        exerciseList: []
     }
 
 

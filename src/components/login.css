@@ -1,0 +1,8 @@
+.form-signin {
+    min-height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #f5f5f5;
+}

@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import Create from './components/Create/Create'
+import Login from './components/Login'
 
 class App extends Component {
     render() {
         return (
             <>
-                <Create />
+                <Login />
             </>
         )
     }
