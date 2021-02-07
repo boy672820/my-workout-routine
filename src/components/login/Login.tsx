@@ -6,29 +6,44 @@ import {
     Button,
     Alert
 } from 'react-bootstrap'
+
 import './login.css'
 
-class Login extends Component {
+import { LoginPropsInterface, LoginStateInterface } from './login.interface'
+import { LoginAPI } from '../../api/users/login.api'
 
-    state = {
-        email: '',
-        valid_email: true,
-        valid_password: true
+
+class Login extends Component<LoginPropsInterface, LoginStateInterface> {
+
+    constructor( props: LoginPropsInterface ) {
+        super( props )
+
+        this.state = {
+            email: '',
+            valid_email: true,
+            valid_password: true,
+            success: {}
+        }
+
+        this.handleChange = this.handleChange.bind( this )
+        this.handleSubmit = this.handleSubmit.bind( this )
     }
 
-    handleChange = ( { target } ) => {
-        const value = target.value
+    private passwordRef = React.createRef<any>()
+
+    async handleChange( { currentTarget }: React.ChangeEvent<HTMLInputElement> ) {
+        const value = currentTarget.value
 
         this.setState( {
             email: value
         } )
     }
 
-    handleSubmit = ( e ) => {
+    async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
         e.preventDefault()
 
         const email = this.state.email
-        const password = this.passwordRef.value
+        const password = this.passwordRef.current.value
 
         const regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
 
@@ -43,10 +58,14 @@ class Login extends Component {
         if ( ! password ) validate.valid_password = false
         else validate.valid_password = true
 
-        if ( validate.valid_email && validate.valid_password ) {
+        this.setState( validate )
 
+        if ( validate.valid_email && validate.valid_password ) {
+            const payload = { email: this.state.email, password: this.passwordRef.current.value }
+            const response = LoginAPI.login( payload )
+
+            if ( response ) this.setState( { success: response } )
         }
-        else this.setState( validate )
     }
 
     render() {
@@ -89,7 +108,7 @@ class Login extends Component {
                                 name="password"
                                 className="login-form-bottom"
                                 size="lg"
-                                ref={ ref => this.passwordRef = ref }
+                                ref={this.passwordRef}
                             />
                         </Form.Group>
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import Login from './components/Login'
+import Login from './components/login/Login'
 
-class App extends Component {
+export default class App extends Component {
     render() {
         return (
             <>
@@ -10,5 +10,3 @@ class App extends Component {
         )
     }
 }
-
-export default App
