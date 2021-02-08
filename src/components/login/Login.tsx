@@ -62,7 +62,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         if ( validate.valid_email && validate.valid_password ) {
             const payload = { email: this.state.email, password: this.passwordRef.current.value }
-            const response = LoginAPI.login( payload )
+            const response = await LoginAPI.login( payload )
 
             if ( response ) this.setState( { success: response } )
         }
