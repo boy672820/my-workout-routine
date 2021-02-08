@@ -22,6 +22,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
             email: '',
             valid_email: true,
             valid_password: true,
+            valid_login: true,
             success: {}
         }
 
@@ -49,7 +50,8 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         const validate = {
             valid_email: false,
-            valid_password: false
+            valid_password: false,
+            valid_login: true
         }
 
         if ( ! email || ! regEmail.test( email ) ) validate.valid_email = false
@@ -62,9 +64,18 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         if ( validate.valid_email && validate.valid_password ) {
             const payload = { email: this.state.email, password: this.passwordRef.current.value }
-            const response = await LoginAPI.login( payload )
+            const response = LoginAPI.login( payload )
 
-            if ( response ) this.setState( { success: response } )
+            response
+                .then( response => { // Login success.
+                    this.setState( {
+                        valid_login: true,
+                        success: response.data
+                    } )
+                } )
+                .catch( error => {
+                    this.setState( { valid_login: false } )
+                } )
         }
     }
 
@@ -81,6 +92,10 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                     <Alert variant="danger" hidden={ is_alert } className="text align left">
                         <div style={ this.state.valid_email ? displayNone : displayBlock }>이메일 양식에 맞게 입력해주세요.(예: example@gmail.com)</div>
                         <div style={ this.state.valid_password ? displayNone : displayBlock }>비밀번호를 입력해주세요.</div>
+                    </Alert>
+
+                    <Alert variant="danger" hidden={ this.state.valid_login ? true : false } className="text align left">
+                        <div style={ this.state.valid_login ? displayNone : displayBlock }>이메일 또는 아이디가 틀립니다.</div>
                     </Alert>
 
                     <h3 className="h3 mb-3 fw-normal">로그인 해주세요.</h3>
