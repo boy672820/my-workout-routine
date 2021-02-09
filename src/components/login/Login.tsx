@@ -6,6 +6,7 @@ import {
     Button,
     Alert
 } from 'react-bootstrap'
+import axios from 'axios'
 
 import './login.css'
 
@@ -23,7 +24,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
             valid_email: true,
             valid_password: true,
             valid_login: true,
-            success: {}
+            success: false
         }
 
         this.handleChange = this.handleChange.bind( this )
@@ -63,19 +64,21 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         this.setState( validate )
 
         if ( validate.valid_email && validate.valid_password ) {
-            const payload = { email: this.state.email, password: this.passwordRef.current.value }
-            const response = LoginAPI.login( payload )
+            // Response login api.
+            const userData = { email: this.state.email, password: this.passwordRef.current.value }
+            const response = LoginAPI.login( userData )
 
-            response
-                .then( response => { // Login success.
-                    this.setState( {
-                        valid_login: true,
-                        success: response.data
-                    } )
-                } )
-                .catch( error => {
-                    this.setState( { valid_login: false } )
-                } )
+            response.then( response => {
+                this.setState( { valid_login: true, success: true } )
+
+                axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
+
+                // Direct main page.
+                this.props.history.push( '/' )
+            } )
+            .catch( error => {
+                this.setState( { valid_login: false, success: false } )
+            } )
         }
     }
 
