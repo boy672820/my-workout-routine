@@ -69,12 +69,14 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
             const response = LoginAPI.login( userData )
 
             response.then( response => {
-                this.setState( { valid_login: true, success: true } )
+                if ( response.status === 201 ) {
+                    this.setState( { valid_login: true, success: true } )
 
-                axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
+                    axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
 
-                // Direct main page.
-                this.props.history.push( '/' )
+                    this.props.history.push( '/' )
+                }
+                else this.setState( { valid_login: false, success: false } )
             } )
             .catch( error => {
                 this.setState( { valid_login: false, success: false } )

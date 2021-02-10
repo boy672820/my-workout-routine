@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import {
     Container
 } from 'react-bootstrap'
-import axios from 'axios'
 
-import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
 import { LoginAPI } from '../../api/users/login.api'
+import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
 
 
 class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface> {
@@ -19,14 +18,9 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
     }
 
     componentDidMount() {
-        if ( axios.defaults.headers.common.Authorization ) {
-            LoginAPI.getProfile().then( response => {
-                LoginAPI.refresh( response.data.email )
-            } )
-        }
-        else {
-            this.props.history.push( '/login' )
-        }
+        LoginAPI.getProfile().then( response => {
+            LoginAPI.refresh( response.data.email )
+        } )
     }
 
     render() {
