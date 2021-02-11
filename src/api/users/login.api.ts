@@ -4,14 +4,7 @@ import { LoginDto } from "./dto/login.dto"
 export class LoginAPI {
 
     public static async login( userData: LoginDto ): Promise<AxiosResponse> {
-        // return await axios( {
-        //     method: 'post',
-        //     url: '/user/login',
-        //     data: userData,
-        //     withCredentials: true
-        // } )
-
-        return  await axios.post( '/user/login', userData, { withCredentials: true } )
+        return await axios.post( '/user/login', userData, { withCredentials: true } )
     }
 
     public static async getProfile() {
@@ -21,12 +14,23 @@ export class LoginAPI {
         } )
     }
 
+    public static async getAccessToken( refresh_token: string ) {
+        axios( {
+            method: 'post',
+            url: '/user/get-access-token',
+            headers: { Authorization: refresh_token }
+        } )
+        .then( response => {
+            axios.defaults.headers.common[ 'Authorization' ] = response.data.user.token
+        } )
+    }
+
     public static async refresh( email: string ) {
         // const JWT_EXPIRY_TIME = 24 * 3600 * 1000
-        const JWT_EXPIRY_TIME = 11 * 1000
+        const JWT_EXPIRY_TIME = 6 * 1000
 
         const onSilentRefresh = () => {
-            axios.post( '/user/refresh', { email: email } )
+            axios.post( '/user/refresh', { email: 'mwr@test.com' } )
             .then( onLoginSuccess )
             .catch( error => {
                 console.log( error )
@@ -37,9 +41,9 @@ export class LoginAPI {
             const user = response.data.user
         
             // accessToken 설정
-            axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
+            axios.defaults.headers.common['Authorization'] = `Bearer ${user.refresh_token}`
 
-            console.log( axios.defaults.headers.common['Authorization'] )
+            console.log( axios.defaults.headers.common.Authorization )
         
             // accessToken 만료하기 1분 전에 로그인 연장
             // setTimeout( onSilentRefresh, JWT_EXPIRY_TIME - 60000 )

@@ -3,7 +3,6 @@ import {
     Container
 } from 'react-bootstrap'
 
-import { LoginAPI } from '../../api/users/login.api'
 import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
 
 
@@ -15,12 +14,6 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         this.state = {
 
         }
-    }
-
-    componentDidMount() {
-        LoginAPI.getProfile().then( response => {
-            LoginAPI.refresh( response.data.email )
-        } )
     }
 
     render() {
