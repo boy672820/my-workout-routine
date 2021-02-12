@@ -7,8 +7,6 @@ import {
     Alert
 } from 'react-bootstrap'
 import axios from 'axios'
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie'
 
 import './login.css'
 
@@ -16,12 +14,7 @@ import { LoginPropsInterface, LoginStateInterface } from './login.interface'
 import { LoginAPI } from '../../api/users/login.api'
 
 
-class Login extends Component<LoginPropsInterface, LoginStateInterface> {
-
-    static propTypes = {
-        cookies: instanceOf( Cookies ).isRequired
-    }
-     
+class Login extends Component<LoginPropsInterface, LoginStateInterface> {     
 
     constructor( props: LoginPropsInterface ) {
         super( props )
@@ -86,7 +79,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                     this.props.cookies.set( 'token', response.data.user.refresh_token )
 
                     // Set silent refresh getting token from App component.
-                    this.props.silentRefresh()
+                    this.props.silentRefresh( this.props.cookies )
                 }
                 else this.setState( { valid_login: false, success: false } )
             } )
@@ -156,4 +149,4 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
     }
 }
 
-export default withCookies( Login )
+export default Login

@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
+import { CookiesProvider } from 'react-cookie'
+
 import App from './App'
 
 import './common/normalize.minify.css'
@@ -12,7 +14,9 @@ axios.defaults.baseURL = process.env.REACT_APP_REST_URI
 
 export default function Root() {
     return (
-        <App />
+        <CookiesProvider>
+            <App />
+        </CookiesProvider>
     )
 }
   
