@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import axios from 'axios'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie'
@@ -75,15 +75,12 @@ class App extends Component <AppPropsInterface> {
     
         return (
             <Router>
-                {isAuth}
-                <ul>
-                    <li><Link to="/calendar">Calendar</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/records">Records</Link></li>
-                </ul>
-                <div>
-                    <button onClick={handleLogout}>Logout</button>
-                </div>
+                {/* {isAuth} */}
+                {
+                axios.defaults.headers.common.Authorization ?
+                <div><button onClick={handleLogout}>Logout</button></div>
+                : ''
+                }
                 <Route path="/calendar" component={ Calendar } />
                 <Route path="/login">
                     {

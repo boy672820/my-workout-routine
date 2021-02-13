@@ -9,11 +9,9 @@ fieldset {
     padding: 0;
 }
 
-/* .container {
-    width: 100%;
-    margin-top: 30px;
-} */
-
+.main {
+    padding-top: 30px;
+}
 .text.align.center {
     text-align: center;
 }
@@ -22,4 +20,12 @@ fieldset {
 }
 .text.align.right {
     text-align: right;
+}
+
+.text.ellipsis {
+    display: inline-block;
+    width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
