@@ -40,12 +40,12 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                         <tbody>
                             <tr>
                                 <td className="text align center" width="60">1</td>
-                                <td className="text align left ellipsis"><a href="/calendar" onClick={this.handleClick}>스쿼트 / 데드리프트 / 덤벨 컬 / 클로즈그립 벤치프레스</a></td>
+                                <td className="text align left"><a href="/calendar" onClick={this.handleClick}>스쿼트 / 데드리프트 / 덤벨 컬 / 클로즈그립 벤치프레스</a></td>
                                 <td className="text align center" width="60"><Form.Check type="checkbox" /></td>
                             </tr>
                             <tr>
                                 <td className="text align center" width="60">2</td>
-                                <td className="text align left ellipsis"><a href="/calendar" onClick={this.handleClick}>기록을 남겨주세요.</a></td>
+                                <td className="text align left"><a href="/calendar" onClick={this.handleClick}>기록을 남겨주세요.</a></td>
                                 <td className="text align center" width="60"><Form.Check type="checkbox" /></td>
                             </tr>
                         </tbody>
