@@ -7,7 +7,7 @@ import { withCookies, Cookies } from 'react-cookie'
 import { LoginAPI } from './api/users/login.api'
 import Calendar from './components/calendar/Calendar'
 import Login from './components/login/Login'
-import Records from './components/records/Records'
+import Record from './components/record/Record'
 
 
 interface AppPropsInterface {
@@ -89,7 +89,7 @@ class App extends Component <AppPropsInterface> {
                             <Login cookies={this.props.cookies} silentRefresh={this.getRefreshToken} />
                     }
                 </Route>
-                <Route path="/records" component={ Records } />
+                <Route path="/record" component={ Record } />
 
             </Router>
         )

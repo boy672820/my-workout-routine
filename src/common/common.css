@@ -1,3 +1,7 @@
+html {
+    font-size: 12px;
+}
+
 .hidden {
     top: 0;
     left: 0;
@@ -22,6 +26,9 @@ fieldset {
     text-align: right;
 }
 
+.vertical.align.middle {
+    vertical-align: middle;
+}
 
 .text.ellipsis {
     display: inline-block;
