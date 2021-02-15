@@ -1,5 +1,30 @@
-.record-header {
-    padding-bottom: 10px;
+.main {
+    margin-top: 75px;
+}
+.record-date {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    z-index: 1;
+    top: 0;
+    padding: 15px 0 10px 0;
+    text-align: center;
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    -webkit-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+}
+.record-date-title {
+    font-size: 18px;
+}
+.record-date-desc {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.record-item {
+    margin-bottom: 10px;
 }
 .record-item-header {
     padding: 5px 0;
