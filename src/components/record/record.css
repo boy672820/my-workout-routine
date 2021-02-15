@@ -1,7 +1,21 @@
 .record-header {
     padding-bottom: 10px;
 }
-
-.inactive {
-    color: #a9a9a9;
+.record-item-header {
+    padding: 5px 0;
+}
+.record-item-table > tbody > tr:first-child > td {
+    border-top: 0;
+}
+.edit-button > .fa-edit {
+    font-size: 14px;
+    color: #17a2b8;
+}
+.record-item-complete-set,
+.record-item-complete-set .record-item-set-title {
+    color: #818182;
+    text-decoration: line-through;
+}
+.record-item-set-title {
+    padding-left: 5px;
 }

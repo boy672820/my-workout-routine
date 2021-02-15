@@ -1,5 +1,6 @@
 html {
     font-size: 12px;
+    background-color: #f5f5f5;
 }
 
 .hidden {
@@ -15,6 +16,7 @@ fieldset {
 
 .main {
     padding-top: 30px;
+    background-color: #f5f5f5;
 }
 .text.align.center {
     text-align: center;
@@ -38,3 +40,25 @@ fieldset {
     text-overflow: ellipsis;
 }
 
+.no.margin {
+    margin: 0;
+}
+.no.padding {
+    padding: 0;
+}
+.display.inline.block {
+    display: inline-block;
+}
+
+
+/* Bootstrap custom */
+.card {
+    border-radius: 1rem !important;
+    -webkit-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+}
+.card-header {
+    background-color: rgba( 0, 0, 0, 0 ) !important;
+    border-bottom: 1px dashed rgba(0,0,0,.125) !important;
+}

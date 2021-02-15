@@ -3,10 +3,12 @@ import {
     Container,
     Table,
     Button,
-    Modal
+    Modal,
+    Form,
+    Card
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBurn, faCheckCircle, faCircle } from "@fortawesome/free-solid-svg-icons"
+import { faBurn, faEdit } from "@fortawesome/free-solid-svg-icons"
 
 import './record.css'
 
@@ -26,7 +28,9 @@ class Records extends Component<RecordPropsInterface, RecordStateInterface> {
             modal: false
         }
 
-        this.handleModal.bind( this )
+        this.handleModal = this.handleModal.bind( this )
+        this.handleEdit = this.handleEdit.bind( this )
+        this.handleComplete = this.handleComplete.bind( this )
     }
 
     handleModal() {
@@ -34,53 +38,120 @@ class Records extends Component<RecordPropsInterface, RecordStateInterface> {
             modal: ! this.state.modal
         } )
     }
-    
+
+    handleEdit() {
+        this.handleModal() // Open modal.
+    }
+
+    handleComplete() {
+        console.log( 'test' )
+    }
+
     render() {
         return (
             <main className="main">
                 <Container>
 
                     <div className="record-header">
-                        <h2>2021년 2월 13일</h2>
-                        <p>
+                        <h2 className="record-header-title">2021년 2월 13일</h2>
+                        <h3 className="record-header-desc">
                             <strong>토요일</strong> / <span>캔디토 상체 컨트롤데이</span>
-                        </p>
+                        </h3>
                     </div>
 
-                    <Table>
-                        <tbody>
-                            <tr>
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCheckCircle} />&nbsp;<strong>정지 벤치프레스</strong></td>
-                                <td className="vertical align middle" width="95">6세트 4회</td>
-                                <td className="vertical align middle" width="15"><Button variant="link" size="sm" title="기록 작성하기" style={{ color: '#dc3545' }}><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                            <tr>
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCircle} />&nbsp;<strong>펜들레이 로우</strong></td>
-                                <td className="vertical align middle">3세트 4회</td>
-                                <td className="vertical align middle"><Button variant="link" size="sm" title="기록 작성하기" style={{ color: '#dc3545' }}><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                            <tr className="inactive">
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCircle} />&nbsp;<strong>오버 헤드 프레스</strong></td>
-                                <td className="vertical align middle">6세트 4회</td>
-                                <td className="vertical align middle"><Button variant="link" size="sm" title="기록 작성하기"><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                            <tr className="inactive">
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCircle} />&nbsp;<strong>풀업</strong></td>
-                                <td className="vertical align middle">3세트 12회</td>
-                                <td className="vertical align middle"><Button variant="link" size="sm" title="기록 작성하기"><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                            <tr className="inactive">
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCircle} />&nbsp;<strong>라잉 트라이셉스 익스텐션</strong></td>
-                                <td className="vertical align middle">4세트 8~10회</td>
-                                <td className="vertical align middle"><Button variant="link" size="sm" title="기록 작성하기"><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                            <tr className="inactive">
-                                <td className="vertical align middle"><FontAwesomeIcon icon={faCircle} />&nbsp;<strong>랫 풀 다운</strong></td>
-                                <td className="vertical align middle">3세트 10~12회</td>
-                                <td className="vertical align middle"><Button variant="link" size="sm" title="기록 작성하기"><FontAwesomeIcon icon={faBurn} /></Button></td>
-                            </tr>
-                        </tbody>
-                    </Table>
+                    <Card>
+                        <Card.Header>
+                            <div className="record-item-header">
+                                <h4><FontAwesomeIcon icon={faBurn} style={{color: '#dc3545'}} />&nbsp;&nbsp;정지 벤치프레스</h4>
+                                <p className="no margin"><b>100kg</b>의 무게로 <b>6세트 4회</b> 진행하기</p>
+                            </div>
+                        </Card.Header>
+                        <Card.Body className="no padding">
+                            <Table className="record-item-table no margin text align center">
+                                <tbody>
+                                    <tr className="record-item-complete-set">
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" onChange={this.handleComplete} /></div>
+                                            <div className="record-item-set-title vertical align middle display inline block">1세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" /></div>&nbsp;
+                                            <div className="vertical align middle display inline block">2세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" /></div>&nbsp;
+                                            <div className="vertical align middle display inline block">3세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" /></div>&nbsp;
+                                            <div className="vertical align middle display inline block">4세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" /></div>&nbsp;
+                                            <div className="vertical align middle display inline block">5세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="vertical align middle">
+                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" /></div>&nbsp;
+                                            <div className="vertical align middle display inline block">6세트</div>
+                                        </td>
+                                        <td className="vertical align middle">100kg</td>
+                                        <td className="vertical align middle">4회</td>
+                                        <td className="vertical align middle">
+                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ this.handleEdit }>
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </Card.Body>
+                    </Card>
+
                 </Container>
 
                 <Modal show={this.state.modal} onHide={this.handleModal} animation={true}>
