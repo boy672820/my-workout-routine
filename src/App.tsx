@@ -8,6 +8,7 @@ import { LoginAPI } from './api/users/login.api'
 import Calendar from './components/calendar/Calendar'
 import Login from './components/login/Login'
 import Record from './components/record/Record'
+import Create from './components/create/Create'
 
 
 interface AppPropsInterface {
@@ -65,7 +66,7 @@ class App extends Component <AppPropsInterface> {
 
 
     render() {
-        const isAuth = axios.defaults.headers.common.Authorization ? '' : <Redirect to="/login" />
+        // const isAuth = axios.defaults.headers.common.Authorization ? '' : <Redirect to="/login" />
 
         const handleLogout = () => {
             axios.defaults.headers.common[ 'Authorization' ] = ''
@@ -76,19 +77,17 @@ class App extends Component <AppPropsInterface> {
         return (
             <Router>
                 {/* {isAuth} */}
-                {
-                axios.defaults.headers.common.Authorization ?
-                <div><button onClick={handleLogout}>Logout</button></div>
-                : ''
-                }
-                <Route path="/calendar" component={ Calendar } />
+
+                { axios.defaults.headers.common.Authorization ? <div><button onClick={handleLogout}>Logout</button></div> : '' }
+
                 <Route path="/login">
-                    {
-                        axios.defaults.headers.common.Authorization ?
-                            <Redirect to="/calendar" /> :
-                            <Login cookies={this.props.cookies} silentRefresh={this.getRefreshToken} />
-                    }
+                    { axios.defaults.headers.common.Authorization ?
+                        <Redirect to="/calendar" /> :
+                        <Login cookies={this.props.cookies} silentRefresh={this.getRefreshToken} /> }
                 </Route>
+
+                <Route path="/calendar" component={ Calendar } />
+                <Route path="/create" component={ Create } />
                 <Route path="/record" component={ Record } />
 
             </Router>
