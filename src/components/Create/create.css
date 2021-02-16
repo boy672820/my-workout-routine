@@ -1,0 +1,22 @@
+.create-header {
+    padding: 10px 0 4px 7px;
+}
+.disable-group {
+    padding: 10px 0;
+}
+.label-checkbox {
+    display: inline-block !important;
+    vertical-align: middle;
+    padding-right: .2rem;
+}
+.label-text {
+    display: inline-block !important;
+    vertical-align: middle;
+    margin: 0;
+}
+.create-submit-btn {
+    width: 100%;
+}
+.weight-group {
+    margin-bottom: 5px !important;
+}

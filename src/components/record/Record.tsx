@@ -80,7 +80,7 @@ class Records extends Component<RecordPropsInterface, RecordStateInterface> {
                     </Container>
                 </div>
 
-                <main className="main">
+                <main className="main record-main">
                     <Container>
                         <Card className="record-item">
                             <Card.Header>
