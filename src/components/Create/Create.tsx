@@ -24,10 +24,12 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         super( props )
 
         this.state = {
-            disable_range: true
+            disable_range: true,
+            weight_plate: 20
         }
 
         this.handleRange = this.handleRange.bind( this )
+        this.handlePlateToggle = this.handlePlateToggle.bind( this )
     }
 
     async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
@@ -35,6 +37,14 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
         this.setState( {
             disable_range: !checked
+        } )
+    }
+
+    async handlePlateToggle( e: React.ChangeEvent<HTMLInputElement> ) {
+        const { value } = e.target
+
+        this.setState( {
+            weight_plate: Number( value )
         } )
     }
 
@@ -109,12 +119,30 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
                                     <Form.Group className="weight-group">
                                         <ButtonGroup toggle aria-label="증가할 중량">
-                                            <ToggleButton type="radio" value="2.5" checked={false} variant="secondary" size="sm">2.5kg</ToggleButton>
-                                            <ToggleButton type="radio" value="5" checked={false} variant="secondary" size="sm">5kg</ToggleButton>
-                                            <ToggleButton type="radio" value="10" checked={false} variant="secondary" size="sm">10kg</ToggleButton>
-                                            <ToggleButton type="radio" value="15" checked={false} variant="secondary" size="sm">15kg</ToggleButton>
-                                            <ToggleButton type="radio" value="20" checked={false} variant="secondary" size="sm">20kg</ToggleButton>
-                                            <ToggleButton type="radio" value="25" checked={false} variant="secondary" size="sm">25kg</ToggleButton>
+                                            {
+                                                [
+                                                    { name: '2.5kg', value: 2.5 },
+                                                    { name: '5kg', value: 5 },
+                                                    { name: '10kg', value: 10 },
+                                                    { name: '15kg', value: 15 },
+                                                    { name: '20kg', value: 20 },
+                                                    { name: '25kg', value: 25 }
+                                                ]
+                                                .map( ( item, idx ) => {
+                                                    return (
+                                                        <ToggleButton key={idx}
+                                                            type="radio"
+                                                            value={item.value}
+                                                            checked={ this.state.weight_plate === item.value }
+                                                            variant="secondary"
+                                                            size="sm"
+                                                            onChange={ this.handlePlateToggle }
+                                                        >
+                                                            {item.name}
+                                                        </ToggleButton>
+                                                    )
+                                                } )
+                                            }
                                         </ButtonGroup>
                                     </Form.Group>
 
