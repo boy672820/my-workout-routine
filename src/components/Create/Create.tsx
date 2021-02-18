@@ -24,12 +24,21 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         super( props )
 
         this.state = {
+            exercise_name: '',
+            set_number: 3,
+            weight: 20,
+            reps: 8,
+            max_reps: 10,
             disable_range: true,
+            rir: 0,
             weight_plate: 20
         }
 
+        /** Bind events */
         this.handleRange = this.handleRange.bind( this )
         this.handlePlateToggle = this.handlePlateToggle.bind( this )
+        this.handleForm = this.handleForm.bind( this )
+        this.handleIncrement = this.handleIncrement.bind( this )
     }
 
     async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
@@ -48,6 +57,34 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         } )
     }
 
+    async handleForm( e: React.ChangeEvent<HTMLInputElement> ) {
+        const { name, value } = e.target
+
+        const update: CreateStateInterface = { ...this.state }
+
+        switch( name ) {
+            case 'exercise_name':
+                update[ 'exercise_name' ] = value
+                break
+
+            case 'set_number':
+            case 'weight':
+            case 'reps':
+            case 'max_reps':
+            case 'rir':
+                update[ name ] = Number( value )
+                break
+        }
+
+        this.setState( update )
+    }
+
+    async handleIncrement( target_name: string, value: number ) {
+        const increment = this.state[ target_name ] + value
+
+        if ( increment > 0 ) this.setState( { [ target_name ]: increment } )
+    }
+
     render() {
         return (
             <main className="main">
@@ -62,7 +99,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                             <Form>
                                 <Form.Group>
                                     <Form.Label htmlFor="exercise_name">종목</Form.Label>
-                                    <Form.Control type="text" name="exercise_name" id="exercise_name" placeholder="종목을 입력해주세요." />
+                                    <Form.Control type="text" name="exercise_name" id="exercise_name" placeholder="종목을 입력해주세요." onChange={ this.handleForm } value={ this.state.exercise_name } />
                                 </Form.Group>
 
                                 <Form.Row>
@@ -71,11 +108,11 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                             <Form.Label htmlFor="set_number">세트</Form.Label>
                                             <InputGroup>
                                                 <InputGroup.Prepend>
-                                                    <Button variant="outline-secondary" title="감소"><FontAwesomeIcon icon={ faAngleDown } /></Button>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'set_number', -1 ) }><FontAwesomeIcon icon={ faAngleDown } /></Button>
                                                 </InputGroup.Prepend>
-                                                <Form.Control type="text" name="set_number" id="set_number" placeholder="세트" />
+                                                <Form.Control type="text" name="set_number" id="set_number" placeholder="세트" onChange={ this.handleForm } value={ this.state.set_number } />
                                                 <InputGroup.Append>
-                                                    <Button variant="outline-secondary" title="증가"><FontAwesomeIcon icon={ faAngleUp } /></Button>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'set_number', 1 ) }><FontAwesomeIcon icon={ faAngleUp } /></Button>
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form.Group>
@@ -83,14 +120,14 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
                                     <Col xs={6}>
                                         <Form.Group className="no margin">
-                                            <Form.Label htmlFor="set_reps">횟수</Form.Label>
+                                            <Form.Label htmlFor="reps">횟수</Form.Label>
                                             <InputGroup>
                                                 <InputGroup.Prepend>
-                                                    <Button variant="outline-secondary" title="감소"><FontAwesomeIcon icon={ faAngleDown } /></Button>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'reps', -1 ) }><FontAwesomeIcon icon={ faAngleDown } /></Button>
                                                 </InputGroup.Prepend>
-                                                <Form.Control type="text" name="set_reps" id="set_reps" placeholder="횟수" />
+                                                <Form.Control type="text" name="reps" id="reps" placeholder="횟수" onChange={ this.handleForm } value={ this.state.reps } />
                                                 <InputGroup.Append>
-                                                    <Button variant="outline-secondary" title="증가"><FontAwesomeIcon icon={ faAngleUp } /></Button>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'reps', 1 ) }><FontAwesomeIcon icon={ faAngleUp } /></Button>
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form.Group>
@@ -103,11 +140,11 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                         <Form.Group>
                                             <InputGroup>
                                                 <InputGroup.Prepend>
-                                                    <Button variant="outline-secondary" title="감소"><FontAwesomeIcon icon={ faAngleDown } /></Button>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'max_reps', -1 ) }><FontAwesomeIcon icon={ faAngleDown } /></Button>
                                                 </InputGroup.Prepend>
-                                                <Form.Control type="text" name="set_max_reps" id="set_max_reps" placeholder="최대 횟수" disabled={this.state.disable_range} />
+                                                <Form.Control type="text" name="max_reps" id="max_reps" placeholder="최대 횟수" disabled={this.state.disable_range} onChange={ this.handleForm } value={ this.state.max_reps } />
                                                 <InputGroup.Append>
-                                                    <Button variant="outline-secondary" title="증가"><FontAwesomeIcon icon={ faAngleUp } /></Button>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'max_reps', 1 ) }><FontAwesomeIcon icon={ faAngleUp } /></Button>
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form.Group>
@@ -150,7 +187,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                         <InputGroup.Prepend>
                                             <Button variant="outline-secondary" title="감소"><FontAwesomeIcon icon={faAngleDown} /></Button>
                                         </InputGroup.Prepend>
-                                        <Form.Control type="text" name="weight" id="weight" placeholder="중량을 입력해주세요." />
+                                        <Form.Control type="text" name="weight" id="weight" placeholder="중량을 입력해주세요." onChange={ this.handleForm } value={ this.state.weight } />
                                         <InputGroup.Append>
                                             <Button variant="outline-secondary" title="증가"><FontAwesomeIcon icon={faAngleUp} /></Button>
                                         </InputGroup.Append>
@@ -158,7 +195,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                 </Form.Group>
 
                                 <Form.Group>
-                                    <Form.Label htmlFor="weight">
+                                    <Form.Label htmlFor="rir">
                                         RIR(Repetitions In Reserve)&nbsp;
                                         <OverlayTrigger trigger="click" placement="top" overlay={
                                             <Popover id="popover-basic">
@@ -176,7 +213,19 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                         </OverlayTrigger>
                                         
                                     </Form.Label>
-                                    <Form.Control type="text" name="weight" id="weight" placeholder="RIR을 입력해주세요." />
+                                    <Form.Control as="select" name="rir" id="rir" onChange={ this.handleForm } value={ this.state.rir }>
+                                        <option value={0}>0</option>
+                                        <option value={1}>1</option>
+                                        <option value={2}>2</option>
+                                        <option value={3}>3</option>
+                                        <option value={4}>4</option>
+                                        <option value={5}>5</option>
+                                        <option value={6}>6</option>
+                                        <option value={7}>7</option>
+                                        <option value={8}>8</option>
+                                        <option value={9}>9</option>
+                                        <option value={10}>10</option>
+                                    </Form.Control>
                                 </Form.Group>
 
                                 <Button variant="primary" type="submit" size="lg" className="create-submit-btn">저장</Button>

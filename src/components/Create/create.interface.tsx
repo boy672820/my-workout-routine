@@ -1,6 +1,8 @@
 export interface CreateStateInterface {
+    [ key: string ]: any
+
     exercise_name: string
-    sets: number
+    set_number: number
     weight: number
     reps: number
     max_reps: number
