@@ -9,10 +9,18 @@ import {
     ToggleButton,
     ButtonGroup,
     OverlayTrigger,
-    Popover
+    Popover,
+    Table
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDown, faAngleUp, faQuestionCircle } from "@fortawesome/free-solid-svg-icons"
+import {
+    faAngleDown,
+    faAngleUp,
+    faQuestionCircle,
+    faEdit,
+    faTrashAlt,
+    faBurn
+} from "@fortawesome/free-solid-svg-icons"
 
 import { CreatePropsInterface, CreateStateInterface } from './create.interface'
 import './create.css'
@@ -39,6 +47,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         this.handlePlateToggle = this.handlePlateToggle.bind( this )
         this.handleForm = this.handleForm.bind( this )
         this.handleIncrement = this.handleIncrement.bind( this )
+        this.handleIncreaseWeight = this.handleIncreaseWeight.bind( this )
         this.fixedReps = this.fixedReps.bind( this )
         this.fixedMaxReps = this.fixedMaxReps.bind( this )
     }
@@ -89,9 +98,20 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         this.setState( update )
     }
 
-    async handleIncrement( target_name: string, value: number ) {
+    async handleIncreaseWeight( i: number ) {
+        const increment = this.state.weight_plate * i
+        let value = this.state.weight + increment
+
+        if ( value <= 0 ) value = 0
+
+        this.setState( {
+            weight: value
+        } )
+    }
+
+    async handleIncrement( target_name: string, i: number ) {
         let update: CreateStateInterface = { ...this.state }
-        const increment = Number( update[ target_name ] ) + value
+        const increment = Number( update[ target_name ] ) + i
 
         update[ target_name ] = increment
 
@@ -192,18 +212,18 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                 </Form.Row>
 
                                 <Form.Group>
-                                    <Form.Label htmlFor="weight">중량</Form.Label>
+                                    <Form.Label htmlFor="weight">중량(kg)</Form.Label>
 
                                     <Form.Group className="weight-group">
-                                        <ButtonGroup toggle aria-label="증가할 중량">
+                                        <ButtonGroup toggle aria-label="증가할 중량" className="weight-plate-group">
                                             {
                                                 [
-                                                    { name: '2.5kg', value: 2.5 },
-                                                    { name: '5kg', value: 5 },
-                                                    { name: '10kg', value: 10 },
-                                                    { name: '15kg', value: 15 },
-                                                    { name: '20kg', value: 20 },
-                                                    { name: '25kg', value: 25 }
+                                                    { name: '2.5kg', value: 2.5, variant: 'light' },
+                                                    { name: '5kg', value: 5, variant: 'light' },
+                                                    { name: '10kg', value: 10, variant: 'success' },
+                                                    { name: '15kg', value: 15, variant: 'warning' },
+                                                    { name: '20kg', value: 20, variant: 'primary' },
+                                                    { name: '25kg', value: 25, variant: 'danger' }
                                                 ]
                                                 .map( ( item, idx ) => {
                                                     return (
@@ -211,7 +231,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                                             type="radio"
                                                             value={item.value}
                                                             checked={ this.state.weight_plate === item.value }
-                                                            variant="secondary"
+                                                            variant={ item.variant }
                                                             size="sm"
                                                             onChange={ this.handlePlateToggle }
                                                         >
@@ -225,11 +245,15 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <Button variant="outline-secondary" title="감소"><FontAwesomeIcon icon={faAngleDown} /></Button>
+                                            <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncreaseWeight( -1 ) }>
+                                                <FontAwesomeIcon icon={faAngleDown} />
+                                            </Button>
                                         </InputGroup.Prepend>
                                         <Form.Control type="text" name="weight" id="weight" placeholder="중량을 입력해주세요." onChange={ this.handleForm } value={ this.state.weight } />
                                         <InputGroup.Append>
-                                            <Button variant="outline-secondary" title="증가"><FontAwesomeIcon icon={faAngleUp} /></Button>
+                                            <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncreaseWeight( 1 ) }>
+                                                <FontAwesomeIcon icon={faAngleUp} />
+                                            </Button>
                                         </InputGroup.Append>
                                     </InputGroup>
                                 </Form.Group>
@@ -270,6 +294,39 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
                                 <Button variant="primary" type="submit" size="lg" className="create-submit-btn">저장</Button>
                             </Form>
+                        </Card.Body>
+                    </Card>
+
+                    <hr />
+
+                    <header className="create-header">
+                        <h5>생선된 운동</h5>
+                    </header>
+
+                    <Card className="create-item">
+                        <Card.Header>
+                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;스쿼트</h5>
+                            <p className="no margin"><b>100kg</b>의 무게로 <b>4세트 10~12회</b> 진행하기</p>
+                        </Card.Header>
+                        <Card.Body className="no padding">
+                            <Table className="record-item-table no margin text align center">
+                                <tbody>
+                                    <tr>
+                                        <td className="vertical align middle">1세트</td>
+                                        <td className="vertical align middle">100kg / 10~12회 / 10RIR</td>
+                                        <td className="vertical align middle" width="10">
+                                            <Button variant="link">
+                                                <FontAwesomeIcon icon={faEdit} />
+                                            </Button>
+                                        </td>
+                                        <td className="vertical align middle" width="10">
+                                            <Button variant="link">
+                                                <FontAwesomeIcon icon={faTrashAlt} style={ { color: '#dc3545' } } />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
                         </Card.Body>
                     </Card>
 

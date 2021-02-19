@@ -20,3 +20,9 @@
 .weight-group {
     margin-bottom: 5px !important;
 }
+.weight-plate-group {
+    width: 100%;
+}
+.create-item {
+    margin-bottom: 10px;
+}
