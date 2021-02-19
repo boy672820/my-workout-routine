@@ -39,6 +39,8 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         this.handlePlateToggle = this.handlePlateToggle.bind( this )
         this.handleForm = this.handleForm.bind( this )
         this.handleIncrement = this.handleIncrement.bind( this )
+        this.fixedReps = this.fixedReps.bind( this )
+        this.fixedMaxReps = this.fixedMaxReps.bind( this )
     }
 
     async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
@@ -60,29 +62,63 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
     async handleForm( e: React.ChangeEvent<HTMLInputElement> ) {
         const { name, value } = e.target
 
-        const update: CreateStateInterface = { ...this.state }
+        let update: CreateStateInterface = { ...this.state }
 
         switch( name ) {
             case 'exercise_name':
-                update[ 'exercise_name' ] = value
-                break
+            update[ name ] = value
+            break
 
             case 'set_number':
             case 'weight':
-            case 'reps':
-            case 'max_reps':
             case 'rir':
-                update[ name ] = Number( value )
-                break
+            update[ name ] = Number( value )
+            break
+
+            case 'reps':
+            update[ name ] = Number( value )
+            update = await this.fixedMaxReps( update )
+            break
+
+            case 'max_reps':
+            update[ name ] = Number( value )
+            update = await this.fixedReps( update )
+            break
         }
 
         this.setState( update )
     }
 
     async handleIncrement( target_name: string, value: number ) {
-        const increment = this.state[ target_name ] + value
+        let update: CreateStateInterface = { ...this.state }
+        const increment = Number( update[ target_name ] ) + value
 
-        if ( increment > 0 ) this.setState( { [ target_name ]: increment } )
+        update[ target_name ] = increment
+
+        if ( target_name === 'max_reps' ) update = await this.fixedReps( update )
+        if ( target_name === 'reps' ) update = await this.fixedMaxReps( update )
+
+        if ( increment > 0 ) this.setState( update )
+    }
+
+    async fixedReps( update: CreateStateInterface ): Promise<CreateStateInterface> {
+        const { reps, max_reps } = update
+
+        if ( update.max_reps <= 2 ) {
+            update.max_reps = 2
+            update.reps = 1
+        }
+        else if ( reps >= max_reps ) update.reps = max_reps - 1
+
+        return update
+    }
+
+    async fixedMaxReps( update: CreateStateInterface ): Promise<CreateStateInterface> {
+        const { reps, max_reps } = update
+
+        if ( reps >= max_reps ) update.max_reps = reps + 1
+
+        return update
     }
 
     render() {
@@ -140,11 +176,15 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                                         <Form.Group>
                                             <InputGroup>
                                                 <InputGroup.Prepend>
-                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'max_reps', -1 ) }><FontAwesomeIcon icon={ faAngleDown } /></Button>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'max_reps', -1 ) } disabled={this.state.disable_range}>
+                                                        <FontAwesomeIcon icon={ faAngleDown } />
+                                                    </Button>
                                                 </InputGroup.Prepend>
                                                 <Form.Control type="text" name="max_reps" id="max_reps" placeholder="최대 횟수" disabled={this.state.disable_range} onChange={ this.handleForm } value={ this.state.max_reps } />
                                                 <InputGroup.Append>
-                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'max_reps', 1 ) }><FontAwesomeIcon icon={ faAngleUp } /></Button>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'max_reps', 1 ) } disabled={this.state.disable_range}>
+                                                        <FontAwesomeIcon icon={ faAngleUp } />
+                                                    </Button>
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form.Group>

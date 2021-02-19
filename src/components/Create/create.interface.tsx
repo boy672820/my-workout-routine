@@ -1,6 +1,8 @@
-export interface CreateStateInterface {
-    [ key: string ]: any
+interface CreateObjectKeys {
+    [ key: string ]: string | number | boolean
+}
 
+export interface CreateStateInterface extends CreateObjectKeys {
     exercise_name: string
     set_number: number
     weight: number
