@@ -34,11 +34,12 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         this.state = {
             exercise_name: '',
             set_number: 3,
-            weight: 20,
+            weight: 0,
             reps: 8,
             max_reps: 10,
             disable_range: true,
             rir: 0,
+            rest: 1.5,
             weight_plate: 20
         }
 
@@ -50,7 +51,10 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         this.handleIncreaseWeight = this.handleIncreaseWeight.bind( this )
         this.fixedReps = this.fixedReps.bind( this )
         this.fixedMaxReps = this.fixedMaxReps.bind( this )
+        this.handleSubmit = this.handleSubmit.bind( this )
     }
+
+    private exerciseRef = React.createRef<any>()
 
     async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
         const { checked } = e.target
@@ -75,6 +79,7 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
         switch( name ) {
             case 'exercise_name':
+            if ( value ) this.exerciseRef.current.style.border = '1px solid #ced4da'
             update[ name ] = value
             break
 
@@ -141,6 +146,22 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
         return update
     }
 
+    async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
+        e.preventDefault()
+
+        const ref = this.exerciseRef.current
+
+        if ( ! this.state.exercise_name ) ref.style.border = '1px solid #dc3545'
+
+        else {
+            this.setState( {
+                exercise_name: '',
+                weight: 0,
+                rir: 0
+            } )
+        }
+    }
+
     render() {
         return (
             <main className="main">
@@ -152,10 +173,10 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
                     </header>
                     <Card>
                         <Card.Body>
-                            <Form>
+                            <Form onSubmit={ this.handleSubmit }>
                                 <Form.Group>
                                     <Form.Label htmlFor="exercise_name">종목</Form.Label>
-                                    <Form.Control type="text" name="exercise_name" id="exercise_name" placeholder="종목을 입력해주세요." onChange={ this.handleForm } value={ this.state.exercise_name } />
+                                    <Form.Control type="text" name="exercise_name" id="exercise_name" placeholder="종목을 입력해주세요." onChange={ this.handleForm } value={ this.state.exercise_name } ref={ this.exerciseRef } />
                                 </Form.Group>
 
                                 <Form.Row>

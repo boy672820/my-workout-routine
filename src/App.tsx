@@ -87,7 +87,7 @@ class App extends Component <AppPropsInterface> {
                 </Route>
 
                 <Route path="/calendar" component={ Calendar } />
-                <Route path="/create" component={ Create } />
+                <Route path="/create/exercise" component={ Create } />
                 <Route path="/record" component={ Record } />
 
             </Router>

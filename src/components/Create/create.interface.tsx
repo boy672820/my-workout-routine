@@ -10,6 +10,7 @@ export interface CreateStateInterface extends CreateObjectKeys {
     max_reps: number
     disable_range: boolean
     rir: number
+    rest: number
     weight_plate: number
 }
 
