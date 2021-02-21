@@ -8,7 +8,8 @@ import { LoginAPI } from './api/users/login.api'
 import Calendar from './components/calendar/Calendar'
 import Login from './components/login/Login'
 import Record from './components/record/Record'
-import Create from './components/create/Create'
+import CreateExercise from './components/create/CreateExercise'
+import CreateBlock from './components/create/CreateBlock'
 
 
 interface AppPropsInterface {
@@ -76,6 +77,7 @@ class App extends Component <AppPropsInterface> {
     
         return (
             <Router>
+
                 {/* {isAuth} */}
 
                 { axios.defaults.headers.common.Authorization ? <div><button onClick={handleLogout}>Logout</button></div> : '' }
@@ -87,7 +89,10 @@ class App extends Component <AppPropsInterface> {
                 </Route>
 
                 <Route path="/calendar" component={ Calendar } />
-                <Route path="/create/exercise" component={ Create } />
+
+                <Route path="/create/block" component={ CreateBlock } />
+                <Route path="/create/exercise" component={ CreateExercise } />
+
                 <Route path="/record" component={ Record } />
 
             </Router>

@@ -26,7 +26,7 @@ import { CreatePropsInterface, CreateStateInterface } from './create.interface'
 import './create.css'
 
 
-class Create extends Component<CreatePropsInterface, CreateStateInterface> {
+class CreateExercise extends Component<CreatePropsInterface, CreateStateInterface> {
 
     constructor( props: CreatePropsInterface ) {
         super( props )
@@ -355,8 +355,8 @@ class Create extends Component<CreatePropsInterface, CreateStateInterface> {
 
 
             </main>
-        )    
+        )
     }
 }
 
-export default Create
+export default CreateExercise
