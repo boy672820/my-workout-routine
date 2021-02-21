@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBurn, faEdit, faPlusCircle } from "@fortawesome/free-solid-svg-icons"
 
 import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
+import { CreateAPI } from '../../api/create/create.api'
 
 import './calendar.css'
 
@@ -64,7 +65,21 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
     async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
         e.preventDefault()
 
-        this.props.history.push( '/create/exercise' )
+        if ( this.state.routine_id ) {
+            const data = {
+                routine_id: this.state.routine_id,
+                block_title: this.state.block_title
+            }
+            const response = CreateAPI.createBlock( data )
+
+            response.then( ( { data } ) => {
+                this.props.history.push( `/create/exercise/${data.ID}` )
+            } ).catch( err => {
+                console.log( err )
+            } )
+        }
+
+        else alert( '잘못 된 접근입니다.')
     }
 
     render() {
