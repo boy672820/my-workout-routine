@@ -31,7 +31,10 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
     constructor( props: CreatePropsInterface ) {
         super( props )
 
+        const { block_id } = props.match.params
+
         this.state = {
+            block_id: Number( block_id ),
             exercise_name: '',
             set_number: 3,
             weight: 0,

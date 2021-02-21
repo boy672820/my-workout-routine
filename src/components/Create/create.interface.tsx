@@ -3,6 +3,7 @@ interface CreateObjectKeys {
 }
 
 export interface CreateStateInterface extends CreateObjectKeys {
+    block_id: number
     exercise_name: string
     set_number: number
     weight: number
@@ -14,4 +15,7 @@ export interface CreateStateInterface extends CreateObjectKeys {
     weight_plate: number
 }
 
-export interface CreatePropsInterface {}
+export interface CreatePropsInterface {
+    history: any
+    match: any
+}
