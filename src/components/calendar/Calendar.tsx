@@ -25,6 +25,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
             modal: false,
             modal_title: '',
             routine_id: null,
+            routine_date: '',
             block_title: ''
         }
 
@@ -41,9 +42,9 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
     }
 
     async handleModal() {
-        this.setState( {
-            modal: ! this.state.modal
-        } )
+        const { modal } = this.state
+
+        this.setState( { modal: ! modal } )
     }
 
     async handleCreateBlock( routine_id: number, date_string: string ) {
@@ -58,6 +59,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
 
         this.setState( {
             routine_id: routine_id,
+            routine_date: date_string,
             modal_title: `${year}년 ${month}월 ${d}일 ${week[ day ]}`
         } )
     }
@@ -68,6 +70,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         if ( this.state.routine_id ) {
             const data = {
                 routine_id: this.state.routine_id,
+                routine_date: this.state.routine_date,
                 block_title: this.state.block_title
             }
             const response = CreateAPI.createBlock( data )
