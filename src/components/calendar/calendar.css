@@ -2,6 +2,9 @@
     padding: 10px 0 3px 0;
     text-align: center;
 }
+.calendar-body {
+    margin-bottom: 20px;
+}
 .no-record {
     color: #a0a0a0;
 }
