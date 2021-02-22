@@ -5,6 +5,14 @@ import { RoutineBlockDTO } from './dto/routine.block.dto'
 
 export class RoutineAPI {
 
+    public static async getExercises( block_id: number ): Promise<AxiosResponse> {
+        const encode = encodeURIComponent( block_id )
+        return await axios( {
+            method: 'get',
+            url: `/routine/exercises/${encode}`
+        } )
+    }
+
     public static async getActiveRoutine( user_email: string ): Promise<AxiosResponse> {
         const encode = encodeURIComponent( user_email )
 

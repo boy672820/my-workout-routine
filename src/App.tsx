@@ -9,7 +9,6 @@ import Calendar from './components/calendar/Calendar'
 import Login from './components/login/Login'
 import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
-import CreateBlock from './components/create/CreateBlock'
 
 
 interface AppPropsInterface {
@@ -90,7 +89,6 @@ class App extends Component <AppPropsInterface> {
 
                 <Route path="/calendar" component={ Calendar } />
 
-                <Route path="/create/block" component={ CreateBlock } />
                 <Route path="/create/exercise/:block_id" component={ CreateExercise } />
 
                 <Route path="/record" component={ Record } />

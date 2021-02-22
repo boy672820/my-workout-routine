@@ -10,7 +10,8 @@ import {
     ButtonGroup,
     OverlayTrigger,
     Popover,
-    Table
+    Table,
+    Modal
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -22,8 +23,9 @@ import {
     faBurn
 } from "@fortawesome/free-solid-svg-icons"
 
-import { CreatePropsInterface, CreateStateInterface } from './create.interface'
+import { CreatePropsInterface, CreateStateInterface, CreateExerciseDataInterface } from './create.interface'
 import './create.css'
+import { RoutineAPI } from '../../api/routine/routine.api'
 
 
 class CreateExercise extends Component<CreatePropsInterface, CreateStateInterface> {
@@ -35,6 +37,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
         this.state = {
             block_id: Number( block_id ),
+            create_modal: false,
             exercise_name: '',
             set_number: 3,
             weight: 0,
@@ -43,7 +46,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             disable_range: true,
             rir: 0,
             rest: 1.5,
-            weight_plate: 20
+            weight_plate: 20,
+            exerciseData: []
         }
 
         /** Bind events */
@@ -55,9 +59,23 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
         this.fixedReps = this.fixedReps.bind( this )
         this.fixedMaxReps = this.fixedMaxReps.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
+        this.handleCreateModal = this.handleCreateModal.bind( this )
     }
 
     private exerciseRef = React.createRef<any>()
+
+    componentDidMount() {
+        RoutineAPI.getExercises( this.state.block_id )
+            .then( ( { data } ) => {
+                this.setState( { exerciseData: data } )
+            } )
+    }
+
+    async handleCreateModal() {
+        const { create_modal } = this.state
+
+        this.setState( { create_modal: !create_modal } )
+    }
 
     async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
         const { checked } = e.target
@@ -158,6 +176,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
         else {
             this.setState( {
+                create_modal: false,
                 exercise_name: '',
                 weight: 0,
                 rir: 0
@@ -172,11 +191,62 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                 <Container>
 
                     <header className="create-header">
-                        <h5>운동 일정 작성</h5>
+                        <h5>생선된 운동</h5>
                     </header>
-                    <Card>
-                        <Card.Body>
-                            <Form onSubmit={ this.handleSubmit }>
+
+                    {
+                        ( ( that, data ) => {
+
+                            const res: any[] = []
+
+                            data.map( ( row: CreateExerciseDataInterface, index: number ) => {
+                                res.push (
+                                    <Card className="create-item" key={ index }>
+                                        <Card.Header>
+                                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;{ row.exercise_name }</h5>
+                                            <p className="no margin"><b>100kg</b>의 무게로 <b>4세트 10~12회</b> 진행하기</p>
+                                        </Card.Header>
+                                        <Card.Body className="no padding">
+                                            <Table className="record-item-table no margin text align center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td className="vertical align middle">1세트</td>
+                                                        <td className="vertical align middle">100kg / 10~12회 / 10RIR</td>
+                                                        <td className="vertical align middle" width="10">
+                                                            <Button variant="link">
+                                                                <FontAwesomeIcon icon={faEdit} />
+                                                            </Button>
+                                                        </td>
+                                                        <td className="vertical align middle" width="10">
+                                                            <Button variant="link">
+                                                                <FontAwesomeIcon icon={faTrashAlt} style={ { color: '#dc3545' } } />
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                )
+                            } )
+
+                            return res
+
+                        } )( this, this.state.exerciseData )
+                    }
+
+                    <Button variant="warning" type="button" size="lg" className="create-modal-btn" onClick={ this.handleCreateModal }>운동 생성</Button>
+
+                </Container>
+
+                <Modal size="lg" show={this.state.create_modal} onHide={ this.handleCreateModal } centered>
+                    <Form onSubmit={ this.handleSubmit }>
+
+                        <Modal.Header closeButton>
+                            <Modal.Title>운동 일정 작성</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>
                                 <Form.Group>
                                     <Form.Label htmlFor="exercise_name">종목</Form.Label>
                                     <Form.Control type="text" name="exercise_name" id="exercise_name" placeholder="종목을 입력해주세요." onChange={ this.handleForm } value={ this.state.exercise_name } ref={ this.exerciseRef } />
@@ -315,47 +385,13 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         <option value={10}>10</option>
                                     </Form.Control>
                                 </Form.Group>
+                        </Modal.Body>
 
-                                <Button variant="primary" type="submit" size="lg" className="create-submit-btn">저장</Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-
-                    <hr />
-
-                    <header className="create-header">
-                        <h5>생선된 운동</h5>
-                    </header>
-
-                    <Card className="create-item">
-                        <Card.Header>
-                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;스쿼트</h5>
-                            <p className="no margin"><b>100kg</b>의 무게로 <b>4세트 10~12회</b> 진행하기</p>
-                        </Card.Header>
-                        <Card.Body className="no padding">
-                            <Table className="record-item-table no margin text align center">
-                                <tbody>
-                                    <tr>
-                                        <td className="vertical align middle">1세트</td>
-                                        <td className="vertical align middle">100kg / 10~12회 / 10RIR</td>
-                                        <td className="vertical align middle" width="10">
-                                            <Button variant="link">
-                                                <FontAwesomeIcon icon={faEdit} />
-                                            </Button>
-                                        </td>
-                                        <td className="vertical align middle" width="10">
-                                            <Button variant="link">
-                                                <FontAwesomeIcon icon={faTrashAlt} style={ { color: '#dc3545' } } />
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Card.Body>
-                    </Card>
-
-                </Container>
-
+                        <Modal.Footer>
+                            <Button variant="primary" type="submit" size="lg" className="create-submit-btn">저장</Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
 
             </main>
         )

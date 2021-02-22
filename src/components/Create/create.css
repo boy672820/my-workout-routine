@@ -17,6 +17,13 @@
 .create-submit-btn {
     width: 100%;
 }
+.create-modal-btn {
+    width: 100%;
+    border-radius: 1rem !important;
+    -webkit-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.1);
+}
 .weight-group {
     margin-bottom: 5px !important;
 }
