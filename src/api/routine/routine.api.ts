@@ -1,11 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { RoutineBlockDTO } from './dto/routine.block.dto'
 
 
 export class RoutineAPI {
 
-    public static async getActiveRoutine( user_email: string ) {
+    public static async getActiveRoutine( user_email: string ): Promise<AxiosResponse> {
         const encode = encodeURIComponent( user_email )
 
         return await axios( {
@@ -14,7 +14,14 @@ export class RoutineAPI {
         } )
     }
 
-    public static async createBlock( data: RoutineBlockDTO ) {
+    public static async getRoutineDates( routine_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'get',
+            url: `/routine/dates/${routine_id}`
+        } )
+    }
+
+    public static async createBlock( data: RoutineBlockDTO ): Promise<AxiosResponse> {
         return await axios( {
             method: 'post',
             url: '/routine/block',
@@ -22,7 +29,7 @@ export class RoutineAPI {
         } )
     }
 
-    public static async nowDate() {
+    public static async nowDate(): Promise<AxiosResponse> {
         return await axios( {
             method: 'get',
             url: '/routine/now-date'

@@ -27,7 +27,8 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
             routine_id: null,
             routine_date: '',
             block_title: '',
-            nowDate: { year: 0, month: 0, date: 0 }
+            nowDate: { year: 0, month: 0, date: 0 },
+            blocks: {}
         }
 
         this.handleChange = this.handleChange.bind( this )
@@ -44,10 +45,18 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
             .then( ( { data } ) => {
                 this.setState( { nowDate: data } )
             } )
-        // Set active routine id.
+
+            // Set active routine id.
         RoutineAPI.getActiveRoutine( 'test@mwr.com' )
             .then( ( { data } ) => {
                 this.setState( { routine_id: data.ID } )
+
+                // Set routine blocks.
+                const getRoutineDates = RoutineAPI.getRoutineDates( data.ID )
+
+                getRoutineDates.then( response => {
+                    this.setState( { blocks: response.data } )
+                } )
             } )
     }
 
@@ -129,21 +138,54 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                     { ( ( that ) => {
                                         const rows = []
                                         let i = 1
+                                        const { blocks } = that.state
+                                        const keys = Object.keys( blocks )
+                                        const today = new Date( Date.now() )
+
                                         for ( i; i <= last_date; i += 1 ) {
                                             const day = new Date( year, month, i ).getDay()
                                             const week = that.week[ day ][ 0 ]
+                                            const ymd = `${year}/${month}/${i}`
+                                            const is_today = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}` === ymd ? 'today' : ''
+                                            const is_weekend = day === 0 || day === 6 ? 'weekend ' : ''
 
-                                            rows.push(
-                                                <tr key={ i }>
-                                                    <td className="vertical text align middle center">{ i }({ week })</td>
-                                                    <td className="vertical align middle"><b className="no-record">운동 기록이 없습니다.</b></td>
-                                                    <td className="vertical text align middle center">
-                                                        <Button variant="link" className="no padding" onClick={ that.handleCreateBlock } data-date_string={ `${year}/${month}/${i}` } title="운동기록 작성하기">
-                                                            <FontAwesomeIcon icon={ faPlusCircle } />
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                            )
+                                            const key_index = keys.indexOf( ymd )
+
+                                            if ( key_index < 0 ) {
+                                                rows.push(
+                                                    <tr key={ i }>
+                                                        <td className={ "vertical text align middle center td " + is_weekend + is_today }>
+                                                            <span className={ 'day ' + is_weekend + is_today }>{ i }({ week })</span>
+                                                        </td>
+                                                        <td className={ "vertical align middle td td " + is_weekend + is_today }>
+                                                            <b className="no-record">운동 기록이 없습니다.</b>
+                                                        </td>
+                                                        <td className={ "vertical text align middle center td " + is_weekend + is_today }>
+                                                            <Button variant="link" className="no padding" onClick={ that.handleCreateBlock } data-date_string={ ymd } title="운동기록 작성하기">
+                                                                <FontAwesomeIcon icon={ faPlusCircle } />
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
+                                            else {
+                                                rows.push(
+                                                    <tr key={ i }>
+                                                        <td className={ "vertical text align middle center td " + is_weekend + is_today }>
+                                                            <span className={ 'day ' + is_weekend + is_today }>{ i }({ week })</span>
+                                                        </td>
+                                                        <td className={ "vertical align middle td " + is_weekend + is_today }>
+                                                            <FontAwesomeIcon icon={ faBurn } style={ { color: '#dc3545' } } />&nbsp;
+                                                            { blocks[ ymd ].block_title }
+                                                        </td>
+                                                        <td className={ "vertical text align middle center td " + is_weekend + is_today }>
+                                                            <Button variant="link" className="no padding" title="운동기록 수정하기">
+                                                                <FontAwesomeIcon icon={faEdit} />
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
                                         }
 
                                         return rows

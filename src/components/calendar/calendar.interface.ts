@@ -15,4 +15,5 @@ export interface CalendarStateInterface {
     routine_date: string
     block_title: string
     nowDate: CalendarNowDateInterface
+    blocks: { [ key: string ]: any }
 }

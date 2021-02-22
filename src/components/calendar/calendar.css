@@ -8,3 +8,20 @@
 .no-record {
     color: #a0a0a0;
 }
+.td.weekend {
+    background-color: #f5f5f5;
+    color: #7b7a7a;
+}
+.td.today {
+    background-color: #dee2e6;
+}
+.day.today {
+    padding: 5px;
+    background-color: #eb4d3d !important;
+    color: #fff !important;
+    font-weight: bold;
+    border-radius: 10px;
+}
+.day.weekend {
+    color: #7b7b7b;
+}
