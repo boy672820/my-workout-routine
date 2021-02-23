@@ -20,7 +20,8 @@ import {
     faQuestionCircle,
     faEdit,
     faTrashAlt,
-    faBurn
+    faBurn,
+    faDumbbell
 } from "@fortawesome/free-solid-svg-icons"
 
 import { CreatePropsInterface, CreateStateInterface, CreateExerciseDataInterface } from './create.interface'
@@ -197,13 +198,13 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                     {
                         ( ( that, data ) => {
 
-                            const res: any[] = []
+                            const res: JSX.Element[] = []
 
-                            data.map( ( row: CreateExerciseDataInterface, index: number ) => {
-                                res.push (
-                                    <Card className="create-item" key={ index }>
+                            data.forEach( (row: CreateExerciseDataInterface, index: number) => {
+                                res.push(
+                                    <Card className="create-item" key={index}>
                                         <Card.Header>
-                                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;{ row.exercise_name }</h5>
+                                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;{row.exercise_name}</h5>
                                             <p className="no margin"><b>100kg</b>의 무게로 <b>4세트 10~12회</b> 진행하기</p>
                                         </Card.Header>
                                         <Card.Body className="no padding">
@@ -219,7 +220,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                                         </td>
                                                         <td className="vertical align middle" width="10">
                                                             <Button variant="link">
-                                                                <FontAwesomeIcon icon={faTrashAlt} style={ { color: '#dc3545' } } />
+                                                                <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#dc3545' }} />
                                                             </Button>
                                                         </td>
                                                     </tr>
@@ -235,7 +236,10 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                         } )( this, this.state.exerciseData )
                     }
 
-                    <Button variant="warning" type="button" size="lg" className="create-modal-btn" onClick={ this.handleCreateModal }>운동 생성</Button>
+                    <Button variant="warning" type="button" size="lg" className="create-modal-btn" onClick={ this.handleCreateModal }>
+                        <FontAwesomeIcon icon={ faDumbbell } />&nbsp;
+                        종목 추가하기
+                    </Button>
 
                 </Container>
 
