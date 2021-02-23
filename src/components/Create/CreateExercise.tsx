@@ -201,6 +201,29 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                             const res: JSX.Element[] = []
 
                             data.forEach( (row: CreateExerciseDataInterface, index: number) => {
+                                const setElements: JSX.Element[] = []
+
+                                row.sets.forEach( ( set, index ) => {
+                                    setElements.push(
+                                        <tr key={ index }>
+                                            <td className="vertical align middle">{ set.set_number }세트</td>
+                                            <td className="vertical align middle">
+                                                { set.set_weight }kg / { set.set_reps }{ set.set_disable_range ? `~${ set.set_max_reps }` : '' }회 / { set.set_rir }RIR
+                                            </td>
+                                            <td className="vertical align middle" width="10">
+                                                <Button variant="link">
+                                                    <FontAwesomeIcon icon={faEdit} />
+                                                </Button>
+                                            </td>
+                                            <td className="vertical align middle" width="10">
+                                                <Button variant="link">
+                                                    <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#dc3545' }} />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                } )
+
                                 res.push(
                                     <Card className="create-item" key={index}>
                                         <Card.Header>
@@ -210,20 +233,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         <Card.Body className="no padding">
                                             <Table className="record-item-table no margin text align center">
                                                 <tbody>
-                                                    <tr>
-                                                        <td className="vertical align middle">1세트</td>
-                                                        <td className="vertical align middle">100kg / 10~12회 / 10RIR</td>
-                                                        <td className="vertical align middle" width="10">
-                                                            <Button variant="link">
-                                                                <FontAwesomeIcon icon={faEdit} />
-                                                            </Button>
-                                                        </td>
-                                                        <td className="vertical align middle" width="10">
-                                                            <Button variant="link">
-                                                                <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#dc3545' }} />
-                                                            </Button>
-                                                        </td>
-                                                    </tr>
+                                                    { setElements }
                                                 </tbody>
                                             </Table>
                                         </Card.Body>
