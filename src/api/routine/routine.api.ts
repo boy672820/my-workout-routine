@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 
 import { RoutineBlockDTO } from './dto/routine.block.dto'
+import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
 
 
 export class RoutineAPI {
@@ -29,6 +30,14 @@ export class RoutineAPI {
         } )
     }
 
+    public static async createExercise( data: RoutineExerciseDTO ) {
+        return await axios( {
+            method: 'post',
+            url: '/routine/exercise',
+            data: data
+        } )
+    }
+    
     public static async createBlock( data: RoutineBlockDTO ): Promise<AxiosResponse> {
         return await axios( {
             method: 'post',

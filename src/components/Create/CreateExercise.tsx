@@ -27,6 +27,7 @@ import {
 import { CreatePropsInterface, CreateStateInterface, CreateExerciseDataInterface } from './create.interface'
 import './create.css'
 import { RoutineAPI } from '../../api/routine/routine.api'
+import { RoutineExerciseDTO } from '../../api/routine/dto/routine.exercise.dto'
 
 
 class CreateExercise extends Component<CreatePropsInterface, CreateStateInterface> {
@@ -37,8 +38,15 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
         const { block_id } = props.match.params
 
         this.state = {
-            block_id: Number( block_id ),
+            // UI/UX data.
             create_modal: false,
+            weight_plate: 20,
+
+            // Getting data.
+            exerciseData: [],
+
+            // Using form data.
+            block_id: Number( block_id ),
             exercise_name: '',
             set_number: 3,
             weight: 0,
@@ -46,9 +54,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             max_reps: 10,
             disable_range: true,
             rir: 0,
-            rest: 1.5,
-            weight_plate: 20,
-            exerciseData: []
+            rest_minute: 1,
+            rest_second: 30
         }
 
         /** Bind events */
@@ -108,6 +115,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             case 'set_number':
             case 'weight':
             case 'rir':
+            case 'rest_minute':
+            case 'rest_second':
             update[ name ] = Number( value )
             break
 
@@ -171,11 +180,31 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
     async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
         e.preventDefault()
 
+        // Valid exercise name.
         const ref = this.exerciseRef.current
-
         if ( ! this.state.exercise_name ) ref.style.border = '1px solid #dc3545'
 
         else {
+            const { block_id, exercise_name, set_number, weight, reps, max_reps, disable_range, rir, rest_minute, rest_second } = this.state
+            const rest = rest_minute * 60 + rest_second
+
+            const data: RoutineExerciseDTO = {
+                block_id: block_id,
+                exercise_name: exercise_name,
+                set_number: set_number,
+                weight: weight,
+                reps: reps,
+                max_reps: max_reps,
+                disable_range: disable_range,
+                rir: rir,
+                rest: rest
+            }
+            const response = RoutineAPI.createExercise( data )
+
+            response.then( ( { data } ) => {
+                console.log( data )
+            } )
+            
             this.setState( {
                 create_modal: false,
                 exercise_name: '',
@@ -196,7 +225,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                     </header>
 
                     {
-                        ( ( that, data ) => {
+                        ( ( data ) => {
 
                             const res: JSX.Element[] = []
 
@@ -204,18 +233,34 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                 const setElements: JSX.Element[] = []
 
                                 row.sets.forEach( ( set, index ) => {
+                                    const rest_minute = Math.floor( set.set_rest / 60 )
+                                    const rest_second_decimal = ( set.set_rest / 60 ) % 1
+                                    const rest_second = rest_second_decimal * 60
+
                                     setElements.push(
                                         <tr key={ index }>
-                                            <td className="vertical align middle">{ set.set_number }세트</td>
-                                            <td className="vertical align middle">
-                                                { set.set_weight }kg / { set.set_reps }{ set.set_disable_range ? `~${ set.set_max_reps }` : '' }회 / { set.set_rir }RIR
+                                            <td className="vertical align middle set-td first-td">
+                                                { set.set_number }세트
                                             </td>
-                                            <td className="vertical align middle" width="10">
+                                            <td className="vertical align middle set-td">
+                                                { set.set_weight }kg
+                                            </td>
+                                            <td className="vertical align middle set-td">
+                                                { set.set_reps }{ set.set_disable_range ? `~${ set.set_max_reps }` : '' }회
+                                            </td>
+                                            <td className="vertical align middle set-td">
+                                                { set.set_rir }RIR
+                                            </td>
+                                            <td className="vertical align middle set-td">
+                                                { rest_minute }분&nbsp;
+                                                { rest_second }초
+                                            </td>
+                                            <td className="vertical align middle set-td" width="10">
                                                 <Button variant="link">
                                                     <FontAwesomeIcon icon={faEdit} />
                                                 </Button>
                                             </td>
-                                            <td className="vertical align middle" width="10">
+                                            <td className="vertical align middle set-td last-td" width="10">
                                                 <Button variant="link">
                                                     <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#dc3545' }} />
                                                 </Button>
@@ -225,10 +270,12 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                 } )
 
                                 res.push(
-                                    <Card className="create-item" key={index}>
+                                    <Card className="create-item" key={ index }>
                                         <Card.Header>
-                                            <h5><FontAwesomeIcon icon={faBurn} />&nbsp;{row.exercise_name}</h5>
-                                            <p className="no margin"><b>100kg</b>의 무게로 <b>4세트 10~12회</b> 진행하기</p>
+                                            <h5 className="create-exercise-header no margin">
+                                                <FontAwesomeIcon icon={ faBurn } />
+                                                &nbsp;{ row.exercise_name }
+                                            </h5>
                                         </Card.Header>
                                         <Card.Body className="no padding">
                                             <Table className="record-item-table no margin text align center">
@@ -243,7 +290,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
                             return res
 
-                        } )( this, this.state.exerciseData )
+                        } )( this.state.exerciseData )
                     }
 
                     <Button variant="warning" type="button" size="lg" className="create-modal-btn" onClick={ this.handleCreateModal }>
@@ -398,6 +445,50 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         <option value={9}>9</option>
                                         <option value={10}>10</option>
                                     </Form.Control>
+                                </Form.Group>
+
+                                <Form.Group>
+                                    <Form.Label htmlFor="rest_minute">휴식 시간</Form.Label>
+
+                                    <Form.Row>
+                                        <Col xs={ 4 }>
+                                            <InputGroup>
+                                                <InputGroup.Prepend>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'rest_minute', -1 ) }>
+                                                        <FontAwesomeIcon icon={ faAngleDown } />
+                                                    </Button>
+                                                </InputGroup.Prepend>
+
+                                                <Form.Control type="text" name="rest_minute" id="rest_minute" onChange={ this.handleForm } value={ this.state.rest_minute } />
+
+                                                <InputGroup.Append>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'rest_minute', 1 ) }>
+                                                        <FontAwesomeIcon icon={ faAngleUp } />
+                                                    </Button>
+                                                </InputGroup.Append>
+                                            </InputGroup>
+                                        </Col>
+                                        <Form.Label htmlFor="rest_minute" column xs={ 1 }>분</Form.Label>
+
+                                        <Col xs={ 4 }>
+                                            <InputGroup>
+                                                <InputGroup.Prepend>
+                                                    <Button variant="outline-secondary" title="감소" onClick={ () => this.handleIncrement( 'rest_second', -1 ) }>
+                                                        <FontAwesomeIcon icon={ faAngleDown } />
+                                                    </Button>
+                                                </InputGroup.Prepend>
+
+                                                <Form.Control type="text" name="rest_second" id="rest_second" onChange={ this.handleForm } value={ this.state.rest_second } />
+
+                                                <InputGroup.Append>
+                                                    <Button variant="outline-secondary" title="증가" onClick={ () => this.handleIncrement( 'rest_second', 1 ) }>
+                                                        <FontAwesomeIcon icon={ faAngleUp } />
+                                                    </Button>
+                                                </InputGroup.Append>
+                                            </InputGroup>
+                                        </Col>
+                                        <Form.Label htmlFor="rest_second" column xs={ 1 }>초</Form.Label>
+                                    </Form.Row>
                                 </Form.Group>
                         </Modal.Body>
 

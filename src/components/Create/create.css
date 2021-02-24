@@ -1,6 +1,9 @@
 .create-header {
     padding: 10px 0 4px 7px;
 }
+.create-exercise-header {
+    padding: 5px 0;
+}
 .disable-group {
     padding: 10px 0;
 }
@@ -33,4 +36,14 @@
 }
 .create-item {
     margin-bottom: 10px;
+}
+.set-td {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+}
+.first-td {
+    padding-left: 1rem !important;
+}
+.last-td {
+    padding-right: 1rem !important;
 }

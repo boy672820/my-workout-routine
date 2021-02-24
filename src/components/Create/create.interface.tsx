@@ -22,8 +22,15 @@ export interface CreateExerciseDataInterface {
 }
 
 export interface CreateStateInterface extends CreateObjectKeys {
-    block_id: number
+    // UI/UX data.
     create_modal: boolean
+    weight_plate: number
+
+    // Getting data.
+    exerciseData: CreateExerciseDataInterface[]
+
+    // Using form data.
+    block_id: number
     exercise_name: string
     set_number: number
     weight: number
@@ -31,9 +38,8 @@ export interface CreateStateInterface extends CreateObjectKeys {
     max_reps: number
     disable_range: boolean
     rir: number
-    rest: number
-    weight_plate: number
-    exerciseData: CreateExerciseDataInterface[]
+    rest_minute: number
+    rest_second: number
 }
 
 export interface CreatePropsInterface {
