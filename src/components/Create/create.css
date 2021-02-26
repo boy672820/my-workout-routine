@@ -17,6 +17,13 @@
     vertical-align: middle;
     margin: 0;
 }
+.create-add-set-td {
+    padding: 0 !important;
+}
+.create-add-set-btn {
+    width: 100%;
+    border-radius: 0rem 0rem 1rem 1rem !important;
+}
 .create-submit-btn {
     width: 100%;
 }
@@ -45,5 +52,8 @@
     padding-left: 1rem !important;
 }
 .last-td {
+    padding-right: 1rem !important;
+}
+.create-exercise-remove-btn {
     padding-right: 1rem !important;
 }

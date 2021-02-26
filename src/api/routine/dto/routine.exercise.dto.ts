@@ -6,16 +6,16 @@ export interface RoutineExerciseDTO {
 
     readonly set_number: number
 
-    readonly weight: number
+    readonly set_weight: number
 
-    readonly reps: number
+    readonly set_reps: number
 
-    readonly max_reps: number
+    readonly set_max_reps: number
 
-    readonly disable_range: boolean
+    readonly set_disable_range: boolean
 
-    readonly rir: number
+    readonly set_rir: number
 
-    readonly rest: number
+    readonly set_rest: number
 
 }
