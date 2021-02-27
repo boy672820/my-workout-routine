@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 
 import { RoutineBlockDTO } from './dto/routine.block.dto'
 import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
+import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 
 
 export class RoutineAPI {
@@ -29,6 +30,14 @@ export class RoutineAPI {
         return await axios( {
             method: 'delete',
             url: `/routine/exercise/${encode}`
+        } )
+    }
+
+    public static async updateExerciseSet( data: RoutineUpdateSetDTO ) {
+        return await axios( {
+            method: 'put',
+            url: '/routine/exercise/set',
+            data: data
         } )
     }
 

@@ -36,7 +36,7 @@ export interface CreateStateInterface extends CreateObjectKeys {
     weight_plate: number
     remove_exercise_modal: boolean
 
-    // Using form state.
+    // Create exercise state.
     block_id: number
     exercise_name: string
     set_number: number

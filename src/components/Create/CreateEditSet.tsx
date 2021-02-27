@@ -111,7 +111,7 @@ class CreateEditSet extends Component<CreateEditSetPropsInterface, CreateEditSet
                                 name={ `${prefix}set_disable_range` }
                                 id={ `${prefix}set_disable_range` }
                                 className="label-checkbox"
-                                onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => parent.handleRange( e, 'edit_' ) }
+                                onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => parent.handleRange( e, prefix ) }
                                 checked={ ! parent.state[ `${prefix}set_disable_range` ] }
                             />
                             <label htmlFor={ `${prefix}set_disable_range` } className="label-text">최대 횟수 사용</label>
@@ -244,10 +244,16 @@ class CreateEditSet extends Component<CreateEditSetPropsInterface, CreateEditSet
                         <Form.Label htmlFor="rest_minute" column xs={ 1 }>분</Form.Label>
 
                         <Col xs={ 4 }>
-                            <Form.Control as="select" name="edit_set_rest_second" id="edit_set_rest_second" onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => parent.handleForm( e, '' ) } value={ parent.state.edit_set_rest_second }>
+                            <Form.Control
+                                as="select"
+                                name={ `${prefix}set_rest_second` }
+                                id={ `${prefix}set_rest_second` }
+                                onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => parent.handleForm( e, prefix ) }
+                                value={ parent.state[ `${prefix}set_rest_second` ] }
+                                >
                                 {
                                     [ ...Array( 59 ) ].map( ( v, i ) => {
-                                        return <option value={ i + 1 } key={ i }>{i + 1}</option>
+                                        return <option value={ i } key={ i }>{ i }</option>
                                     } )
                                 }
                             </Form.Control>
