@@ -4,6 +4,8 @@ import {
     Button
 } from 'react-bootstrap'
 
+import { RoutineAPI } from '../../api/routine/routine.api'
+
 interface RemoveExercisePropsInterface {
     parent: any
 }
@@ -16,6 +18,31 @@ class CreateRemoveExerciseModal extends Component<RemoveExercisePropsInterface, 
         super( props )
 
         this.state = {}
+
+        this.handleRemoveExerciseSubmit = this.handleRemoveExerciseSubmit.bind( this )
+    }
+
+    /**
+     * Handle remove exercise submit.
+     */
+    async handleRemoveExerciseSubmit() {
+        const { parent } = this.props
+
+        parent.handleRemoveExerciseModal()
+
+        const remove_exercise_id = parent.state.remove_exercise_id as number
+        const response = RoutineAPI.removeExercise( remove_exercise_id )
+
+        response.then( ( { data } ) => {
+            if ( data.raw.serverStatus === 2 ) {
+                RoutineAPI.getExercises( parent.state.block_id )
+                    .then( ( { data } ) => {
+                        parent.setState( {
+                            exerciseData: data
+                        } )
+                    } )
+            }
+        } )
     }
 
     render() {
@@ -33,7 +60,7 @@ class CreateRemoveExerciseModal extends Component<RemoveExercisePropsInterface, 
 
                 <Modal.Footer>
                     <Button variant="secondary" type="button" size="lg" onClick={ parent.handleRemoveExerciseModal }>아니오</Button>
-                    <Button variant="danger" type="button" size="lg" onClick={ parent.handleRemoveExerciseSubmit }>삭제</Button>
+                    <Button variant="danger" type="button" size="lg" onClick={ this.handleRemoveExerciseSubmit }>삭제</Button>
                 </Modal.Footer>
             </Modal>
         )

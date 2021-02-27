@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 
 import { RoutineBlockDTO } from './dto/routine.block.dto'
+import { RoutineCreateSetDTO } from './dto/routine.create.set.dto'
 import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
 import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
+import { RoutineUpdateExerciseDTO } from './dto/routine.update.exercise.dto'
 
 
 export class RoutineAPI {
@@ -17,7 +19,7 @@ export class RoutineAPI {
         } )
     }
 
-    public static async createExercise( data: RoutineExerciseDTO ) {
+    public static async createExercise( data: RoutineExerciseDTO ): Promise<AxiosResponse> {
         return await axios( {
             method: 'post',
             url: '/routine/exercise',
@@ -25,7 +27,15 @@ export class RoutineAPI {
         } )
     }
 
-    public static async removeExercise( exercise_id: number ) {
+    public static async updateExercise( data: RoutineUpdateExerciseDTO ) {
+        return await axios( {
+            method: 'put',
+            url: '/routine/exercise',
+            data: data
+        } )
+    }
+
+    public static async removeExercise( exercise_id: number ): Promise<AxiosResponse> {
         const encode = encodeURIComponent( exercise_id )
         return await axios( {
             method: 'delete',
@@ -33,11 +43,41 @@ export class RoutineAPI {
         } )
     }
 
-    public static async updateExerciseSet( data: RoutineUpdateSetDTO ) {
+
+    /** Sets */
+
+    public static async createExerciseSet( data: RoutineCreateSetDTO ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'post',
+            url: '/routine/exercise/set',
+            data: data
+        } )
+    }
+
+    public static async updateExerciseSet( data: RoutineUpdateSetDTO ): Promise<AxiosResponse> {
         return await axios( {
             method: 'put',
             url: '/routine/exercise/set',
             data: data
+        } )
+    }
+
+    public static async removeSetAndReorder( id: number, exercise_id: number, block_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'delete',
+            url: `/routine/exercise/set-reorder`,
+            data: {
+                id: id,
+                exercise_id: exercise_id,
+                block_id: block_id
+            }
+        } )
+    }
+
+    public static async updateOrderSetNumber( exercise_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'put',
+            url: `/routine/exercise/order-set/${exercise_id}`
         } )
     }
 

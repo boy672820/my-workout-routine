@@ -30,7 +30,7 @@ class CreateEditSetModal extends Component<CreateEditSetModalPropsInterface, Cre
         this.handleSubmit = this.handleSubmit.bind( this )
     }
 
-    async handleSubmit( e: React.ChangeEvent<HTMLFormElement> ) {
+    async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
         e.preventDefault()
 
         const { parent } = this.props

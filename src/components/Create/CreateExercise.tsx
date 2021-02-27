@@ -3,14 +3,12 @@ import { debounce } from 'lodash'
 
 import {
     CreatePropsInterface,
-    CreateStateInterface,
-    CreateExerciseSetInterface
+    CreateStateInterface
 } from './create.interface'
 import CreateEditSetModal from './CreateEditSetModal'
 import CreateExerciseModal from './CreateExerciseModal'
 import CreateRemoveExerciseModal from './CreateRemoveExerciseModal'
 import { RoutineAPI } from '../../api/routine/routine.api'
-import { RoutineExerciseDTO } from '../../api/routine/dto/routine.exercise.dto'
 
 import './create.css'
 import CreateExerciseList from './CreateExerciseList'
@@ -58,11 +56,21 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             edit_set_rir: -1,
             edit_set_rest_minute: -1,
             edit_set_rest_second: -1,
-            
+
+            // Create set state.
+            create_set_exercise_name: '',
+            create_set_exercise_id: -1,
+            create_set_reps: 1,
+            create_set_max_reps: 2,
+            create_set_disable_range: true,
+            create_set_weight: 0,
+            create_set_rir: 0,
+            create_set_rest_minute: 1,
+            create_set_rest_second: 30,
+
             // Getting state.
             exerciseData: []
         }
-
 
         /** Bind events */
 
@@ -74,27 +82,24 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
         this.handleForm = this.handleForm.bind( this )
         this.handleIncrement = this.handleIncrement.bind( this )
         this.handleIncreaseWeight = this.handleIncreaseWeight.bind( this )
-        this.handleSubmit = this.handleSubmit.bind( this )
         this.handleCreateModal = this.handleCreateModal.bind( this )
 
         /** Remove exercise events. */
-        this.handleRemoveExercise = this.handleRemoveExercise.bind( this )
         this.handleRemoveExerciseModal = this.handleRemoveExerciseModal.bind( this )
-        this.handleRemoveExerciseSubmit = this.handleRemoveExerciseSubmit.bind( this )
 
         /** Edit set event. */
-        this.handleEditSet = this.handleEditSet.bind( this )
         this.handleEditSetModal = this.handleEditSetModal.bind( this )
 
         /** Debounced */
         this.debouncedHandleChange = this.debouncedHandleChange.bind( this )
     }
 
-
-    /** Refs */
+    // Refs.
     private exerciseRef = React.createRef<any>()
 
-
+    /**
+     * componentDidMount.
+     */
     componentDidMount() {
         RoutineAPI.getExercises( this.state.block_id )
             .then( ( { data } ) => {
@@ -102,39 +107,14 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             } )
     }
 
+    /**
+     * Handle edit set modal.
+     */
     async handleEditSetModal() {
         const { edit_set_modal } = this.state
 
         this.setState( {
             edit_set_modal: ! edit_set_modal,
-        } )
-    }
-
-    /**
-     * Handle edit set.
-     * @param exercise_name
-     * @param data
-     */
-    async handleEditSet( exercise_name: string, data: CreateExerciseSetInterface ) {
-        this.handleEditSetModal()
-
-        const { set_rest } = data
-
-        const rest_minute = Math.floor( set_rest / 60 )
-        const rest_second = set_rest - ( rest_minute * 60 )
-
-        this.setState( {
-            edit_exercise_name: exercise_name,
-            edit_ID: data.ID,
-            edit_exercise_id: data.exercise_id,
-            edit_set_number: data.set_number,
-            edit_set_reps: data.set_reps,
-            edit_set_max_reps: data.set_max_reps,
-            edit_set_disable_range: data.set_disable_range,
-            edit_set_weight: data.set_weight,
-            edit_set_rir: data.set_rir,
-            edit_set_rest_minute: rest_minute,
-            edit_set_rest_second: rest_second
         } )
     }
 
@@ -146,41 +126,6 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
         this.setState( {
             remove_exercise_modal: ! remove_exercise_modal
-        } )
-    }
-
-    /**
-     * Handle remove exercise submit.
-     */
-    async handleRemoveExerciseSubmit() {
-        this.handleRemoveExerciseModal()
-
-        const remove_exercise_id = this.state.remove_exercise_id as number
-        const response = RoutineAPI.removeExercise( remove_exercise_id )
-
-        response.then( ( { data } ) => {
-            if ( data.raw.serverStatus === 2 ) {
-                RoutineAPI.getExercises( this.state.block_id )
-                    .then( ( { data } ) => {
-                        this.setState( {
-                            exerciseData: data
-                        } )
-                    } )
-            }
-        } )
-    }
-
-    /**
-     * Handle remove exercise.
-     * @param exercise_id 
-     * @param exercise_name 
-     */
-    async handleRemoveExercise( exercise_id: number, exercise_name: string ) {
-        this.handleRemoveExerciseModal()
-
-        this.setState( {
-            remove_exercise_name: exercise_name,
-            remove_exercise_id: exercise_id
         } )
     }
 
@@ -352,61 +297,6 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
         }
 
         return res
-    }
-
-    /**
-     * Request api to save exercise data
-     * and get response data to exercises data.
-     * @param e Form event.
-     */
-    async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
-        e.preventDefault()
-
-        // Valid exercise name.
-        const ref = this.exerciseRef.current
-        if ( ! this.state.exercise_name ) ref.style.border = '1px solid #dc3545'
-
-        else {
-            const {
-                block_id,
-                exercise_name,
-                set_number,
-                set_weight,
-                set_reps,
-                set_max_reps,
-                set_disable_range,
-                set_rir,
-                set_rest_minute,
-                set_rest_second } = this.state
-            const set_rest = set_rest_minute * 60 + set_rest_second
-
-            const data: RoutineExerciseDTO = {
-                block_id: block_id,
-                exercise_name: exercise_name,
-                set_number: set_number,
-                set_weight: set_weight,
-                set_reps: set_reps,
-                set_max_reps: set_max_reps,
-                set_disable_range: set_disable_range,
-                set_rir: set_rir,
-                set_rest: set_rest
-            }
-            // Create exercise and sets.
-            await RoutineAPI.createExercise( data )
-
-            // Reload exercise and sets.
-            await RoutineAPI.getExercises( block_id )
-            .then( ( { data } ) => {
-                console.log( data )
-                this.setState( {
-                    exerciseData: data,
-                    create_modal: false,
-                    exercise_name: '',
-                    weight: 0,
-                    rir: 0
-                } )
-            } )
-        }
     }
 
     render() {

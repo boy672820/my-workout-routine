@@ -12,6 +12,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 import CreateEditSet from './CreateEditSet'
+import { RoutineExerciseDTO } from '../../api/routine/dto/routine.exercise.dto'
+import { RoutineAPI } from '../../api/routine/routine.api'
 
 import './create.css'
 
@@ -30,14 +32,72 @@ class CreateExerciseModal extends Component<CreateExerciseModalPropsInterface, C
 
         this.state = {}
 
+        /** Bind events. */
+        this.handleSubmit = this.handleSubmit.bind( this )
+    }
+
+    /**
+     * Request api to save exercise data
+     * and get response data to exercises data.
+     * @param e Form event.
+     */
+    async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
+        e.preventDefault()
+
+        const { parent } = this.props
+
+        // Valid exercise name.
+        const ref = parent.exerciseRef.current
+        if ( ! parent.state.exercise_name ) ref.style.border = '1px solid #dc3545'
+
+        else {
+            const {
+                block_id,
+                exercise_name,
+                set_number,
+                set_weight,
+                set_reps,
+                set_max_reps,
+                set_disable_range,
+                set_rir,
+                set_rest_minute,
+                set_rest_second } = parent.state
+            const set_rest = set_rest_minute * 60 + set_rest_second
+
+            const data: RoutineExerciseDTO = {
+                block_id: block_id,
+                exercise_name: exercise_name,
+                set_number: set_number,
+                set_weight: set_weight,
+                set_reps: set_reps,
+                set_max_reps: set_max_reps,
+                set_disable_range: set_disable_range,
+                set_rir: set_rir,
+                set_rest: set_rest
+            }
+            // Create exercise and sets.
+            await RoutineAPI.createExercise( data )
+
+            // Reload exercise and sets.
+            await RoutineAPI.getExercises( block_id )
+                .then( ( { data } ) => {
+                    parent.setState( {
+                        exerciseData: data,
+                        create_modal: false,
+                        exercise_name: '',
+                        weight: 0,
+                        rir: 0
+                    } )
+                } )
+        }
     }
 
     render() {
-        const { parent } = this.props
+        const { parent, prefix } = this.props
 
         return (
             <Modal size="lg" show={parent.state.create_modal} onHide={ parent.handleCreateModal } centered>
-                <Form onSubmit={ parent.handleSubmit }>
+                <Form onSubmit={ this.handleSubmit }>
 
                     <Modal.Header closeButton>
                         <Modal.Title>운동 일정 작성</Modal.Title>
@@ -70,7 +130,7 @@ class CreateExerciseModal extends Component<CreateExerciseModalPropsInterface, C
                             </InputGroup>
                         </Form.Group>
 
-                        <CreateEditSet parent={ parent } prefix='' />
+                        <CreateEditSet parent={ parent } prefix={ prefix } />
 
                     </Modal.Body>
 

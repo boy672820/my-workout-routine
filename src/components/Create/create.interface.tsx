@@ -62,6 +62,17 @@ export interface CreateStateInterface extends CreateObjectKeys {
     edit_set_rest_minute: number
     edit_set_rest_second: number
 
+    // Create set state.
+    create_set_exercise_name: string
+    create_set_exercise_id: number
+    create_set_reps: number
+    create_set_max_reps: number
+    create_set_disable_range: boolean
+    create_set_weight: number
+    create_set_rir: number
+    create_set_rest_minute: number
+    create_set_rest_second: number
+    
     // Remove state.
     remove_exercise_name: string
     remove_exercise_id: number | null
