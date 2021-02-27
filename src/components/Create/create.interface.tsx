@@ -59,7 +59,8 @@ export interface CreateStateInterface extends CreateObjectKeys {
     edit_set_disable_range: 1 | 0
     edit_set_weight: number
     edit_set_rir: number
-    edit_set_rest: number
+    edit_set_rest_minute: number
+    edit_set_rest_second: number
 
     // Remove state.
     remove_exercise_name: string

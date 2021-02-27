@@ -35,6 +35,7 @@ import {
 import { RoutineAPI } from '../../api/routine/routine.api'
 import { RoutineExerciseDTO } from '../../api/routine/dto/routine.exercise.dto'
 import CreateEditSet from './CreateEditSet'
+import CreateEditSetModal from './CreateEditSetModal'
 
 import './create.css'
 
@@ -77,7 +78,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             edit_set_max_reps: -1,
             edit_set_number: -1,
             edit_set_reps: -1,
-            edit_set_rest: -1,
+            edit_set_rest_minute: -1,
+            edit_set_rest_second: -1,
             edit_set_rir: -1,
             edit_set_weight: -1,
             
@@ -139,6 +141,13 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
      */
     async handleEditSet( exercise_name: string, data: CreateExerciseSetInterface ) {
         this.handleEditSetModal()
+
+        const { set_rest } = data
+
+        const rest_minute = Math.floor( set_rest / 60 )
+        const rest_second_decimal = ( set_rest / 60 ) % 1
+        const rest_second = rest_second_decimal * 60
+
         this.setState( {
             edit_exercise_name: exercise_name,
             edit_ID: data.ID,
@@ -149,7 +158,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             edit_set_disable_range: data.set_disable_range,
             edit_set_weight: data.set_weight,
             edit_set_rir: data.set_rir,
-            edit_set_rest: data.set_rest
+            edit_set_rest_minute: rest_minute,
+            edit_set_rest_second: rest_second
         } )
     }
 
@@ -212,11 +222,12 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
      * Handle disable range.
      * @param e Change event from form control.
      */
-    async handleRange( e: React.ChangeEvent<HTMLInputElement> ) {
+    async handleRange( e: React.ChangeEvent<HTMLInputElement>, prefix?: string ) {
+        const is_prefix = prefix ? prefix : ''
         const { checked } = e.target
 
         this.setState( {
-            set_disable_range: !checked
+            [ `${is_prefix}set_disable_range` ]: !checked
         } )
     }
 
@@ -236,11 +247,12 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
      * Handle increment or decrement to button of weight.
      * @param i 
      */
-    async handleIncreaseWeight( i: number ) {
+    async handleIncreaseWeight( i: number, prefix?: string ) {
+        const is_prefix = prefix ? prefix : ''
         const increment = this.state.weight_plate * i
-        let value = this.state.set_weight + increment
+        let value = Number( this.state[ `${is_prefix}set_weight` ] ) + increment
 
-        const update = await this.validateForm( 'set_weight', value, '' )
+        const update = await this.validateForm( `${is_prefix}set_weight`, value, is_prefix )
 
         this.setState( update )
     }
@@ -251,12 +263,12 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
      * @param i Increment value.
      * @param prefix Use prefix to give it unique name.
      */
-    async handleIncrement( target_name: string, i: number ) {
+    async handleIncrement( target_name: string, i: number, prefix?: string ) {
         const value = this.state[ target_name ]
         let increment_value = Number( value ) + i
 
-        const update = await this.validateForm( target_name, increment_value, '' )
-
+        const update = await this.validateForm( target_name, increment_value, prefix ? prefix : '' )
+    
         this.setState( update )
     }
 
@@ -268,11 +280,15 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
         const { name, value } = e.target
 
-        const update = await this.validateForm( name, value, prefix )
+        const update = this.validateForm( name, value, prefix )
 
-        this.debouncedHandleChange( update )
+        this.setState( await update )
     }
 
+    /**
+     * Debounce
+     * @param update 
+     */
     async debouncedHandleChange( update: any ) {
         debounce( async () => {
             await this.setState( update )
@@ -309,12 +325,17 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
             // Valid number.
             case `${prefix}set_number`:
-            case `${prefix}set_rir`:
             case `${prefix}set_rest_minute`:
                     const number_value = await validNumber( value, 1 )
                 res[ name ] = number_value
             break
 
+            // Valid set_rest_second
+            case `${prefix}set_rir`:
+                const rir_value = await validNumber( value, 0 )
+                res[ name ] = rir_value
+            break
+            
             // Valid set_rest_second
             case `${prefix}set_rest_second`:
                 const rest_second_value = await validNumber( value, 0 )
@@ -521,7 +542,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
 
                 {/** Edit set modal. */}
-                <CreateEditSet parent={ this } prefix="edit_" />
+                <CreateEditSetModal parent={ this } prefix="edit_" />
 
 
                 {/** Remove exercise modal. */}
@@ -579,7 +600,9 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         </Form.Group>
                                     </Col>
 
-                                    <Col xs={6}>
+                                    <CreateEditSet parent={ this } prefix='' />
+
+                                    {/* <Col xs={6}>
                                         <Form.Group className="no margin">
                                             <Form.Label htmlFor="set_reps">횟수</Form.Label>
                                             <InputGroup>
@@ -594,7 +617,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         </Form.Group>
 
                                         <Form.Group className="disable-group no margin">
-                                            <Form.Check type="checkbox" name="set_disable_range" id="set_disable_range" className="label-checkbox" onChange={ this.handleRange } />
+                                            <Form.Check type="checkbox" name="set_disable_range" id="set_disable_range" className="label-checkbox" onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => this.handleRange( e ) } />
                                             <label htmlFor="set_disable_range" className="label-text">최대 횟수 사용</label>
                                         </Form.Group>
 
@@ -613,10 +636,10 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form.Group>
-                                    </Col>
+                                    </Col> */}
                                 </Form.Row>
 
-                                <Form.Group>
+                                {/* <Form.Group>
                                     <Form.Label htmlFor="set_weight">중량(kg)</Form.Label>
 
                                     <Form.Group className="weight-group">
@@ -634,11 +657,11 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                                     return (
                                                         <ToggleButton key={ idx }
                                                             type="radio"
-                                                            value={ item.value }
-                                                            checked={ this.state.weight_plate === item.value }
-                                                            variant={ item.variant }
                                                             size="sm"
+                                                            variant={ item.variant }
+                                                            checked={ this.state.weight_plate === item.value }
                                                             onChange={ this.handlePlateToggle }
+                                                            value={ item.value }
                                                         >
                                                             {item.name}
                                                         </ToggleButton>
@@ -731,7 +754,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
                                         </Col>
                                         <Form.Label htmlFor="set_rest_second" column xs={ 1 }>초</Form.Label>
                                     </Form.Row>
-                                </Form.Group>
+                                </Form.Group> */}
                         </Modal.Body>
 
                         <Modal.Footer>
