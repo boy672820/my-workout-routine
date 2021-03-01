@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import axios from 'axios'
-import { instanceOf } from 'prop-types';
+import { instanceOf } from 'prop-types'
 import { withCookies, Cookies } from 'react-cookie'
 
 import { LoginAPI } from './api/users/login.api'
@@ -9,6 +9,8 @@ import Calendar from './components/calendar/Calendar'
 import Login from './components/login/Login'
 import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
+import NotFound from './components/notfound/NotFound'
+import AuthRoute from './components/AuthRoute'
 
 
 interface AppPropsInterface {
@@ -25,34 +27,36 @@ class App extends Component <AppPropsInterface> {
     constructor( props: AppPropsInterface ) {
         super( props )
 
-        this.getRefreshToken.bind( this )
+        this.getRefreshToken = this.getRefreshToken.bind( this )
+        this.handleLogout = this.handleLogout.bind( this )
     }
 
     componentDidMount() {
-        // If token exists.
-        if ( this.props.cookies.get( 'token' ) ) {
-            // Get access token when refresh token is cookie.
-            const getAccessToken = LoginAPI.getAccessToken( this.props.cookies.get( 'token' ) )
+        // const refresh_token = this.props.cookies.get( 'token' )
+        // // If token exists.
+        // if ( refresh_token ) {
+        //     // Get access token when refresh token is cookie.
+        //     const getAccessToken = LoginAPI.getAccessToken( refresh_token )
 
-            getAccessToken.then( response => {
-                // Set access token in memory.
-                axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
-                // Set refresh token in cookie.
-                this.props.cookies.set( 'token', response.data.user.refresh_token )
+        //     getAccessToken.then( response => {
+        //         // Set access token in memory.
+        //         axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
+        //         // Set refresh token in cookie.
+        //         this.props.cookies.set( 'token', response.data.user.refresh_token )
 
-                // Refresh token.
-                this.getRefreshToken( this.props.cookies )
-            } )
-            .catch( error => {
-                console.log( error )
-            } )
-        }
+        //         // Refresh token.
+        //         this.getRefreshToken( this.props.cookies )
+        //     } )
+        //     .catch( error => {
+        //         console.log( error )
+        //     } )
+        // }
     }
 
     /**
      * Get refresh token.
      */
-    getRefreshToken( cookies: Cookies ) {
+    async getRefreshToken( cookies: Cookies ) {
         LoginAPI.getProfile().then( response => {
             LoginAPI.refresh(
                 response.data.email,
@@ -64,35 +68,29 @@ class App extends Component <AppPropsInterface> {
         } )
     }
 
+    async handleLogout() {
+        axios.defaults.headers.common[ 'Authorization' ] = ''
+        const { cookies } = this.props
+        cookies.remove( 'token' )
+    }
+
 
     render() {
-        // const isAuth = axios.defaults.headers.common.Authorization ? '' : <Redirect to="/login" />
-
-        const handleLogout = () => {
-            axios.defaults.headers.common[ 'Authorization' ] = ''
-            const { cookies } = this.props
-            cookies.remove( 'token' )
-        }
-    
         return (
             <Router>
+                <Switch>
 
-                {/* {isAuth} */}
+                    <Route path="/login" render={ ( props ) => <Login cookies={this.props.cookies} silentRefresh={this.getRefreshToken} history={ props.history } /> } />
 
-                { axios.defaults.headers.common.Authorization ? <div><button onClick={handleLogout}>Logout</button></div> : '' }
+                    <AuthRoute path="/calendar" component={ Calendar } cookies={ this.props.cookies } />
 
-                <Route path="/login">
-                    { axios.defaults.headers.common.Authorization ?
-                        <Redirect to="/calendar" /> :
-                        <Login cookies={this.props.cookies} silentRefresh={this.getRefreshToken} /> }
-                </Route>
+                    <AuthRoute path="/create/exercise/:block_id" component={ CreateExercise } cookies={ this.props.cookies } />
 
-                <Route path="/calendar" component={ Calendar } />
+                    <AuthRoute path="/record" component={ Record } cookies={ this.props.cookies } />
 
-                <Route path="/create/exercise/:block_id" component={ CreateExercise } />
+                    <Route component={ NotFound } />
 
-                <Route path="/record" component={ Record } />
-
+                </Switch>
             </Router>
         )
     }

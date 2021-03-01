@@ -80,6 +80,8 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
                     // Set silent refresh getting token from App component.
                     this.props.silentRefresh( this.props.cookies )
+
+                    this.props.history.push( '/calendar' )
                 }
                 else this.setState( { valid_login: false, success: false } )
             } )
@@ -119,7 +121,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                                 title="이메일을 입력해주세요."
                                 id="email"
                                 name="email"
-                                className="login-form-top"
+                                className="login-form-top text align center"
                                 size="lg"
                                 onChange={ this.handleChange }
                                 value={ this.state.email }
@@ -131,7 +133,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                                 title="비밀번호를 입력해주세요."
                                 id="password"
                                 name="password"
-                                className="login-form-bottom"
+                                className="login-form-bottom text align center"
                                 size="lg"
                                 ref={this.passwordRef}
                             />
