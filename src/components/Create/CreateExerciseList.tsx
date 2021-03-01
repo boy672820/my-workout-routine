@@ -237,13 +237,13 @@ class CreateExerciseList extends Component<ExerciseListPropsInterface, ExerciseL
                                 <Card className="create-item" key={ index }>
                                     <Card.Header>
                                         <Row>
-                                            <Col xs={ 6 }>
+                                            <Col xs={ 8 }>
                                                 <h5 className="create-exercise-header no margin">
                                                     <FontAwesomeIcon icon={ faBurn } />
                                                     &nbsp;{ row.exercise_name }
                                                 </h5>
                                             </Col>
-                                            <Col xs={ 6 } className="text align right create-exercise-remove-btn">
+                                            <Col xs={ 4 } className="text align right create-exercise-remove-btn">
                                                 <Button variant="link" onClick={ () => this.handleEditExercise( row.ID, row.exercise_name ) }>
                                                     <FontAwesomeIcon icon={faEdit} title="운동 종목명 변경" />
                                                 </Button>
