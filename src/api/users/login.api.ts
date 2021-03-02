@@ -9,7 +9,6 @@ export class LoginAPI {
     }
 
     public static async getProfile() {
-        // 여기서 헤더값 못받아옴..
         return await axios( {
             method: 'get',
             url: '/user/profile'

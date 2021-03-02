@@ -11,6 +11,7 @@ import axios from 'axios'
 import './login.css'
 
 import { LoginPropsInterface, LoginStateInterface } from './login.interface'
+import { LoginDto } from '../../api/users/dto/login.dto'
 import { LoginAPI } from '../../api/users/login.api'
 
 
@@ -67,7 +68,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         // Success validate email and password.
         if ( validate.valid_email && validate.valid_password ) {
             // Response login api.
-            const userData = { email: this.state.email, password: this.passwordRef.current.value }
+            const userData: LoginDto = { email: this.state.email, password: this.passwordRef.current.value }
             const loginResponse = LoginAPI.login( userData )
 
             // Login response.
@@ -78,10 +79,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                     axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
                     this.props.cookies.set( 'token', response.data.user.refresh_token )
 
-                    // Set silent refresh getting token from App component.
-                    this.props.silentRefresh( this.props.cookies )
-
-                    this.props.history.push( '/calendar' )
+                    this.props.history.push( '/' )
                 }
                 else this.setState( { valid_login: false, success: false } )
             } )
