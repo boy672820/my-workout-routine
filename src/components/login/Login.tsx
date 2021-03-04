@@ -22,6 +22,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         this.state = {
             email: '',
+            password: '',
             valid_email: true,
             valid_password: true,
             valid_login: true,
@@ -30,24 +31,21 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         this.handleChange = this.handleChange.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
-
     }
-
-    private passwordRef = React.createRef<any>()
 
     async handleChange( { currentTarget }: React.ChangeEvent<HTMLInputElement> ) {
         const value = currentTarget.value
+        const name = currentTarget.name
 
-        this.setState( {
-            email: value
-        } )
+        if ( name === 'email' ) this.setState( { email: value } )
+        else if ( name === 'password' ) this.setState( { password: value } )
     }
 
     async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
         e.preventDefault()
 
         const email = this.state.email
-        const password = this.passwordRef.current.value
+        const password = this.state.password
 
         const regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
 
@@ -68,7 +66,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         // Success validate email and password.
         if ( validate.valid_email && validate.valid_password ) {
             // Response login api.
-            const userData: LoginDto = { email: this.state.email, password: this.passwordRef.current.value }
+            const userData: LoginDto = { email: this.state.email, password: this.state.password }
             const loginResponse = LoginAPI.login( userData )
 
             // Login response.
@@ -133,7 +131,8 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                                 name="password"
                                 className="login-form-bottom text align center"
                                 size="lg"
-                                ref={this.passwordRef}
+                                onChange={ this.handleChange }
+                                value={ this.state.password }
                             />
                         </Form.Group>
 

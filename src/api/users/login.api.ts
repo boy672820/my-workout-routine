@@ -24,7 +24,7 @@ export class LoginAPI {
     }
 
     public static async refresh( email: string, setTokenCookie: any ) {
-        const JWT_EXPIRY_TIME = 24 * 3600 * 1000
+        const JWT_EXPIRY_TIME = 2 * 3600 * 1000
 
         const onSilentRefresh = () => {
             axios.post( '/user/refresh', { email: email } )

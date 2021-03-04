@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
-import { CookiesProvider } from 'react-cookie'
+import { BrowserRouter } from 'react-router-dom'
 
 import App from './App'
 
@@ -14,9 +14,9 @@ axios.defaults.baseURL = process.env.REACT_APP_REST_URI
 
 export default function Root() {
     return (
-        <CookiesProvider>
+        <BrowserRouter>
             <App />
-        </CookiesProvider>
+        </BrowserRouter>
     )
 }
   

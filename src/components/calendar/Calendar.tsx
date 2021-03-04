@@ -14,6 +14,7 @@ import { CalendarPropsInterface, CalendarStateInterface } from './calendar.inter
 import { RoutineAPI } from '../../api/routine/routine.api'
 
 import './calendar.css'
+import { LoginAPI } from '../../api/users/login.api'
 
 
 class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface> {
@@ -41,14 +42,14 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
 
     componentDidMount() {
         // Set now date.
-        RoutineAPI.nowDate()
-            .then( ( { data } ) => {
-                this.setState( { nowDate: data } )
-            } )
+        RoutineAPI.nowDate().then( ( { data } ) => {
+            this.setState( { nowDate: data } )
+        } )
 
+        // Get user profile.
+        LoginAPI.getProfile().then( ( { data } ) => {
             // Set active routine id.
-        RoutineAPI.getActiveRoutine( 'test@mwr.com' )
-            .then( ( { data } ) => {
+            RoutineAPI.getActiveRoutine( data.email ).then( ( { data } ) => {
                 this.setState( { routine_id: data.ID } )
 
                 // Set routine blocks.
@@ -58,6 +59,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                     this.setState( { blocks: response.data } )
                 } )
             } )
+        } )
     }
 
     async handleChange( e: React.ChangeEvent<HTMLInputElement> ) {

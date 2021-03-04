@@ -5,20 +5,16 @@ import {
     Route,
     Redirect
 } from 'react-router'
-import { LoginAPI } from '../api/users/login.api'
-import axios from 'axios'
 
 
 interface AuthRoutePropsInterface {
     cookies: Cookies
-    path: string
+    router: string
     component: any
     exact?: boolean
-}
-interface AuthRouteStateInterface {
     is_auth: boolean
 }
-
+interface AuthRouteStateInterface {}
 
 class AuthRoute extends Component<AuthRoutePropsInterface, AuthRouteStateInterface> {
 
@@ -29,50 +25,62 @@ class AuthRoute extends Component<AuthRoutePropsInterface, AuthRouteStateInterfa
     constructor( props: AuthRoutePropsInterface ) {
         super( props )
 
-        const refresh_token = props.cookies.get( 'token' )
+        // const refresh_token = props.cookies.get( 'token' )
 
-        this.state = { is_auth: refresh_token ? true : false }
+        this.state = {}
+
+        // this.signInUser = this.signInUser.bind( this )
     }
 
-    componentDidMount() {
-        const refresh_token = this.props.cookies.get( 'token' )
+    // componentDidMount() {
+    //     if ( ! axios.defaults.headers.common.Authorization )
+    //         this.signInUser()
+    // }
 
-        if ( refresh_token ) {
-            const response = LoginAPI.getAccessToken( refresh_token )
+    // async signInUser() {
+    //     const refresh_token = this.props.cookies.get( 'token' )
 
-            response.then( response => {
-                if ( response.data.user ) {
-                    axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
-                    this.props.cookies.set( 'token', response.data.user.refresh_token )
+    //     if ( refresh_token ) {
 
-                    LoginAPI.refresh(
-                        response.data.user.email,
-                        ( refresh_token: string ) => {
-                            this.props.cookies.set( 'token', refresh_token )
-                        }
-                    )
-                }
-            } )
-            .catch( error => {
-                console.log( error )
-                this.setState( { is_auth: false } )
-            } )
-        }
-    }
+    //         const promise = new Promise( ( resolve, reject ) => {
+    //             LoginAPI.getAccessToken( refresh_token )
+    //             .then( response => {
+    //                 if ( response.data.user ) {
+    //                     resolve( response )
+    //                 }
+    //             } )
+    //             .catch( error => {
+    //                 reject( error )
+    //             } )
+    //         } )
+
+    //         await promise.then( ( response: any )  => {
+    //             axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
+    //             this.props.cookies.set( 'token', response.data.user.refresh_token )
+
+    //             LoginAPI.refresh(
+    //                 response.data.user.email,
+    //                 ( refresh_token: string ) => {
+    //                     this.props.cookies.set( 'token', refresh_token )
+    //                 }
+    //             )
+    //         } )
+    //         .catch( ( error ) => {
+    //             this.setState( { is_auth: false } )
+    //         } )
+
+    //     }
+    // }
 
     render() {
-        const {
-            path,
-            exact,
-            component: Component
-        } = this.props
+        const { is_auth, router, exact, component: Component } = this.props
 
         return (
             <Route
                 exact={ exact ? true : false }
-                path={ path }
+                path={ router }
                 render={
-                    ( props ) => this.state.is_auth ?
+                    ( props ) => is_auth ?
                         <Component { ...props } /> :
                         <Redirect to={ { pathname: '/login', state: { from: props.location } } } />
                 }
