@@ -32,15 +32,20 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
             blocks: {}
         }
 
+        this.getData = this.getData.bind( this )
         this.handleChange = this.handleChange.bind( this )
         this.handleModal = this.handleModal.bind( this )
         this.handleCreateBlock = this.handleCreateBlock.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
     }
 
+    componentDidMount() {
+        this.getData()
+    }
+
     private week = [ '일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일' ]
 
-    componentDidMount() {
+    async getData() {
         // Set now date.
         RoutineAPI.nowDate().then( ( { data } ) => {
             this.setState( { nowDate: data } )
@@ -78,8 +83,6 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         this.handleModal()
 
         const date_string = e.currentTarget.dataset.date_string as string
-
-        console.log( date_string )
 
         const date = new Date( date_string )
         const year = date.getFullYear()

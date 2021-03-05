@@ -9,15 +9,15 @@ import Login from './components/login/Login'
 import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
-import { LoginAPI } from './api/users/login.api'
 import axios from 'axios'
+import { LoginAPI } from './api/users/login.api'
 
 
 interface AppPropsInterface {
     cookies: Cookies
 }
 interface AppStateInterface {
-    is_auth: boolean
+    auth: boolean
 }
 
 
@@ -30,65 +30,54 @@ class App extends Component <AppPropsInterface, AppStateInterface> {
     constructor( props: AppPropsInterface ) {
         super( props )
 
-        const auth = axios.defaults.headers.common.Authorization
-
         this.state = {
-            is_auth: auth ? true : false
+            auth: false
         }
 
-        this.signInUser = this.signInUser.bind( this )
+        this.signIn = this.signIn.bind( this )
+
     }
 
     componentDidMount() {
-        this.signInUser()
+        // this.signIn()
     }
 
-    async signInUser() {
-        const refresh_token = this.props.cookies.get( 'token' )
+    async signIn() {
+        const token = this.props.cookies.get( 'token' )
 
-        if ( refresh_token ) {
+        if ( ! token ) return
 
-            const promise = new Promise( ( resolve, reject ) => {
-                LoginAPI.getAccessToken( refresh_token )
-                .then( response => {
-                    if ( response.data.user ) {
-                        resolve( response )
-                    }
-                } )
-                .catch( error => {
-                    reject( error )
-                } )
-            } )
+        LoginAPI.getAccessToken( token ).then( response => {
+            const { user } = response.data
 
-            await promise.then( ( response: any )  => {
-                axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
-                this.props.cookies.set( 'token', response.data.user.refresh_token )
+            if ( ! user ) return
 
-                LoginAPI.refresh(
-                    response.data.user.email,
-                    ( refresh_token: string ) => {
-                        this.props.cookies.set( 'token', refresh_token )
-                    }
-                )
-            } )
-            .catch( ( error ) => {
-                this.setState( { is_auth: false } )
-            } )
+            axios.defaults.headers.common.Authorization = `Bearer ${user.token}`
+            this.props.cookies.set( 'token', user.refresh_token )
+            this.setState( { auth: true } )
 
-        }
+            // Silent refresh token.
+            LoginAPI.refresh(
+                user.email,
+                ( refresh_token: string ) => {
+                    this.props.cookies.set( 'token', refresh_token )
+                }
+            )
+        } )
     }
 
     render() {
+        console.log( axios.defaults.headers.common.Authorization )
         return (
             <Router>
                 <Switch>
                     <Route path="/login" render={ ( props ) => <Login cookies={ this.props.cookies } history={ props.history } /> } />
 
-                    <AuthRoute router="/" component={ Calendar } cookies={ this.props.cookies } exact={ true } is_auth={ this.state.is_auth } />
+                    <AuthRoute router="/" component={ Calendar } cookies={ this.props.cookies } exact={ true } signIn={ this.signIn } />
 
-                    <AuthRoute router="/create/exercise/:block_id" component={ CreateExercise } cookies={ this.props.cookies } is_auth={ this.state.is_auth } />
+                    <AuthRoute router="/create/exercise/:block_id" component={ CreateExercise } cookies={ this.props.cookies } signIn={ this.signIn } />
 
-                    <AuthRoute router="/record" component={ Record } cookies={ this.props.cookies } is_auth={ this.state.is_auth } />
+                    <AuthRoute router="/record" component={ Record } cookies={ this.props.cookies } signIn={ this.signIn } />
 
                     <Route component={ NotFound } />
                 </Switch>

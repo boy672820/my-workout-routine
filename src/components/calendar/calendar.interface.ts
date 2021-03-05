@@ -1,10 +1,11 @@
 export interface CalendarPropsInterface {
     history: any
+    auth: boolean
 }
 
 interface CalendarNowDateInterface {
-    year: number,
-    month: number,
+    year: number
+    month: number
     date: number
 }
 

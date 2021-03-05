@@ -23,7 +23,7 @@ export class LoginAPI {
         } )
     }
 
-    public static async refresh( email: string, setTokenCookie: any ) {
+    public static async refresh( email: string, setTokenCookie: ( refresh_token: string ) => void ) {
         const JWT_EXPIRY_TIME = 2 * 3600 * 1000
 
         const onSilentRefresh = () => {
