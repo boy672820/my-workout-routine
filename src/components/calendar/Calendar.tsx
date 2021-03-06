@@ -12,9 +12,10 @@ import { faBurn, faEdit, faPlusCircle } from "@fortawesome/free-solid-svg-icons"
 
 import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
 import { RoutineAPI } from '../../api/routine/routine.api'
+import { LoginAPI } from '../../api/users/login.api'
 
 import './calendar.css'
-import { LoginAPI } from '../../api/users/login.api'
+import { Link } from 'react-router-dom'
 
 
 class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface> {
@@ -185,7 +186,9 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                         </td>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
                                                             <Button variant="link" className="no padding" title="운동기록 수정하기">
-                                                                <FontAwesomeIcon icon={faEdit} />
+                                                                <Link to={ `/create/exercise/${blocks[ ymd ].block_id}` }>
+                                                                    <FontAwesomeIcon icon={faEdit} />
+                                                                </Link>
                                                             </Button>
                                                         </td>
                                                     </tr>

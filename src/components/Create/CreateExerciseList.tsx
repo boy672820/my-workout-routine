@@ -166,10 +166,6 @@ class CreateExerciseList extends Component<ExerciseListPropsInterface, ExerciseL
 
         return (
             <Container>
-                <header className="create-header">
-                    <h5>생선된 운동</h5>
-                </header>
-
                 {
                     ( ( data ) => {
 

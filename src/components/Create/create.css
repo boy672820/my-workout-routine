@@ -1,3 +1,16 @@
+.create-main {
+    background-color: #f5f5f5;
+}
+.create-exercise-block-title {
+    width: 100%;
+    padding: 15px 10px 5px 10px;
+}
+.create-exercise-block-h {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 4px;
+    margin-bottom: 0 !important;
+}
 .create-header {
     padding: 10px 0 4px 7px;
 }

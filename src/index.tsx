@@ -13,7 +13,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 axios.defaults.baseURL = process.env.REACT_APP_REST_URI
 
 export default function Root() {
-    console.log( axios.defaults.headers.common.Authorization )
     return (
         <BrowserRouter>
             <App />

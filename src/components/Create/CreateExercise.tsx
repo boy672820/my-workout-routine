@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { debounce } from 'lodash'
 
 import {
     CreatePropsInterface,
@@ -12,6 +11,7 @@ import { RoutineAPI } from '../../api/routine/routine.api'
 
 import './create.css'
 import CreateExerciseList from './CreateExerciseList'
+import CreateExerciseBlockTitle from './CreateExerciseBlockTitle'
 
 
 class CreateExercise extends Component<CreatePropsInterface, CreateStateInterface> {
@@ -89,9 +89,6 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
         /** Edit set event. */
         this.handleEditSetModal = this.handleEditSetModal.bind( this )
-
-        /** Debounced */
-        this.debouncedHandleChange = this.debouncedHandleChange.bind( this )
     }
 
     // Refs.
@@ -101,10 +98,14 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
      * componentDidMount.
      */
     componentDidMount() {
-        RoutineAPI.getExercises( this.state.block_id )
-            .then( ( { data } ) => {
-                this.setState( { exerciseData: data } )
+        const { block_id } = this.state
+
+        // Get exercises.
+        RoutineAPI.getExercises( block_id ).then( response => {
+            this.setState( {
+                exerciseData: response.data
             } )
+        } )
     }
 
     /**
@@ -206,16 +207,6 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
     }
 
     /**
-     * Debounce
-     * @param update 
-     */
-    async debouncedHandleChange( update: any ) {
-        debounce( async () => {
-            await this.setState( update )
-        }, 500 )
-    }
-
-    /**
      * Validate form.
      * @param name 
      * @param value 
@@ -301,7 +292,8 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
     render() {
         return (
-            <main className="main">
+            <main className="create-main">
+                <CreateExerciseBlockTitle block_id={ this.state.block_id } history={ this.props.history } />
 
                 {/** Exercise list. */}
                 <CreateExerciseList parent={ this } />

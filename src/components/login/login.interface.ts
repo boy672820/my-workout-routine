@@ -1,6 +1,7 @@
 export interface LoginPropsInterface {
     history: any
-    cookies: any
+    setCookie: any
+    setUser: any
 }
 
 export interface LoginStateInterface {

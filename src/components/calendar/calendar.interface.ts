@@ -1,6 +1,5 @@
 export interface CalendarPropsInterface {
     history: any
-    auth: boolean
 }
 
 interface CalendarNowDateInterface {

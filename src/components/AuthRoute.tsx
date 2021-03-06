@@ -1,51 +1,36 @@
 import React, { Component } from 'react'
-import { instanceOf } from 'prop-types'
-import { Cookies } from 'react-cookie'
-import {
-    Route,
-    Redirect
-} from 'react-router'
+import { Route } from 'react-router'
+import Unauthorized from './unauthorized/Unauthorized'
 
 
 interface AuthRoutePropsInterface {
-    cookies: Cookies
-    router: string
+    path: string
     component: any
     exact?: boolean
-    signIn: () => void
+    auth: number
 }
-interface AuthRouteStateInterface {
-    auth: boolean
-}
+interface AuthRouteStateInterface {}
+
 
 class AuthRoute extends Component<AuthRoutePropsInterface, AuthRouteStateInterface> {
-
-    static propTypes = {
-        cookies: instanceOf( Cookies ).isRequired
-    }
 
     constructor( props: AuthRoutePropsInterface ) {
         super( props )
 
-        this.state = {
-            auth: false
-        }
-    }
-
-    componentDidMount() {
+        this.state = {}
     }
 
     render() {
-        const { router, exact, component: Component } = this.props
+        const { exact, path, component: Component, auth } = this.props
 
         return (
             <Route
                 exact={ exact ? true : false }
-                path={ router }
+                path={ path }
                 render={
-                    ( props ) => this.state.auth ?
-                        <Component { ...props } auth={ this.state.auth } /> :
-                        <Redirect to={ { pathname: '/login', state: { from: props.location } } } />
+                    ( props ) => auth ?
+                        <Component { ...props } /> :
+                        <Unauthorized auth={ auth } />
                 }
             />
         )

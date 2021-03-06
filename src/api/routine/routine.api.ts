@@ -5,6 +5,7 @@ import { RoutineCreateSetDTO } from './dto/routine.create.set.dto'
 import { RoutineExerciseDTO } from './dto/routine.exercise.dto'
 import { RoutineUpdateSetDTO } from './dto/routine.update.set.dto'
 import { RoutineUpdateExerciseDTO } from './dto/routine.update.exercise.dto'
+import { RoutineUpdateBlockDTO } from './dto/routine.update.block.dto'
 
 
 export class RoutineAPI {
@@ -106,6 +107,13 @@ export class RoutineAPI {
 
     /** Blocks */
 
+    public static async getBlock( block_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'get',
+            url: `/routine/block/${block_id}`
+        } )
+    }
+
     public static async createBlock( data: RoutineBlockDTO ): Promise<AxiosResponse> {
         return await axios( {
             method: 'post',
@@ -114,6 +122,23 @@ export class RoutineAPI {
         } )
     }
 
+    public static async updateBlock( data: RoutineUpdateBlockDTO ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'put',
+            url: '/routine/block',
+            data: data
+        } )
+    }
+
+    public static async removeBlock( block_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'delete',
+            url: `/routine/block/${block_id}`
+        } )
+    }
+
+
+    // Utilities
 
     public static async nowDate(): Promise<AxiosResponse> {
         return await axios( {
