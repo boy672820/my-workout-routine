@@ -5,6 +5,15 @@
 .calendar-body {
     margin-bottom: 20px;
 }
+.calendar-table > tbody > tr:last-child > td:first-child {
+    border-radius: 0 0 0 10px;
+}
+.calendar-table > tbody > tr:last-child > td:last-child {
+    border-radius: 0 0 10px 0;
+}
+.calendar-th {
+    border-top: 0 none !important;
+}
 .no-record {
     color: #a0a0a0;
 }

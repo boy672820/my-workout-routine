@@ -132,12 +132,12 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
 
                     <Card className="calendar-body">
                         <Card.Body className="no padding">
-                            <Table className="no margin">
+                            <Table className="calendar-table no margin">
                                 <thead>
                                     <tr>
-                                        <th className="text align center">날짜</th>
-                                        <th>내용</th>
-                                        <th className="text align center">기록</th>
+                                        <th className="calendar-th text align center">날짜</th>
+                                        <th className="calendar-th ">내용</th>
+                                        <th className="calendar-th text align center">기록</th>
                                     </tr>
                                 </thead>
                                 <tbody>

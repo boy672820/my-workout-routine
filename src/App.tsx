@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useCookies } from "react-cookie"
+import axios from 'axios'
 
 import AuthRoute from './components/AuthRoute'
 import Calendar from './components/calendar/Calendar'
@@ -9,7 +10,7 @@ import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
 import { LoginAPI } from './api/users/login.api'
-import axios from 'axios'
+import Navigation from './components/layout/Navigation'
 
 
 function App() {
@@ -39,32 +40,39 @@ function App() {
     } )
 
     return (
-        <Router>
-            <Switch>
-                <Route path="/login" render={ ( props ) => <Login setCookie={ setCookie } setUser={ setUser } history={ props.history } /> } />
+        <>
+            <div className="mwr-content">
+                <Router>
+                    <Switch>
+                        <Route path="/login" render={ ( props ) => <Login setCookie={ setCookie } setUser={ setUser } history={ props.history } /> } />
 
-                <AuthRoute
-                    path="/"
-                    component={ Calendar }
-                    exact={ true }
-                    auth={ user }
-                />
+                        <AuthRoute
+                            path="/"
+                            component={ Calendar }
+                            exact={ true }
+                            auth={ user }
+                        />
 
-                <AuthRoute
-                    path="/create/exercise/:block_id"
-                    component={ CreateExercise }
-                    auth={ user }
-                />
+                        <AuthRoute
+                            path="/create/exercise/:block_id"
+                            component={ CreateExercise }
+                            auth={ user }
+                        />
 
-                <AuthRoute
-                    path="/record"
-                    component={ Record }
-                    auth={ user }
-                />
+                        <AuthRoute
+                            path="/record"
+                            component={ Record }
+                            auth={ user }
+                        />
 
-                <Route component={ NotFound } />
-            </Switch>
-        </Router>
+                        <Route component={ NotFound } />
+                    </Switch>
+                </Router>
+            </div>
+
+            {/** Layout navigation */}
+            <Navigation />
+        </>
     )
 }
 
