@@ -44,7 +44,12 @@ function App() {
             <div className="mwr-content">
                 <Router>
                     <Switch>
-                        <Route path="/login" render={ ( props ) => <Login setCookie={ setCookie } setUser={ setUser } history={ props.history } /> } />
+                        <Route
+                            path="/login"
+                            render={
+                                props => <Login setCookie={ setCookie } setUser={ setUser } history={ props.history } />
+                            }
+                        />
 
                         <AuthRoute
                             path="/"
@@ -67,11 +72,11 @@ function App() {
 
                         <Route component={ NotFound } />
                     </Switch>
+
+                    {/** Layout navigation */}
+                    <Navigation />
                 </Router>
             </div>
-
-            {/** Layout navigation */}
-            <Navigation />
         </>
     )
 }

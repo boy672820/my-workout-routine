@@ -1,11 +1,10 @@
 .mwr-nav {
     width: 100%;
-    height: 55px;
+    height: 50px;
     position: fixed;
     bottom: 0;
     background-color: #fff;
     border-top: 1px solid rgba(0,0,0,.125);
-    text-align: right;
 }
 .mwr-nav-list {
     padding: 0 20px;
@@ -13,6 +12,17 @@
 }
 .mwr-nav-item {
     padding-top: 5px;
+    margin-right: 4rem;
+    display: inline-block;
     list-style: none;
-    font-size: 20px;
+    font-size: 22px;
+}
+.mwr-nav-item > a {
+    color: #6c757d;
+}
+.mwr-nav-item.active > a {
+    color: #007bff;
+}
+.mwr-nav-item:last-child {
+    margin-right: 0;
 }
