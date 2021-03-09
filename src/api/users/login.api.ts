@@ -23,11 +23,16 @@ export class LoginAPI {
         } )
     }
 
-    public static async refresh( email: string, setTokenCookie: ( refresh_token: string ) => void ) {
+    public static async refresh( auth: string, email: string, setTokenCookie: ( refresh_token: string ) => void ) {
         const JWT_EXPIRY_TIME = 2 * 3600 * 1000
 
         const onSilentRefresh = () => {
-            axios.post( '/user/refresh', { email: email } )
+            axios( {
+                method: 'post',
+                url: '/user/refresh',
+                headers: { Authorization: `Bearer ${auth}` },
+                data: { email: email }
+            } )
             .then( onLoginSuccess )
             .catch( error => {
                 console.log( error )

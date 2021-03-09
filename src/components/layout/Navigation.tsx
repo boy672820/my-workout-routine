@@ -74,8 +74,8 @@ function Navigation( { user, setUser }: NavigationPropsInterface ) {
                         { signInOrOut }
                     </li>
 
-                    <li className={ `mwr-nav-item` }>
-                        <Link to="/">
+                    <li className={ `mwr-nav-item ${ activeItem( 'routine' ) }` }>
+                        <Link to="/routine">
                             <FontAwesomeIcon icon={ faDumbbell } title="내 루틴 확인" />
                         </Link>
                     </li>

@@ -11,6 +11,7 @@ import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
 import Navigation from './components/layout/Navigation'
 import { LoginAPI } from './api/users/login.api'
+import Routine from './components/routine/Routine'
 
 
 function App() {
@@ -24,12 +25,13 @@ function App() {
             LoginAPI.getAccessToken( token ).then( response => {
                 const { user } = response.data
 
-                axios.defaults.headers.common.Authorization = `Bearer ${user.token}`
-                setCookie( 'token', user.refresh_token, { path: '/' } )
-                setUser( 1 )
+                axios.defaults.headers.common.Authorization = `Bearer ${user.token}` // Set auth to axios defaults headers.
+                setCookie( 'token', user.refresh_token, { path: '/' } ) // Set token cookie.
+                setUser( 1 ) // Set active user status.
 
                 // Refresh token.
                 LoginAPI.refresh(
+                    user.token,
                     user.email,
                     ( refresh_token: string ) => {
                         setCookie( 'token', refresh_token, { path: '/' } )
@@ -67,6 +69,12 @@ function App() {
                         <AuthRoute
                             path="/record"
                             component={ Record }
+                            auth={ user }
+                        />
+
+                        <AuthRoute
+                            path="/routine"
+                            component={ Routine }
                             auth={ user }
                         />
 
