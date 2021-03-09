@@ -9,8 +9,8 @@ import Login from './components/login/Login'
 import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
-import { LoginAPI } from './api/users/login.api'
 import Navigation from './components/layout/Navigation'
+import { LoginAPI } from './api/users/login.api'
 
 
 function App() {
@@ -74,7 +74,7 @@ function App() {
                     </Switch>
 
                     {/** Layout navigation */}
-                    <Navigation />
+                    <Navigation user={ user } setUser={ setUser } />
                 </Router>
             </div>
         </>
