@@ -185,8 +185,13 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                             { blocks[ ymd ].block_title }
                                                         </td>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
-                                                            <Button variant="link" className="no padding" title="운동기록 수정하기">
+                                                            {/* <Button variant="link" className="no padding" title="운동기록 수정하기">
                                                                 <Link to={ `/create/exercise/${blocks[ ymd ].block_id}` }>
+                                                                    <FontAwesomeIcon icon={faEdit} />
+                                                                </Link>
+                                                            </Button> */}
+                                                            <Button variant="link" className="no padding" title="운동 기록하기">
+                                                                <Link to={ `/record/${blocks[ ymd ].block_id}` }>
                                                                     <FontAwesomeIcon icon={faEdit} />
                                                                 </Link>
                                                             </Button>

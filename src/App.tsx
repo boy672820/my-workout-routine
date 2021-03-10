@@ -67,7 +67,7 @@ function App() {
                         />
 
                         <AuthRoute
-                            path="/record"
+                            path="/record/:block_id"
                             component={ Record }
                             auth={ user }
                         />
