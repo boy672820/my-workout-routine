@@ -15,15 +15,14 @@ export class LoginAPI {
         } )
     }
 
-    public static async getAccessToken( refresh_token: string ) {
+    public static async getAccessToken() {
         return await axios( {
             method: 'post',
-            url: '/user/get-access-token',
-            headers: { Authorization: refresh_token }
+            url: '/user/get-access-token'
         } )
     }
 
-    public static async refresh( auth: string, email: string, setTokenCookie: ( refresh_token: string ) => void ) {
+    public static async refresh( auth: string, email: string ) {
         const JWT_EXPIRY_TIME = 2 * 3600 * 1000
 
         const onSilentRefresh = () => {
@@ -44,8 +43,6 @@ export class LoginAPI {
         
             // Set access token in memory.
             axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${user.token}`
-            // Set refresh token in cookies.
-            setTokenCookie( user.refresh_token )
 
             // accessToken 만료하기 1분 전에 로그인 연장
             setTimeout( onSilentRefresh, JWT_EXPIRY_TIME - 60000 )

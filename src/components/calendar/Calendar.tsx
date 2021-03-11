@@ -40,6 +40,8 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         this.handleSubmit = this.handleSubmit.bind( this )
     }
 
+    private scrollRef = React.createRef<HTMLTableRowElement>()
+
     componentDidMount() {
         this.getData()
     }
@@ -122,6 +124,8 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         const { year, month } = this.state.nowDate
         const last_date = new Date( year, month, 0 ).getDate()
 
+        this.scrollRef.current?.scrollIntoView( true )
+
         return (
             <main className="main">
                 <Container>
@@ -157,9 +161,13 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
 
                                             const key_index = keys.indexOf( ymd )
 
+                                            const isScrollRef = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}` === ymd ?
+                                                                { ref: this.scrollRef } :
+                                                                ''
+
                                             if ( key_index < 0 ) {
                                                 rows.push(
-                                                    <tr key={ i }>
+                                                    <tr key={ i } { ...isScrollRef }>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
                                                             <span className={ 'day ' + is_weekend + is_today }>{ i }({ week })</span>
                                                         </td>
@@ -176,7 +184,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                             }
                                             else {
                                                 rows.push(
-                                                    <tr key={ i }>
+                                                    <tr key={ i } { ...isScrollRef }>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
                                                             <span className={ 'day ' + is_weekend + is_today }>{ i }({ week })</span>
                                                         </td>

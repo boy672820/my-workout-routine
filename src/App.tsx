@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { useCookies } from "react-cookie"
 import axios from 'axios'
 
 import AuthRoute from './components/AuthRoute'
@@ -15,28 +14,17 @@ import Routine from './components/routine/Routine'
 
 
 function App() {
-    const [ cookies, setCookie ] = useCookies( [ 'token' ] )
     const [ user, setUser ] = useState( 0 )
 
     useEffect( () => {
-        const { token } = cookies
+        const is_login = localStorage.getItem( 'is_login' )
 
-        if ( token ) {
-            LoginAPI.getAccessToken( token ).then( response => {
+        if ( is_login ) {
+            LoginAPI.getAccessToken().then( response => {
                 const { user } = response.data
 
                 axios.defaults.headers.common.Authorization = `Bearer ${user.token}` // Set auth to axios defaults headers.
-                setCookie( 'token', user.refresh_token, { path: '/' } ) // Set token cookie.
                 setUser( 1 ) // Set active user status.
-
-                // Refresh token.
-                LoginAPI.refresh(
-                    user.token,
-                    user.email,
-                    ( refresh_token: string ) => {
-                        setCookie( 'token', refresh_token, { path: '/' } )
-                    }
-                )
             } )
         }
     } )
@@ -49,7 +37,7 @@ function App() {
                         <Route
                             path="/login"
                             render={
-                                props => <Login setCookie={ setCookie } setUser={ setUser } history={ props.history } />
+                                props => <Login history={ props.history } />
                             }
                         />
 

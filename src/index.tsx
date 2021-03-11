@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 // Axios defaults config.
 axios.defaults.baseURL = process.env.REACT_APP_REST_URI
+axios.defaults.withCredentials = true
 
 export default function Root() {
     return (

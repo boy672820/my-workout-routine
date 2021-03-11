@@ -15,7 +15,7 @@ import { LoginDto } from '../../api/users/dto/login.dto'
 import { LoginAPI } from '../../api/users/login.api'
 
 
-class Login extends Component<LoginPropsInterface, LoginStateInterface> {     
+class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
     constructor( props: LoginPropsInterface ) {
         super( props )
@@ -75,8 +75,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                     this.setState( { valid_login: true, success: true } )
 
                     axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
-                    this.props.setCookie( 'token', response.data.user.refresh_token )
-                    this.props.setUser( 1 )
+                    localStorage.setItem( 'is_login', 'true' )
 
                     this.props.history.push( '/' )
                 }
