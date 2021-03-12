@@ -9,8 +9,8 @@ import Record from './components/record/Record'
 import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
 import Navigation from './components/layout/Navigation'
-import { LoginAPI } from './api/users/login.api'
 import Routine from './components/routine/Routine'
+import { LoginAPI } from './api/users/login.api'
 
 
 function App() {

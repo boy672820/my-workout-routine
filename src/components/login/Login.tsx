@@ -77,7 +77,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                     axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
                     localStorage.setItem( 'is_login', 'true' )
 
-                    this.props.history.push( '/' )
+                    // this.props.history.push( '/' )
                 }
                 else this.setState( { valid_login: false, success: false } )
             } )
