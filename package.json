@@ -21,7 +21,6 @@
     "node": "^15.4.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.3",
-    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-motion": "^0.5.2",
     "react-router": "^5.2.0",

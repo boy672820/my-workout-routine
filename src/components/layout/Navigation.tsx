@@ -1,6 +1,5 @@
 import React from "react"
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useCookies } from "react-cookie"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
     faCalendarAlt,
@@ -10,9 +9,9 @@ import {
     faSignInAlt
 } from "@fortawesome/free-solid-svg-icons"
 import { Container } from "react-bootstrap"
-import axios from "axios"
 
 import './navigation.css'
+import { LoginAPI } from "../../api/users/login.api"
 
 
 interface NavigationPropsInterface {
@@ -23,17 +22,12 @@ interface NavigationPropsInterface {
 function Navigation( { user }: NavigationPropsInterface ) {
     const { pathname } = useLocation()
     const history = useHistory()
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [ cookies, setCookie, removeCookie ] = useCookies( [ 'token' ] )
-
 
     // Handle click.
-    const handleClick = ( e: React.MouseEvent<HTMLAnchorElement> ) => {
+    const handleLogout = ( e: React.MouseEvent<HTMLAnchorElement> ) => {
         e.preventDefault()
 
-        // Remove access & refresh token.
-        axios.defaults.headers.common.Authorization = ''
-        removeCookie( 'token' )
+        LoginAPI.logout()
 
         // Move login.
         history.push( '/login' )
@@ -51,9 +45,10 @@ function Navigation( { user }: NavigationPropsInterface ) {
                         <FontAwesomeIcon icon={ faSignInAlt } title="로그인" />
                     </Link>
 
-    const signOut = <Link to="/login" onClick={ handleClick }>
+    const signOut = <Link to="/login" onClick={ handleLogout }>
                         <FontAwesomeIcon icon={ faSignOutAlt } title="로그아웃" />
                     </Link>
+
     // Set sign in or out.
     let signInOrOut
     if ( user ) signInOrOut = signOut

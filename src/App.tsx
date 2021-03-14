@@ -10,64 +10,65 @@ import NotFound from './components/notfound/NotFound'
 import Navigation from './components/layout/Navigation'
 import Routine from './components/routine/Routine'
 
-import { useStoreState } from './store'
+import { useStoreDispatch, useStoreState } from './store'
 import { LoginAPI } from './api/users/login.api'
 
 
 function App() {
     const { user } = useStoreState()
+    const dispatch = useStoreDispatch()
 
     React.useEffect( () => {
-        LoginAPI.authenticate().then( response => {
-            console.log( response )
-        } )
+        LoginAPI.refresh(
+            () => {
+                dispatch( { type: 'LOGIN' } )
+            },
+            error => {
+                dispatch( { type: 'LOGOUT' } )
+            }
+        )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] )
 
     return (
-        <>
-            <div className="mwr-content">
-                <Router>
-                    <Switch>
-                        <Route
-                            path="/login"
-                            render={
-                                props => <Login history={ props.history } />
-                            }
-                        />
+        <div className="mwr-content">
+            <Router>
+                <Switch>
+                    <Route
+                        path="/login"
+                        render={
+                            props => <Login history={ props.history } />
+                        }
+                    />
 
-                        <AuthRoute
-                            path="/"
-                            component={ Calendar }
-                            exact={ true }
-                            auth={ user }
-                        />
+                    <AuthRoute
+                        path="/"
+                        render={ props => <Calendar { ...props } /> }
+                        exact={ true }
+                    />
 
-                        <AuthRoute
-                            path="/create/exercise/:block_id"
-                            component={ CreateExercise }
-                            auth={ user }
-                        />
+                    <AuthRoute
+                        path="/create/exercise/:block_id"
+                        render={ props => <CreateExercise { ...props } /> }
+                    />
 
-                        <AuthRoute
-                            path="/record/:block_id"
-                            component={ Record }
-                            auth={ user }
-                        />
+                    <AuthRoute
+                        path="/record/:block_id"
+                        render={ props => <Record { ...props } /> }
+                    />
 
-                        <AuthRoute
-                            path="/routine"
-                            component={ Routine }
-                            auth={ user }
-                        />
+                    <AuthRoute
+                        path="/routine"
+                        render={ props => <Routine { ...props } /> }
+                    />
 
-                        <Route component={ NotFound } />
-                    </Switch>
+                    <Route component={ NotFound } />
+                </Switch>
 
-                    {/** Layout navigation */}
-                    <Navigation user={ user } />
-                </Router>
-            </div>
-        </>
+                {/** Layout navigation */}
+                <Navigation user={ user } />
+            </Router>
+        </div>
     )
 }
 

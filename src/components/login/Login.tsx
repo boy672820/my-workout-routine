@@ -6,14 +6,14 @@ import {
     Button,
     Alert
 } from 'react-bootstrap'
-import axios from 'axios'
 
 import './login.css'
 
 import { LoginPropsInterface, LoginStateInterface } from './login.interface'
 import { LoginDto } from '../../api/users/dto/login.dto'
 import { LoginAPI } from '../../api/users/login.api'
-import { storeDispatchContext } from '../../store'
+import { storeDispatchContext, storeStateContext } from '../../store'
+import { Redirect } from 'react-router'
 
 
 class Login extends Component<LoginPropsInterface, LoginStateInterface> {
@@ -79,21 +79,22 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                 if ( response.status === 201 ) {
                     this.setState( { valid_login: true, success: true } )
 
-                    // Set auth.
-                    axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
-                    localStorage.setItem( 'is_login', 'true' )
-
                     // Set user state.
                     this.context( { type: 'LOGIN' } )
 
                     // Push calender component.
                     this.props.history.push( '/' )
                 }
-                else this.setState( { valid_login: false, success: false } )
+                else this.setState( {
+                    valid_login: false,
+                    success: false
+                } )
             } )
             .catch( error => {
-                this.setState( { valid_login: false, success: false } )
-                console.log( error )
+                this.setState( {
+                    valid_login: false,
+                    success: false
+                } )
             } )
         }
     }
@@ -105,56 +106,70 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         const is_alert = ! this.state.valid_email || ! this.state.valid_password ? false : true
 
         return (
-            <main className="form-signin">
-    
-                <Container>
-                    <Alert variant="danger" hidden={ is_alert } className="text align left">
-                        <div style={ this.state.valid_email ? displayNone : displayBlock }>이메일 양식에 맞게 입력해주세요.(예: example@gmail.com)</div>
-                        <div style={ this.state.valid_password ? displayNone : displayBlock }>비밀번호를 입력해주세요.</div>
-                    </Alert>
+            <storeStateContext.Consumer>
+                {
+                    ( user: any ) => {
+                        const redirect = user ? <Redirect to="/" /> : ''
 
-                    <Alert variant="danger" hidden={ this.state.valid_login ? true : false } className="text align left">
-                        <div style={ this.state.valid_login ? displayNone : displayBlock }>이메일 또는 아이디가 틀립니다.</div>
-                    </Alert>
+                        return (
+                            <>
+                                { redirect }
 
-                    <h3 className="h3 mb-3 fw-normal">로그인 해주세요.</h3>
+                                <main className="form-signin">
+                        
+                                    <Container>
+                                        <Alert variant="danger" hidden={ is_alert } className="text align left">
+                                            <div style={ this.state.valid_email ? displayNone : displayBlock }>이메일 양식에 맞게 입력해주세요.(예: example@gmail.com)</div>
+                                            <div style={ this.state.valid_password ? displayNone : displayBlock }>비밀번호를 입력해주세요.</div>
+                                        </Alert>
 
-                    <Form onSubmit={ this.handleSubmit }>
-                        <Form.Group>
-                            <Form.Label htmlFor="email" hidden>이메일</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="example@gmail.com"
-                                title="이메일을 입력해주세요."
-                                id="email"
-                                name="email"
-                                className="login-form-top text align center"
-                                size="lg"
-                                onChange={ this.handleChange }
-                                value={ this.state.email }
-                            />
-                            <Form.Label htmlFor="password" hidden>비밀번호</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="비밀번호를 입력해주세요."
-                                title="비밀번호를 입력해주세요."
-                                id="password"
-                                name="password"
-                                className="login-form-bottom text align center"
-                                size="lg"
-                                onChange={ this.handleChange }
-                                value={ this.state.password }
-                            />
-                        </Form.Group>
+                                        <Alert variant="danger" hidden={ this.state.valid_login ? true : false } className="text align left">
+                                            <div style={ this.state.valid_login ? displayNone : displayBlock }>이메일 또는 아이디가 틀립니다.</div>
+                                        </Alert>
 
-                        <Form.Group>
-                            <Button type="submit" size="lg" block>로그인</Button>
-                        </Form.Group>
+                                        <h3 className="h3 mb-3 fw-normal">로그인 해주세요.</h3>
 
-                    </Form>
-                    
-                </Container>
-            </main>
+                                        <Form onSubmit={ this.handleSubmit }>
+                                            <Form.Group>
+                                                <Form.Label htmlFor="email" hidden>이메일</Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="example@gmail.com"
+                                                    title="이메일을 입력해주세요."
+                                                    id="email"
+                                                    name="email"
+                                                    className="login-form-top text align center"
+                                                    size="lg"
+                                                    onChange={ this.handleChange }
+                                                    value={ this.state.email }
+                                                />
+                                                <Form.Label htmlFor="password" hidden>비밀번호</Form.Label>
+                                                <Form.Control
+                                                    type="password"
+                                                    placeholder="비밀번호를 입력해주세요."
+                                                    title="비밀번호를 입력해주세요."
+                                                    id="password"
+                                                    name="password"
+                                                    className="login-form-bottom text align center"
+                                                    size="lg"
+                                                    onChange={ this.handleChange }
+                                                    value={ this.state.password }
+                                                />
+                                            </Form.Group>
+
+                                            <Form.Group>
+                                                <Button type="submit" size="lg" block>로그인</Button>
+                                            </Form.Group>
+
+                                        </Form>
+                                        
+                                    </Container>
+                                </main>
+                            </>
+                        )
+                    }
+                }
+            </storeStateContext.Consumer>
         )
     }
 }

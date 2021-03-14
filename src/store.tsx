@@ -18,6 +18,9 @@ function reducer( state: State, action: Action ): State {
         case 'LOGIN':
             return { user: 1 }
 
+        case 'LOGOUT':
+            return { user: 0 }
+
         default:
             throw new Error( 'Unhandled action' )
     }
