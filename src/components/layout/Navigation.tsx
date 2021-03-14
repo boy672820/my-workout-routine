@@ -17,11 +17,10 @@ import './navigation.css'
 
 interface NavigationPropsInterface {
     user: any
-    setUser: any
 }
 
 
-function Navigation( { user, setUser }: NavigationPropsInterface ) {
+function Navigation( { user }: NavigationPropsInterface ) {
     const { pathname } = useLocation()
     const history = useHistory()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,8 +34,7 @@ function Navigation( { user, setUser }: NavigationPropsInterface ) {
         // Remove access & refresh token.
         axios.defaults.headers.common.Authorization = ''
         removeCookie( 'token' )
-        // Set status to user state.
-        setUser( 0 )
+
         // Move login.
         history.push( '/login' )
     }

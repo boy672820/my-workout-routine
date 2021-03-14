@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router'
-import Unauthorized from './unauthorized/Unauthorized'
+import { Redirect, Route } from 'react-router'
 
 
 interface AuthRoutePropsInterface {
     path: string
     component: any
-    exact?: boolean
     auth: number
+    exact?: boolean
 }
 interface AuthRouteStateInterface {}
 
@@ -30,7 +29,7 @@ class AuthRoute extends Component<AuthRoutePropsInterface, AuthRouteStateInterfa
                 render={
                     ( props ) => auth ?
                         <Component { ...props } /> :
-                        <Unauthorized auth={ auth } />
+                        <Redirect to={ { pathname: '/login', state: props.location } } />
                 }
             />
         )

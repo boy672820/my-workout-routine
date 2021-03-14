@@ -13,9 +13,12 @@ import './login.css'
 import { LoginPropsInterface, LoginStateInterface } from './login.interface'
 import { LoginDto } from '../../api/users/dto/login.dto'
 import { LoginAPI } from '../../api/users/login.api'
+import { storeDispatchContext } from '../../store'
 
 
 class Login extends Component<LoginPropsInterface, LoginStateInterface> {
+
+    static contextType = storeDispatchContext
 
     constructor( props: LoginPropsInterface ) {
         super( props )
@@ -32,6 +35,8 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         this.handleChange = this.handleChange.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
     }
+
+    
 
     async handleChange( { currentTarget }: React.ChangeEvent<HTMLInputElement> ) {
         const value = currentTarget.value
@@ -74,15 +79,21 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                 if ( response.status === 201 ) {
                     this.setState( { valid_login: true, success: true } )
 
+                    // Set auth.
                     axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${response.data.user.token}`
                     localStorage.setItem( 'is_login', 'true' )
 
-                    // this.props.history.push( '/' )
+                    // Set user state.
+                    this.context( { type: 'LOGIN' } )
+
+                    // Push calender component.
+                    this.props.history.push( '/' )
                 }
                 else this.setState( { valid_login: false, success: false } )
             } )
             .catch( error => {
                 this.setState( { valid_login: false, success: false } )
+                console.log( error )
             } )
         }
     }

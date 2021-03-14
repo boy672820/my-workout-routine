@@ -15,37 +15,31 @@ export class LoginAPI {
         } )
     }
 
-    public static async getAccessToken() {
+    public static async authenticate() {
         return await axios( {
-            method: 'post',
-            url: '/user/get-access-token'
+            method: 'get',
+            url: '/user/authenticate'
         } )
     }
 
-    public static async refresh( auth: string, email: string ) {
-        const JWT_EXPIRY_TIME = 2 * 3600 * 1000
+    public static async refresh() {
+        const JWT_EXPIRY_TIME = 1 * 3600 * 1000
 
         const onSilentRefresh = () => {
             axios( {
                 method: 'post',
-                url: '/user/refresh',
-                headers: { Authorization: `Bearer ${auth}` },
-                data: { email: email }
+                url: '/user/refresh'
             } )
             .then( onLoginSuccess )
-            .catch( error => {
-                console.log( error )
-            } )
         }
 
         const onLoginSuccess = ( response: any ) => {
-            const user = response.data.user
+            const { user } = response.data
         
             // Set access token in memory.
             axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${user.token}`
 
-            // accessToken 만료하기 1분 전에 로그인 연장
-            setTimeout( onSilentRefresh, JWT_EXPIRY_TIME - 60000 )
+            setTimeout( onSilentRefresh, JWT_EXPIRY_TIME )
         }
 
         onSilentRefresh()

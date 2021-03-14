@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import axios from 'axios'
 
 import AuthRoute from './components/AuthRoute'
 import Calendar from './components/calendar/Calendar'
@@ -10,24 +9,19 @@ import CreateExercise from './components/create/CreateExercise'
 import NotFound from './components/notfound/NotFound'
 import Navigation from './components/layout/Navigation'
 import Routine from './components/routine/Routine'
+
+import { useStoreState } from './store'
 import { LoginAPI } from './api/users/login.api'
 
 
 function App() {
-    const [ user, setUser ] = useState( 0 )
+    const { user } = useStoreState()
 
-    useEffect( () => {
-        const is_login = localStorage.getItem( 'is_login' )
-
-        if ( is_login ) {
-            LoginAPI.getAccessToken().then( response => {
-                const { user } = response.data
-
-                axios.defaults.headers.common.Authorization = `Bearer ${user.token}` // Set auth to axios defaults headers.
-                setUser( 1 ) // Set active user status.
-            } )
-        }
-    } )
+    React.useEffect( () => {
+        LoginAPI.authenticate().then( response => {
+            console.log( response )
+        } )
+    }, [] )
 
     return (
         <>
@@ -70,7 +64,7 @@ function App() {
                     </Switch>
 
                     {/** Layout navigation */}
-                    <Navigation user={ user } setUser={ setUser } />
+                    <Navigation user={ user } />
                 </Router>
             </div>
         </>
