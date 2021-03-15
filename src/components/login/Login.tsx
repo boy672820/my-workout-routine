@@ -108,13 +108,9 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
         return (
             <storeStateContext.Consumer>
                 {
-                    ( user: any ) => {
-                        const redirect = user ? <Redirect to="/" /> : ''
-
-                        return (
-                            <>
-                                { redirect }
-
+                    ( store: any ) => {
+                        if ( ! store.user ) {
+                            return (
                                 <main className="form-signin">
                         
                                     <Container>
@@ -165,8 +161,9 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                                         
                                     </Container>
                                 </main>
-                            </>
-                        )
+                            )
+                        }
+                        else return <Redirect to="/" />
                     }
                 }
             </storeStateContext.Consumer>

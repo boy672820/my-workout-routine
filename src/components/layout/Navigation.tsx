@@ -12,6 +12,7 @@ import { Container } from "react-bootstrap"
 
 import './navigation.css'
 import { LoginAPI } from "../../api/users/login.api"
+import { useStoreDispatch } from "../../store"
 
 
 interface NavigationPropsInterface {
@@ -22,12 +23,14 @@ interface NavigationPropsInterface {
 function Navigation( { user }: NavigationPropsInterface ) {
     const { pathname } = useLocation()
     const history = useHistory()
+    const dispatch = useStoreDispatch()
 
     // Handle click.
     const handleLogout = ( e: React.MouseEvent<HTMLAnchorElement> ) => {
         e.preventDefault()
 
         LoginAPI.logout()
+        dispatch( { type: 'LOGOUT' } )
 
         // Move login.
         history.push( '/login' )
