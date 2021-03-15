@@ -19,6 +19,7 @@ function Records() {
     const { block_id }: any = useParams()
     const [ modal, setModal ] = useState( false )
     const [ title, setTitle ] = useState( '' )
+    const [ routineDate, setRoutineDate ] = useState( '...' )
     const [ data, setData ] = useState<any[]>( [] )
 
 
@@ -32,6 +33,10 @@ function Records() {
         // Get exercises.
         RoutineAPI.getExercises( block_id ).then( response => {
             setData( response.data )
+        } )
+        // Get routine date.
+        RoutineAPI.getRoutineDate( block_id ).then( response => {
+            setRoutineDate( response.data.routine_date )
         } )
     }, [ block_id ] )
 
@@ -52,7 +57,13 @@ function Records() {
                     <h2 className="record-date-title">
                         <strong>(토요일)</strong> <span>{ title }</span>
                     </h2>
-                    <p className="record-date-desc">2021년 2월 13일</p>
+                    <p className="record-date-desc">
+                        { ( ( date ) => {
+                            const split = date.split( '/' )
+
+                            return `${split[ 0 ]}년 ${split[ 1 ]}월 ${split[ 2 ]}일`
+                        } )( routineDate ) }
+                    </p>
                 </Container>
             </div>
 
@@ -67,7 +78,6 @@ function Records() {
                                             <FontAwesomeIcon icon={faBurn} style={{color: '#dc3545'}} />&nbsp;&nbsp;
                                             { item.exercise_name }
                                         </h4>
-                                        <p className="no margin"><b>100kg</b>의 무게로 <b>6세트 4회</b> 진행하기</p>
                                     </div>
                                 </Card.Header>
                                 <Card.Body className="no padding">

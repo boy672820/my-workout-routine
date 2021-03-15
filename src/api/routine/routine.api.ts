@@ -104,6 +104,13 @@ export class RoutineAPI {
         } )
     }
 
+    public static async getRoutineDate( block_id: number ): Promise<AxiosResponse> {
+        return await axios( {
+            method: 'get',
+            url: `/routine/date/${block_id}`
+        } )
+    }
+
 
     /** Blocks */
 
