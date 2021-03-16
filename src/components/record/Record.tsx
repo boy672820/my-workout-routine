@@ -21,6 +21,7 @@ function Records() {
     const [ title, setTitle ] = useState( '' )
     const [ routineDate, setRoutineDate ] = useState( '...' )
     const [ data, setData ] = useState<any[]>( [] )
+    const [ complete, setComplete ] = useState<number[]>( [] )
 
 
     useEffect( () => {
@@ -47,6 +48,20 @@ function Records() {
 
     const handleEdit = () => {
         handleModal()
+    }
+
+    const handleComplete = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+        const { value, checked } = e.target
+
+        if ( checked ) setComplete( [ ...complete, Number( value ) ] )
+
+        else {
+            const index = complete.indexOf( Number( value ) )
+
+            complete.splice( index, 1 )
+
+            setComplete( [ ...complete ] )
+        }
     }
 
 
@@ -84,16 +99,24 @@ function Records() {
                                     <Table className="record-item-table no margin text align center">
                                         <tbody>
                                             { item.sets.map( ( set: any, set_index: number ) => {
+                                                const completeClass = complete.indexOf( set.ID ) < 0 ? '' : 'record-item-complete-set'
+
                                                 return (
-                                                    <tr key={ set_index }>
+                                                    <tr key={ set_index } className={ completeClass }>
                                                         <td className="vertical align middle">
-                                                            <div className="vertical align middle display inline block"><Form.Check type="checkbox" value={ set.ID } /></div>&nbsp;
-                                                            <div className="record-item-set-title vertical align middle display inline block">{ set.set_number }세트</div>
+                                                            <div className="vertical align middle display inline block">
+                                                                <Form.Check type="checkbox" name="complete" id={ `complete-${set.ID}` } onChange={ handleComplete } value={ set.ID } />
+                                                            </div>&nbsp;
+                                                            <div className="record-item-set-title vertical align middle display inline block">
+                                                                <Form.Label htmlFor={ `complete-${set.ID}` } className="no margin">
+                                                                    { set.set_number }세트
+                                                                </Form.Label>
+                                                            </div>
                                                         </td>
                                                         <td className="vertical align middle">{ set.set_weight }kg</td>
                                                         <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
                                                         <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" className="edit-button" onClick={ handleEdit }>
+                                                            <Button variant="link" title="수정하기" onClick={ handleEdit }>
                                                                 <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
