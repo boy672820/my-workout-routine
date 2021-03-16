@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, useLocation } from 'react-router-dom'
 
 import AuthRoute from './components/AuthRoute'
 import Calendar from './components/calendar/Calendar'
@@ -10,13 +10,13 @@ import NotFound from './components/notfound/NotFound'
 import Navigation from './components/layout/Navigation'
 import Routine from './components/routine/Routine'
 
-import { useStoreDispatch, useStoreState } from './store'
+import { useStoreDispatch } from './store'
 import { LoginAPI } from './api/users/login.api'
 
 
 function App() {
-    const { user } = useStoreState()
     const dispatch = useStoreDispatch()
+    const location = useLocation()
 
     React.useEffect( () => {
         LoginAPI.refresh(
@@ -37,7 +37,7 @@ function App() {
                     <Route
                         path="/login"
                         render={
-                            props => <Login history={ props.history } />
+                            props => <Login history={ props.history } location_pathname={ location.pathname } />
                         }
                     />
 
@@ -66,7 +66,7 @@ function App() {
                 </Switch>
 
                 {/** Layout navigation */}
-                <Navigation user={ user } />
+                <Navigation />
             </Router>
         </div>
     )

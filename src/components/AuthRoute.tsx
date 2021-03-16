@@ -16,7 +16,7 @@ export default function AuthRoute( { exact, path, render }: AuthRoutePropsInterf
     
     return (
         <Route
-            exact={ exact ? true : false }
+            { ...exact }
             path={ path }
             render={
                 props => user ?

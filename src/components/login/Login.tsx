@@ -105,6 +105,8 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
 
         const is_alert = ! this.state.valid_email || ! this.state.valid_password ? false : true
 
+        const pathname = this.props.location_pathname !== '/login' ? this.props.location_pathname : '/'
+
         return (
             <storeStateContext.Consumer>
                 {
@@ -163,7 +165,7 @@ class Login extends Component<LoginPropsInterface, LoginStateInterface> {
                                 </main>
                             )
                         }
-                        else return <Redirect to="/" />
+                        else return <Redirect to={ pathname } />
                     }
                 }
             </storeStateContext.Consumer>

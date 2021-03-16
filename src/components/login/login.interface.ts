@@ -1,5 +1,6 @@
 export interface LoginPropsInterface {
     history: any
+    location_pathname: string
 }
 
 export interface LoginStateInterface {

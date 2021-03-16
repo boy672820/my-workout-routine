@@ -12,18 +12,14 @@ import { Container } from "react-bootstrap"
 
 import './navigation.css'
 import { LoginAPI } from "../../api/users/login.api"
-import { useStoreDispatch } from "../../store"
+import { useStoreDispatch, useStoreState } from "../../store"
 
 
-interface NavigationPropsInterface {
-    user: any
-}
-
-
-function Navigation( { user }: NavigationPropsInterface ) {
+function Navigation() {
     const { pathname } = useLocation()
     const history = useHistory()
     const dispatch = useStoreDispatch()
+    const { user } = useStoreState()
 
     // Handle click.
     const handleLogout = ( e: React.MouseEvent<HTMLAnchorElement> ) => {
