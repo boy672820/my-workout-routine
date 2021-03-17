@@ -35,7 +35,8 @@ function Navigation() {
 
     // Active item.
     const activeItem = ( name: string ) => {
-        return pathname === `/${name}` ? 'active' : ''
+        const params = pathname.split( '/' )
+        return params[ 1 ] === `${name}` ? 'active' : ''
     }
 
 

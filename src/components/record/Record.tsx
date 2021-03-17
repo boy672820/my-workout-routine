@@ -5,7 +5,8 @@ import {
     Button,
     Modal,
     Form,
-    Card
+    Card,
+    Col
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBurn, faEdit } from "@fortawesome/free-solid-svg-icons"
@@ -17,7 +18,7 @@ import { useParams } from 'react-router-dom'
 
 function Records() {
     const { block_id }: any = useParams()
-    const [ modal, setModal ] = useState( false )
+    const [ modal, setModal ] = useState( true )
     const [ title, setTitle ] = useState( '' )
     const [ routineDate, setRoutineDate ] = useState( '...' )
     const [ data, setData ] = useState<any[]>( [] )
@@ -115,8 +116,9 @@ function Records() {
                                                         </td>
                                                         <td className="vertical align middle">{ set.set_weight }kg</td>
                                                         <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
+                                                        <td className="vertical align middle">{ set.set_rir }RIR</td>
                                                         <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" onClick={ handleEdit }>
+                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit() } }>
                                                                 <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
@@ -137,16 +139,55 @@ function Records() {
                         <Modal.Header closeButton>
                             <Modal.Title>정지 벤치프레스 1세트 수정</Modal.Title>
                         </Modal.Header>
+
                         <Modal.Body>
                             <Form.Group>
-                                <Form.Label htmlFor="weight">중량</Form.Label>
-                                <Form.Control type="text" id="weight" name="weight" placeholder="중량을 입력해주세요." />
+                                <Form.Label htmlFor="set_weight">중량</Form.Label>
+                                <Form.Control type="text" id="set_weight" name="set_weight" placeholder="중량을 입력해주세요." />
                             </Form.Group>
+
+                            <Form.Row>
+                                <Col xs={6}>
+                                    <Form.Group>
+                                        <Form.Label htmlFor="set_reps">횟수</Form.Label>
+                                        <Form.Control type="text" id="set_reps" name="set_reps" placeholder="횟수를 입력해주세요." />
+                                    </Form.Group>
+                                </Col>
+                                <Col xs={6}>
+                                    <Form.Group>
+                                        <Form.Label htmlFor="set_max_reps">최대 횟수</Form.Label>
+                                        <Form.Control type="text" id="set_max_reps" name="set_max_reps" placeholder="횟수를 입력해주세요." />
+                                    </Form.Group>
+                                </Col>
+                            </Form.Row>
+
                             <Form.Group>
-                                <Form.Label htmlFor="reps">횟수</Form.Label>
-                                <Form.Control type="text" id="reps" name="reps" placeholder="횟수를 입력해주세요." />
+                                <Form.Label htmlFor="set_rir">RIR</Form.Label>
+                                <Form.Control type="text" id="set_rir" name="set_rir" placeholder="횟수를 입력해주세요." />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label htmlFor="set_rest">쉬는시간</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    name="set_rir"
+                                    id="set_rir"
+                                >
+                                    <option value={0}>0</option>
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
+                                    <option value={6}>6</option>
+                                    <option value={7}>7</option>
+                                    <option value={8}>8</option>
+                                    <option value={9}>9</option>
+                                    <option value={10}>10</option>
+                                </Form.Control>
                             </Form.Group>
                         </Modal.Body>
+
                         <Modal.Footer>
                             <Button variant="secondary" onClick={ handleModal }>닫기</Button>
                             <Button variant="primary" onClick={ handleModal }>저장</Button>
