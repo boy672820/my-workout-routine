@@ -252,7 +252,7 @@ class CreateEditSet extends Component<CreateEditSetPropsInterface, CreateEditSet
                                 value={ parent.state[ `${prefix}set_rest_second` ] }
                                 >
                                 {
-                                    [ ...Array( 59 ) ].map( ( v, i ) => {
+                                    [ ...Array( 60 ) ].map( ( v, i ) => {
                                         return <option value={ i } key={ i }>{ i }</option>
                                     } )
                                 }

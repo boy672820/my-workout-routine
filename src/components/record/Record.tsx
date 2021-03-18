@@ -6,10 +6,11 @@ import {
     Modal,
     Form,
     Card,
-    Col
+    Col,
+    InputGroup
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBurn, faEdit } from "@fortawesome/free-solid-svg-icons"
+import { faBurn, faEdit, faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
 
 import './record.css'
 import { RoutineAPI } from '../../api/routine/routine.api'
@@ -18,11 +19,22 @@ import { useParams } from 'react-router-dom'
 
 function Records() {
     const { block_id }: any = useParams()
-    const [ modal, setModal ] = useState( true )
+
+    const [ modal, setModal ] = useState( false )
     const [ title, setTitle ] = useState( '' )
     const [ routineDate, setRoutineDate ] = useState( '...' )
+
     const [ data, setData ] = useState<any[]>( [] )
     const [ complete, setComplete ] = useState<number[]>( [] )
+
+    const [ setId, setSetId ] = useState( 0 )
+    const [ setNumber, setSetNumber ] = useState( 0 )
+    const [ weight, setWeight ] = useState( 0 )
+    const [ reps, setReps ] = useState( 0 )
+    const [ maxReps, setMaxReps ] = useState( 0 )
+    const [ rir, setRir ] = useState( 0 )
+    const [ restMinute, setRestMinute ] = useState( 0 )
+    const [ restSecond, setRestSecond ] = useState( 0 )
 
 
     useEffect( () => {
@@ -47,8 +59,22 @@ function Records() {
         setModal( ! modal )
     }
 
-    const handleEdit = () => {
+    const handleEdit = ( data: any ) => {
         handleModal()
+
+        const { ID, set_number, set_weight, set_reps, set_max_reps, set_rir, set_rest } = data
+
+        const rest_minute = Math.floor( set_rest / 60 )
+        const rest_second = set_rest - ( rest_minute * 60 )
+
+        setSetId( ID )
+        setSetNumber( set_number )
+        setWeight( set_weight )
+        setReps( set_reps )
+        setMaxReps( set_max_reps )
+        setRir( set_rir )
+        setRestMinute( rest_minute )
+        setRestSecond( rest_second )
     }
 
     const handleComplete = ( e: React.ChangeEvent<HTMLInputElement> ) => {
@@ -118,7 +144,7 @@ function Records() {
                                                         <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
                                                         <td className="vertical align middle">{ set.set_rir }RIR</td>
                                                         <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit() } }>
+                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set ) } }>
                                                                 <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
@@ -141,51 +167,146 @@ function Records() {
                         </Modal.Header>
 
                         <Modal.Body>
+
+                            {/* Weight */}
                             <Form.Group>
                                 <Form.Label htmlFor="set_weight">중량</Form.Label>
-                                <Form.Control type="text" id="set_weight" name="set_weight" placeholder="중량을 입력해주세요." />
+
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <Button type="button" variant="outline-secondary" title="감소">
+                                            <FontAwesomeIcon icon={ faAngleDown } />
+                                        </Button>
+                                    </InputGroup.Prepend>
+
+                                    <Form.Control type="text" id="set_weight" name="set_weight" placeholder="중량을 입력해주세요." value={ weight } />
+
+                                    <InputGroup.Append>
+                                        <Button type="button" variant="outline-secondary" title="증가">
+                                            <FontAwesomeIcon icon={ faAngleUp } />
+                                        </Button>
+                                    </InputGroup.Append>
+                                </InputGroup>
                             </Form.Group>
 
+                            {/* Reps */}
                             <Form.Row>
                                 <Col xs={6}>
                                     <Form.Group>
                                         <Form.Label htmlFor="set_reps">횟수</Form.Label>
-                                        <Form.Control type="text" id="set_reps" name="set_reps" placeholder="횟수를 입력해주세요." />
+
+                                        <InputGroup>
+                                            <InputGroup.Prepend>
+                                                <Button type="button" variant="outline-secondary" title="감소">
+                                                    <FontAwesomeIcon icon={ faAngleDown } />                                                    
+                                                </Button>
+                                            </InputGroup.Prepend>
+
+                                            <Form.Control type="text" id="set_reps" name="set_reps" placeholder="횟수를 입력해주세요." value={ reps } />
+
+                                            <InputGroup.Append>
+                                                <Button type="button" variant="outline-secondary" title="증가">
+                                                    <FontAwesomeIcon icon={ faAngleUp } />                                                    
+                                                </Button>
+                                            </InputGroup.Append>
+                                        </InputGroup>
                                     </Form.Group>
                                 </Col>
+
                                 <Col xs={6}>
                                     <Form.Group>
                                         <Form.Label htmlFor="set_max_reps">최대 횟수</Form.Label>
-                                        <Form.Control type="text" id="set_max_reps" name="set_max_reps" placeholder="횟수를 입력해주세요." />
+
+                                        <InputGroup>
+                                            <InputGroup.Prepend>
+                                                <Button type="button" variant="outline-secondary" title="감소">
+                                                    <FontAwesomeIcon icon={ faAngleDown } />                                                    
+                                                </Button>
+                                            </InputGroup.Prepend>
+
+                                            <Form.Control type="text" id="set_max_reps" name="set_max_reps" placeholder="횟수를 입력해주세요." value={ maxReps } />
+
+                                            <InputGroup.Append>
+                                                <Button type="button" variant="outline-secondary" title="증가">
+                                                    <FontAwesomeIcon icon={ faAngleUp } />                                                    
+                                                </Button>
+                                            </InputGroup.Append>
+                                        </InputGroup>
                                     </Form.Group>
                                 </Col>
                             </Form.Row>
 
                             <Form.Group>
                                 <Form.Label htmlFor="set_rir">RIR</Form.Label>
-                                <Form.Control type="text" id="set_rir" name="set_rir" placeholder="횟수를 입력해주세요." />
-                            </Form.Group>
-
-                            <Form.Group>
-                                <Form.Label htmlFor="set_rest">쉬는시간</Form.Label>
                                 <Form.Control
                                     as="select"
                                     name="set_rir"
                                     id="set_rir"
+                                    value={ rir }
                                 >
-                                    <option value={0}>0</option>
-                                    <option value={1}>1</option>
-                                    <option value={2}>2</option>
-                                    <option value={3}>3</option>
-                                    <option value={4}>4</option>
-                                    <option value={5}>5</option>
-                                    <option value={6}>6</option>
-                                    <option value={7}>7</option>
-                                    <option value={8}>8</option>
-                                    <option value={9}>9</option>
-                                    <option value={10}>10</option>
+                                    {
+                                        [ ...Array( 11 ) ].map( ( v, i ) => {
+                                            return <option value={ i } key={ i }>{ i }</option>
+                                        } )
+                                    }
                                 </Form.Control>
                             </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label htmlFor="set_rest">쉬는시간</Form.Label>
+
+                                <Form.Row>
+                                    <Col xs={ 4 }>
+                                        <InputGroup>
+                                            <InputGroup.Prepend>
+                                                <Button
+                                                    variant="outline-secondary"
+                                                    title="감소"
+                                                >
+                                                    <FontAwesomeIcon icon={ faAngleDown } />
+                                                </Button>
+                                            </InputGroup.Prepend>
+
+                                            <Form.Control
+                                                type="text"
+                                                name="set_rest_minute"
+                                                id="set_rest_minute"
+                                                value={ restMinute }
+                                            />
+
+                                            <InputGroup.Append>
+                                                <Button
+                                                    variant="outline-secondary"
+                                                    title="증가"
+                                                >
+                                                    <FontAwesomeIcon icon={ faAngleUp } />
+                                                </Button>
+                                            </InputGroup.Append>
+                                        </InputGroup>
+                                    </Col>
+
+                                    <Form.Label htmlFor="rest_minute" column xs={ 1 }>분</Form.Label>
+
+                                    <Col xs={ 4 }>
+                                        <Form.Control
+                                            as="select"
+                                            name="set_rest_second"
+                                            id="set_rest_second"
+                                            value={ restSecond }
+                                        >
+                                            {
+                                                [ ...Array( 60 ) ].map( ( v, i ) => {
+                                                    return <option value={ i } key={ i }>{ i }</option>
+                                                } )
+                                            }
+                                        </Form.Control>
+                                    </Col>
+
+                                    <Form.Label htmlFor="rest_second" column xs={ 1 }>초</Form.Label>
+                                </Form.Row>
+
+                            </Form.Group>
+
                         </Modal.Body>
 
                         <Modal.Footer>
