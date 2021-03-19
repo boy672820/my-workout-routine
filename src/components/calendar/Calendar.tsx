@@ -15,7 +15,6 @@ import { RoutineAPI } from '../../api/routine/routine.api'
 import { LoginAPI } from '../../api/users/login.api'
 
 import './calendar.css'
-import { Link } from 'react-router-dom'
 
 
 class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface> {
@@ -38,6 +37,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         this.handleModal = this.handleModal.bind( this )
         this.handleCreateBlock = this.handleCreateBlock.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
+        this.handleCreateRecord = this.handleCreateRecord.bind( this )
     }
 
     private scrollRef = React.createRef<HTMLTableRowElement>()
@@ -97,6 +97,10 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
             routine_date: date_string,
             modal_title: `${year}년 ${month}월 ${d}일 ${this.week[ day ]}`
         } )
+    }
+
+    async handleCreateRecord( block_id: number ) {
+
     }
 
     async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
@@ -183,6 +187,8 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                 )
                                             }
                                             else {
+                                                const block = blocks[ ymd ]
+                                                
                                                 rows.push(
                                                     <tr key={ i } { ...isScrollRef }>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
@@ -190,18 +196,11 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                         </td>
                                                         <td className={ "vertical align middle td " + is_weekend + is_today }>
                                                             <FontAwesomeIcon icon={ faBurn } style={ { color: '#dc3545' } } />&nbsp;
-                                                            { blocks[ ymd ].block_title }
+                                                            { block.block_title }
                                                         </td>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
-                                                            {/* <Button variant="link" className="no padding" title="운동기록 수정하기">
-                                                                <Link to={ `/create/exercise/${blocks[ ymd ].block_id}` }>
-                                                                    <FontAwesomeIcon icon={faEdit} />
-                                                                </Link>
-                                                            </Button> */}
-                                                            <Button variant="link" className="no padding" title="운동 기록하기">
-                                                                <Link to={ `/record/${blocks[ ymd ].block_id}` }>
-                                                                    <FontAwesomeIcon icon={faEdit} />
-                                                                </Link>
+                                                            <Button variant="link" className="no padding" title="운동 기록하기" onClick={ () => { that.handleCreateRecord( block.block_id ) } }>
+                                                                <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
                                                     </tr>

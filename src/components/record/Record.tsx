@@ -198,7 +198,7 @@ function Records() {
                                         <InputGroup>
                                             <InputGroup.Prepend>
                                                 <Button type="button" variant="outline-secondary" title="감소">
-                                                    <FontAwesomeIcon icon={ faAngleDown } />                                                    
+                                                    <FontAwesomeIcon icon={ faAngleDown } />
                                                 </Button>
                                             </InputGroup.Prepend>
 
@@ -206,7 +206,7 @@ function Records() {
 
                                             <InputGroup.Append>
                                                 <Button type="button" variant="outline-secondary" title="증가">
-                                                    <FontAwesomeIcon icon={ faAngleUp } />                                                    
+                                                    <FontAwesomeIcon icon={ faAngleUp } />
                                                 </Button>
                                             </InputGroup.Append>
                                         </InputGroup>
