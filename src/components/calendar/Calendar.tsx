@@ -11,10 +11,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBurn, faEdit, faPlusCircle } from "@fortawesome/free-solid-svg-icons"
 
 import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
-import { RoutineAPI } from '../../api/routine/routine.api'
 import { LoginAPI } from '../../api/users/login.api'
+import { RoutineAPI } from '../../api/routine/routine.api'
+import { RecordAPI } from '../../api/record/record.api'
 
 import './calendar.css'
+import { RecordCreateDTO } from '../../api/record/dto/record.create.dto'
 
 
 class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface> {
@@ -99,8 +101,25 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
         } )
     }
 
+    /**
+     * Get or create record.
+     * @param block_id Block id
+     */
     async handleCreateRecord( block_id: number ) {
+        LoginAPI.getProfile().then( ( { data } ) => {
+            const { ID } = data
 
+            const recordData: RecordCreateDTO = {
+                user_id: ID,
+                block_id: block_id
+            }
+
+            RecordAPI.getOrCreateRecord( recordData ).then( response => {
+                const { ID } = response.data
+
+                this.props.history.push( `/record/${ID}` )
+            } )
+        } )
     }
 
     async handleSubmit( e: React.FormEvent<HTMLFormElement> ) {
@@ -186,6 +205,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                     </tr>
                                                 )
                                             }
+                                            // 운동 블럭이 있을 경우..
                                             else {
                                                 const block = blocks[ ymd ]
                                                 
@@ -195,12 +215,12 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                             <span className={ 'day ' + is_weekend + is_today }>{ i }({ week })</span>
                                                         </td>
                                                         <td className={ "vertical align middle td " + is_weekend + is_today }>
-                                                            <FontAwesomeIcon icon={ faBurn } style={ { color: '#dc3545' } } />&nbsp;
+                                                            <FontAwesomeIcon icon={ faBurn } className={ block.record_id !== null ? "active-burn" : "inactive-burn"} />&nbsp;
                                                             { block.block_title }
                                                         </td>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
                                                             <Button variant="link" className="no padding" title="운동 기록하기" onClick={ () => { that.handleCreateRecord( block.block_id ) } }>
-                                                                <FontAwesomeIcon icon={faEdit} />
+                                                                <FontAwesomeIcon icon={faEdit} className={ block.record_id !== null ? "success-edit" : ""} />
                                                             </Button>
                                                         </td>
                                                     </tr>

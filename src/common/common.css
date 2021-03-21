@@ -76,3 +76,14 @@ fieldset {
     background-color: rgba( 0, 0, 0, 0 ) !important;
     border-bottom: 1px dashed rgba(0,0,0,.125) !important;
 }
+
+.active-burn {
+    color: #dc3545;
+}
+.inactive-burn {
+    color: #8c98a1;
+}
+
+.success-edit {
+    color: #28a745;
+}

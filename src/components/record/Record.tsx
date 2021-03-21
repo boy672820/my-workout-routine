@@ -15,10 +15,11 @@ import { faBurn, faEdit, faAngleDown, faAngleUp } from "@fortawesome/free-solid-
 import './record.css'
 import { RoutineAPI } from '../../api/routine/routine.api'
 import { useParams } from 'react-router-dom'
+import { RecordAPI } from '../../api/record/record.api'
 
 
 function Records() {
-    const { block_id }: any = useParams()
+    const { record_id }: any = useParams()
 
     const [ modal, setModal ] = useState( false )
     const [ title, setTitle ] = useState( '' )
@@ -37,22 +38,14 @@ function Records() {
     const [ restSecond, setRestSecond ] = useState( 0 )
 
 
+    // Use effect..
     useEffect( () => {
-        // Get block title.
-        RoutineAPI.getBlock( block_id ).then( response => {
-            const { block_title } = response.data
+        
+        RecordAPI.getRecordWithBlock( record_id ).then( response => {
+            console.log( response )
+        } )
 
-            setTitle( block_title )
-        } )
-        // Get exercises.
-        RoutineAPI.getExercises( block_id ).then( response => {
-            setData( response.data )
-        } )
-        // Get routine date.
-        RoutineAPI.getRoutineDate( block_id ).then( response => {
-            setRoutineDate( response.data.routine_date )
-        } )
-    }, [ block_id ] )
+    }, [ record_id ] )
 
 
     const handleModal = () => {
@@ -100,11 +93,6 @@ function Records() {
                         <strong>(토요일)</strong> <span>{ title }</span>
                     </h2>
                     <p className="record-date-desc">
-                        { ( ( date ) => {
-                            const split = date.split( '/' )
-
-                            return `${split[ 0 ]}년 ${split[ 1 ]}월 ${split[ 2 ]}일`
-                        } )( routineDate ) }
                     </p>
                 </Container>
             </div>

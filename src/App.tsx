@@ -53,7 +53,7 @@ function App() {
                     />
 
                     <AuthRoute
-                        path="/record/:block_id"
+                        path="/record/:record_id"
                         render={ props => <Record { ...props } /> }
                     />
 
