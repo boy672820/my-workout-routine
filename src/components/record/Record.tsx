@@ -3,19 +3,17 @@ import {
     Container,
     Table,
     Button,
-    Modal,
     Form,
     Card,
-    Col,
-    InputGroup
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBurn, faEdit, faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
+import { faBurn, faEdit } from "@fortawesome/free-solid-svg-icons"
 
-import './record.css'
-import { RoutineAPI } from '../../api/routine/routine.api'
 import { useParams } from 'react-router-dom'
 import { RecordAPI } from '../../api/record/record.api'
+
+import './record.css'
+import RecordEditModal from './RecordEditModal'
 
 
 function Records() {
@@ -25,17 +23,19 @@ function Records() {
     const [ title, setTitle ] = useState( '' )
     const [ routineDate, setRoutineDate ] = useState( '...' )
 
+    // Exercises data
     const [ data, setData ] = useState<any[]>( [] )
     const [ complete, setComplete ] = useState<number[]>( [] )
 
-    const [ setId, setSetId ] = useState( 0 )
-    const [ setNumber, setSetNumber ] = useState( 0 )
-    const [ weight, setWeight ] = useState( 0 )
-    const [ reps, setReps ] = useState( 0 )
-    const [ maxReps, setMaxReps ] = useState( 0 )
-    const [ rir, setRir ] = useState( 0 )
-    const [ restMinute, setRestMinute ] = useState( 0 )
-    const [ restSecond, setRestSecond ] = useState( 0 )
+    const [ editData, setEditData ] = useState<any>( {
+        ID: -1,
+        set_number: 0,
+        weight: 0,
+        reps: 0,
+        max_reps: 0,
+        rir: 0,
+        rest: 0
+    } )
 
 
     // Use effect..
@@ -43,13 +43,13 @@ function Records() {
         
         RecordAPI.getRecordWithBlock( record_id ).then( response => {
             const {
-                block_ID,
                 block_block_title,
                 date_routine_date,
                 exercises
             } = response.data
 
             setRoutineDate( date_routine_date )
+            setTitle( block_block_title )
 
             // Set exercises.
             setData( exercises )
@@ -58,26 +58,25 @@ function Records() {
     }, [ record_id ] )
 
 
-    const handleModal = () => {
-        setModal( ! modal )
-    }
-
+    /**
+     * Open edit modal popover.
+     * @param data 
+     */
     const handleEdit = ( data: any ) => {
-        handleModal()
+        setModal( true )
 
-        const { ID, set_number, set_weight, set_reps, set_max_reps, set_rir, set_rest } = data
+        const { ID, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
 
-        const rest_minute = Math.floor( set_rest / 60 )
-        const rest_second = set_rest - ( rest_minute * 60 )
-
-        setSetId( ID )
-        setSetNumber( set_number )
-        setWeight( set_weight )
-        setReps( set_reps )
-        setMaxReps( set_max_reps )
-        setRir( set_rir )
-        setRestMinute( rest_minute )
-        setRestSecond( rest_second )
+        setEditData( {
+            ID: ID,
+            set_number: set_number,
+            set_weight: set_weight,
+            set_reps: set_reps,
+            set_max_reps: set_max_reps,
+            set_disable_range: set_disable_range,
+            set_rir: set_rir,
+            set_rest: set_rest
+        } )
     }
 
     const handleComplete = ( e: React.ChangeEvent<HTMLInputElement> ) => {
@@ -100,7 +99,7 @@ function Records() {
             <div className="record-date">
                 <Container>
                     <h2 className="record-date-title">
-                        <strong>(토요일)</strong> <span>{ title }</span>
+                        <strong>(토)</strong><span>{ title }</span>
                     </h2>
                     <p className="record-date-desc">
                         {
@@ -165,161 +164,7 @@ function Records() {
                     
                 </Container>
 
-                <Modal show={ modal } onHide={ handleModal } animation={true} centered>
-                    <Form>
-                        <Modal.Header closeButton>
-                            <Modal.Title>정지 벤치프레스 1세트 수정</Modal.Title>
-                        </Modal.Header>
-
-                        <Modal.Body>
-
-                            {/* Weight */}
-                            <Form.Group>
-                                <Form.Label htmlFor="set_weight">중량</Form.Label>
-
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <Button type="button" variant="outline-secondary" title="감소">
-                                            <FontAwesomeIcon icon={ faAngleDown } />
-                                        </Button>
-                                    </InputGroup.Prepend>
-
-                                    <Form.Control type="text" id="set_weight" name="set_weight" placeholder="중량을 입력해주세요." value={ weight } />
-
-                                    <InputGroup.Append>
-                                        <Button type="button" variant="outline-secondary" title="증가">
-                                            <FontAwesomeIcon icon={ faAngleUp } />
-                                        </Button>
-                                    </InputGroup.Append>
-                                </InputGroup>
-                            </Form.Group>
-
-                            {/* Reps */}
-                            <Form.Row>
-                                <Col xs={6}>
-                                    <Form.Group>
-                                        <Form.Label htmlFor="set_reps">횟수</Form.Label>
-
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                                <Button type="button" variant="outline-secondary" title="감소">
-                                                    <FontAwesomeIcon icon={ faAngleDown } />
-                                                </Button>
-                                            </InputGroup.Prepend>
-
-                                            <Form.Control type="text" id="set_reps" name="set_reps" placeholder="횟수를 입력해주세요." value={ reps } />
-
-                                            <InputGroup.Append>
-                                                <Button type="button" variant="outline-secondary" title="증가">
-                                                    <FontAwesomeIcon icon={ faAngleUp } />
-                                                </Button>
-                                            </InputGroup.Append>
-                                        </InputGroup>
-                                    </Form.Group>
-                                </Col>
-
-                                <Col xs={6}>
-                                    <Form.Group>
-                                        <Form.Label htmlFor="set_max_reps">최대 횟수</Form.Label>
-
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                                <Button type="button" variant="outline-secondary" title="감소">
-                                                    <FontAwesomeIcon icon={ faAngleDown } />                                                    
-                                                </Button>
-                                            </InputGroup.Prepend>
-
-                                            <Form.Control type="text" id="set_max_reps" name="set_max_reps" placeholder="횟수를 입력해주세요." value={ maxReps } />
-
-                                            <InputGroup.Append>
-                                                <Button type="button" variant="outline-secondary" title="증가">
-                                                    <FontAwesomeIcon icon={ faAngleUp } />                                                    
-                                                </Button>
-                                            </InputGroup.Append>
-                                        </InputGroup>
-                                    </Form.Group>
-                                </Col>
-                            </Form.Row>
-
-                            <Form.Group>
-                                <Form.Label htmlFor="set_rir">RIR</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    name="set_rir"
-                                    id="set_rir"
-                                    value={ rir }
-                                >
-                                    {
-                                        [ ...Array( 11 ) ].map( ( v, i ) => {
-                                            return <option value={ i } key={ i }>{ i }</option>
-                                        } )
-                                    }
-                                </Form.Control>
-                            </Form.Group>
-
-                            <Form.Group>
-                                <Form.Label htmlFor="set_rest">쉬는시간</Form.Label>
-
-                                <Form.Row>
-                                    <Col xs={ 4 }>
-                                        <InputGroup>
-                                            <InputGroup.Prepend>
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    title="감소"
-                                                >
-                                                    <FontAwesomeIcon icon={ faAngleDown } />
-                                                </Button>
-                                            </InputGroup.Prepend>
-
-                                            <Form.Control
-                                                type="text"
-                                                name="set_rest_minute"
-                                                id="set_rest_minute"
-                                                value={ restMinute }
-                                            />
-
-                                            <InputGroup.Append>
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    title="증가"
-                                                >
-                                                    <FontAwesomeIcon icon={ faAngleUp } />
-                                                </Button>
-                                            </InputGroup.Append>
-                                        </InputGroup>
-                                    </Col>
-
-                                    <Form.Label htmlFor="rest_minute" column xs={ 1 }>분</Form.Label>
-
-                                    <Col xs={ 4 }>
-                                        <Form.Control
-                                            as="select"
-                                            name="set_rest_second"
-                                            id="set_rest_second"
-                                            value={ restSecond }
-                                        >
-                                            {
-                                                [ ...Array( 60 ) ].map( ( v, i ) => {
-                                                    return <option value={ i } key={ i }>{ i }</option>
-                                                } )
-                                            }
-                                        </Form.Control>
-                                    </Col>
-
-                                    <Form.Label htmlFor="rest_second" column xs={ 1 }>초</Form.Label>
-                                </Form.Row>
-
-                            </Form.Group>
-
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={ handleModal }>닫기</Button>
-                            <Button variant="primary" onClick={ handleModal }>저장</Button>
-                        </Modal.Footer>
-                    </Form>
-                </Modal>
+                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } />
             </main>
         </>
     )
