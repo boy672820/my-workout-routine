@@ -42,7 +42,17 @@ function Records() {
     useEffect( () => {
         
         RecordAPI.getRecordWithBlock( record_id ).then( response => {
-            console.log( response )
+            const {
+                block_ID,
+                block_block_title,
+                date_routine_date,
+                exercises
+            } = response.data
+
+            setRoutineDate( date_routine_date )
+
+            // Set exercises.
+            setData( exercises )
         } )
 
     }, [ record_id ] )
@@ -93,6 +103,13 @@ function Records() {
                         <strong>(토요일)</strong> <span>{ title }</span>
                     </h2>
                     <p className="record-date-desc">
+                        {
+                            ( ( date ) => {
+                                const split = date.split( '/' )
+
+                                return `${split[ 0 ]}년 ${split[ 1 ]}월 ${split[ 2 ]}일`
+                            } )( routineDate )
+                        }
                     </p>
                 </Container>
             </div>
