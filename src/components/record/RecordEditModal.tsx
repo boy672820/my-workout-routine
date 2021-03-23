@@ -19,7 +19,9 @@ interface propsInterface {
 
 
 export default function RecordEditModal( { modal, setModal, data }: propsInterface ) {
-    console.log( data )
+
+    console.log(data)
+
     const [ weight, setWeight ] = useState<number>( data.set_weight )
     const [ reps, setReps ] = useState<number>( data.set_reps )
     const [ maxReps, setMaxReps ] = useState<number>( data.set_max_reps )
@@ -33,6 +35,11 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
 
     const [ restMinute, setRestMinute ] = useState<number>( rest_minute )
     const [ restSecond, setRestSecond ] = useState<number>( rest_second )
+
+    const handleChange = ( e: React.ChangeEvent ) => {
+
+    };
+
 
     return (
         <Modal show={ modal } onHide={ setModal } animation={ true } centered>
@@ -54,7 +61,14 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                         </Button>
                                     </InputGroup.Prepend>
 
-                                    <Form.Control type="text" id="set_weight" name="set_weight" placeholder="중량을 입력해주세요." value={ weight } />
+                                    <Form.Control
+                                        type="text"
+                                        id="set_weight"
+                                        name="set_weight"
+                                        placeholder="중량을 입력해주세요."
+                                        onChange={ ( e ) => { handleChange( e ) } }
+                                        value={ weight }
+                                    />
 
                                     <InputGroup.Append>
                                         <Button type="button" variant="outline-secondary" title="증가">
@@ -77,7 +91,14 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                                 </Button>
                                             </InputGroup.Prepend>
 
-                                            <Form.Control type="text" id="set_reps" name="set_reps" placeholder="횟수를 입력해주세요." value={ reps } />
+                                            <Form.Control
+                                                type="text"
+                                                id="set_reps"
+                                                name="set_reps"
+                                                placeholder="횟수를 입력해주세요."
+                                                onChange={ ( e ) => { handleChange( e ) } }
+                                                value={ reps }
+                                            />
 
                                             <InputGroup.Append>
                                                 <Button type="button" variant="outline-secondary" title="증가">
@@ -99,7 +120,14 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                                 </Button>
                                             </InputGroup.Prepend>
 
-                                            <Form.Control type="text" id="set_max_reps" name="set_max_reps" placeholder="횟수를 입력해주세요." value={ maxReps } />
+                                            <Form.Control
+                                                type="text"
+                                                id="set_max_reps"
+                                                name="set_max_reps"
+                                                placeholder="횟수를 입력해주세요."
+                                                onChange={ ( e ) => { handleChange( e ) } }
+                                                value={ maxReps }
+                                            />
 
                                             <InputGroup.Append>
                                                 <Button type="button" variant="outline-secondary" title="증가">
@@ -107,6 +135,16 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                                 </Button>
                                             </InputGroup.Append>
                                         </InputGroup>
+
+                                        <Form.Check
+                                            type="checkbox"
+                                            name="disable_range"
+                                            id="disable_range"
+                                            className="label-checkbox"
+                                            onChange={ ( e ) => { handleChange( e ) } }
+                                            checked={ disableRange ? true : false }
+                                        />
+                                        <label htmlFor="disable_range" className="label-text">최대 횟수 사용</label>
                                     </Form.Group>
                                 </Col>
                             </Form.Row>
@@ -117,6 +155,7 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                     as="select"
                                     name="set_rir"
                                     id="set_rir"
+                                    onChange={ ( e ) => { handleChange( e ) } }
                                     value={ rir }
                                 >
                                     {
@@ -146,6 +185,7 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                                 type="text"
                                                 name="set_rest_minute"
                                                 id="set_rest_minute"
+                                                onChange={ ( e ) => { handleChange( e ) } }
                                                 value={ restMinute }
                                             />
 
@@ -167,6 +207,7 @@ export default function RecordEditModal( { modal, setModal, data }: propsInterfa
                                             as="select"
                                             name="set_rest_second"
                                             id="set_rest_second"
+                                            onChange={ ( e ) => { handleChange( e ) } }
                                             value={ restSecond }
                                         >
                                             {
