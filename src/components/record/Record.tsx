@@ -16,7 +16,7 @@ import './record.css'
 import RecordEditModal from './RecordEditModal'
 
 
-function Records() {
+function Record() {
     const { record_id }: any = useParams()
 
     const [ modal, setModal ] = useState( false )
@@ -28,6 +28,7 @@ function Records() {
     const [ complete, setComplete ] = useState<number[]>( [] )
 
     const [ editData, setEditData ] = useState<any>( {
+        index: -1,
         ID: -1,
         set_number: 0,
         weight: 0,
@@ -40,7 +41,7 @@ function Records() {
 
     // Use effect..
     useEffect( () => {
-        
+
         RecordAPI.getRecordWithBlock( record_id ).then( response => {
             const {
                 block_block_title,
@@ -62,12 +63,16 @@ function Records() {
      * Open edit modal popover.
      * @param data 
      */
-    const handleEdit = ( data: any ) => {
+    const handleEdit = ( index: number, data: any ) => {
         setModal( true )
 
         const { ID, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
 
+        const set_rest_minute = Math.floor( set_rest / 60 )
+        const set_rest_second = set_rest - ( set_rest_minute * 60 )
+
         setEditData( {
+            index: index,
             ID: ID,
             set_number: set_number,
             set_weight: set_weight,
@@ -75,7 +80,8 @@ function Records() {
             set_max_reps: set_max_reps,
             set_disable_range: set_disable_range,
             set_rir: set_rir,
-            set_rest: set_rest
+            set_rest_minute: set_rest_minute,
+            set_rest_second: set_rest_second
         } )
     }
 
@@ -148,7 +154,15 @@ function Records() {
                                                         <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
                                                         <td className="vertical align middle">{ set.set_rir }RIR</td>
                                                         <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set ) } }>
+                                                            { ( ( rest ) => {
+                                                                const minute = Math.floor( rest / 60 )
+                                                                const second = rest - ( minute * 60 )
+
+                                                                return `${minute}분 ${second}초`
+                                                            } )( set.set_rest ) }
+                                                        </td>
+                                                        <td className="vertical align middle">
+                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set_index, set ) } }>
                                                                 <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
@@ -170,4 +184,4 @@ function Records() {
     )
 }
 
-export default Records
+export default Record
