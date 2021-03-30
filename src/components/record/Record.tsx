@@ -28,14 +28,14 @@ function Record() {
     const [ complete, setComplete ] = useState<number[]>( [] )
 
     const [ editData, setEditData ] = useState<any>( {
-        index: -1,
         ID: -1,
         set_number: 0,
         weight: 0,
         reps: 0,
         max_reps: 0,
         rir: 0,
-        rest: 0
+        rest_minute: 0,
+        rest_second: 0,
     } )
 
 
@@ -72,7 +72,6 @@ function Record() {
         const set_rest_second = set_rest - ( set_rest_minute * 60 )
 
         setEditData( {
-            index: index,
             ID: ID,
             set_number: set_number,
             set_weight: set_weight,
@@ -98,6 +97,13 @@ function Record() {
             setComplete( [ ...complete ] )
         }
     }
+
+    const updateEditData = ( update: any ) => {
+        setEditData( {
+            ...editData,
+            ...update
+        } )
+    };
 
 
     return (
@@ -178,7 +184,7 @@ function Record() {
                     
                 </Container>
 
-                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } />
+                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } updateData={updateEditData} />
             </main>
         </>
     )

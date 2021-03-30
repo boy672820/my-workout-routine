@@ -17,17 +17,10 @@ interface PropsInterface {
     modal: boolean
     setModal: any
     data: any
+    updateData: ( update: any ) => void
 }
 interface StateInterface {
-    is_derived: boolean
     weight_plate: number
-    weight: number
-    reps: number
-    max_reps: number
-    disable_range: number
-    rir: number
-    rest_minute: number
-    rest_second: number
 }
 
 
@@ -37,15 +30,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         super( props )
 
         this.state = {
-            is_derived: false,
             weight_plate: 20,
-            weight: 0,
-            reps: 0,
-            max_reps: 0,
-            disable_range: 0,
-            rir: 0,
-            rest_minute: 0,
-            rest_second: 0
         }
 
         this.handleChange = this.handleChange.bind( this )
@@ -53,27 +38,13 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         this.handleIncrease = this.handleIncrease.bind( this )
     }
 
-    static getDerivedStateFromProps( nextProps: any, prevState: any ) {
-        if ( nextProps.is_derived !== prevState.is_derived ) {
-            const { data } = nextProps
-            
-            return {
-                is_derived: true,
-                weight: data.weight,
-                reps: data.reps,
-                max_reps: data.max_reps,
-                disable_range: data.disable_range,
-                rir: data.rir,
-                rest_minute: data.rest_minute,
-                rest_second: data.rest_second,
-            }
-        }
-        return null
-    }
 
+    async handleChange( e: React.ChangeEvent<HTMLInputElement> ) {
+        const { name, value } = e.target
 
-    async handleChange( e: React.ChangeEvent ) {
-
+        this.props.updateData( {
+            [ name ]: Number( value )
+        } )
     }
 
     async handlePlateToggle( e: React.ChangeEvent<HTMLInputElement> ) {
@@ -84,8 +55,13 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         } )
     }
 
-    async handleIncrease( increment: number ) {
-        
+    async handleIncrease( target: string, increment: number ) {
+        const { updateData, data } = this.props
+        const value = data[ target ] + increment
+
+        updateData( {
+            [ target ]: value
+        } )
     }
 
 
@@ -136,7 +112,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                             <InputGroup>
                                 <InputGroup.Prepend>
-                                    <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( 1 ) } }>
+                                    <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( "set_weight", -1 * this.state.weight_plate ) } }>
                                         <FontAwesomeIcon icon={ faAngleDown } />
                                     </Button>
                                 </InputGroup.Prepend>
@@ -146,12 +122,12 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                     id="set_weight"
                                     name="set_weight"
                                     placeholder="중량을 입력해주세요."
-                                    onChange={ ( e ) => { this.handleChange( e ) } }
+                                    onChange={ this.handleChange }
                                     defaultValue={ data.set_weight }
                                 />
 
                                 <InputGroup.Append>
-                                    <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( -1 ) } }>
+                                    <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( "set_weight", this.state.weight_plate ) } }>
                                         <FontAwesomeIcon icon={ faAngleUp } />
                                     </Button>
                                 </InputGroup.Append>
@@ -166,7 +142,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <Button type="button" variant="outline-secondary" title="감소">
+                                            <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( "set_reps", -1 ) } }>
                                                 <FontAwesomeIcon icon={ faAngleDown } />
                                             </Button>
                                         </InputGroup.Prepend>
@@ -176,12 +152,12 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             id="set_reps"
                                             name="set_reps"
                                             placeholder="횟수를 입력해주세요."
-                                            onChange={ ( e ) => { this.handleChange( e ) } }
+                                            onChange={ this.handleChange }
                                             defaultValue={ data.set_reps }
                                         />
 
                                         <InputGroup.Append>
-                                            <Button type="button" variant="outline-secondary" title="증가">
+                                            <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( "set_reps", 1 ) } }>
                                                 <FontAwesomeIcon icon={ faAngleUp } />
                                             </Button>
                                         </InputGroup.Append>
@@ -195,7 +171,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <Button type="button" variant="outline-secondary" title="감소">
+                                            <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( "set_max_reps", -1 ) } }>
                                                 <FontAwesomeIcon icon={ faAngleDown } />                                                    
                                             </Button>
                                         </InputGroup.Prepend>
@@ -205,12 +181,12 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             id="set_max_reps"
                                             name="set_max_reps"
                                             placeholder="횟수를 입력해주세요."
-                                            onChange={ ( e ) => { this.handleChange( e ) } }
+                                            onChange={ this.handleChange }
                                             defaultValue={ data.set_max_reps }
                                         />
 
                                         <InputGroup.Append>
-                                            <Button type="button" variant="outline-secondary" title="증가">
+                                            <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( "set_max_reps", 1 ) } }>
                                                 <FontAwesomeIcon icon={ faAngleUp } />                                                    
                                             </Button>
                                         </InputGroup.Append>
@@ -221,7 +197,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                         name="disable_range"
                                         id="disable_range"
                                         className="label-checkbox"
-                                        onChange={ ( e ) => { this.handleChange( e ) } }
+                                        onChange={ this.handleChange }
                                         checked={ data.set_disable_range ? true : false }
                                     />
                                     <label htmlFor="disable_range" className="label-text">최대 횟수 사용</label>
@@ -235,7 +211,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                 as="select"
                                 name="set_rir"
                                 id="set_rir"
-                                onChange={ ( e ) => { this.handleChange( e ) } }
+                                onChange={ this.handleChange }
                                 defaultValue={ data.set_rir }
                             >
                                 {
@@ -256,6 +232,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             <Button
                                                 variant="outline-secondary"
                                                 title="감소"
+                                                onClick={ () => { this.handleIncrease( "set_rest_minute", -1 ) } }
                                             >
                                                 <FontAwesomeIcon icon={ faAngleDown } />
                                             </Button>
@@ -265,14 +242,15 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             type="text"
                                             name="set_rest_minute"
                                             id="set_rest_minute"
-                                            onChange={ ( e ) => { this.handleChange( e ) } }
-                                            defaultValue={ this.state.rest_minute }
+                                            onChange={ this.handleChange }
+                                            defaultValue={ data.set_rest_minute }
                                         />
 
                                         <InputGroup.Append>
                                             <Button
                                                 variant="outline-secondary"
                                                 title="증가"
+                                                onClick={ () => { this.handleIncrease( "set_rest_minute", 1 ) } }
                                             >
                                                 <FontAwesomeIcon icon={ faAngleUp } />
                                             </Button>
@@ -287,8 +265,8 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                         as="select"
                                         name="set_rest_second"
                                         id="set_rest_second"
-                                        onChange={ ( e ) => { this.handleChange( e ) } }
-                                        defaultValue={ this.state.rest_second }
+                                        onChange={ this.handleChange }
+                                        defaultValue={ data.set_rest_second }
                                     >
                                         {
                                             [ ...Array( 60 ) ].map( ( v, i ) => {
