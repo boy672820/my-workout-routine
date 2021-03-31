@@ -36,31 +36,69 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         this.handleChange = this.handleChange.bind( this )
         this.handlePlateToggle = this.handlePlateToggle.bind( this )
         this.handleIncrease = this.handleIncrease.bind( this )
+        this.validate = this.validate.bind( this )
     }
 
 
+    /**
+     * Validate form.
+     * @param target 
+     * @returns 
+     */
+    async validate( target: any ) {
+        const { name, value } = target
+        const update: any = {};
+
+        switch( name ) {
+            case "set_disable_range":
+                update[ name ] = ! target.checked
+                break
+
+            default:
+                const default_value = Number( value )
+
+                if ( ! isNaN( default_value ) )
+                    update[ name ] = default_value
+
+                break
+        }
+
+        return update
+    }
+
+    /**
+     * Handle change event.
+     * @param e 
+     */
     async handleChange( e: React.ChangeEvent<HTMLInputElement> ) {
-        const { name, value } = e.target
+        const update = await this.validate( e.target )
 
-        this.props.updateData( {
-            [ name ]: Number( value )
-        } )
+        this.props.updateData( update )
     }
 
-    async handlePlateToggle( e: React.ChangeEvent<HTMLInputElement> ) {
-        const { value } = e.target
-
-        this.setState( {
-            weight_plate: Number( value )
-        } )
-    }
-
+   /**
+    * Handle increment form.
+    * @param target 
+    * @param increment 
+    */ 
     async handleIncrease( target: string, increment: number ) {
         const { updateData, data } = this.props
         const value = data[ target ] + increment
 
         updateData( {
             [ target ]: value
+        } )
+    }
+
+    /**
+     * Toggle weight plate.
+     * @param e 
+     */
+    async handlePlateToggle( e: React.ChangeEvent<HTMLInputElement> ) {
+        const { value } = e.target
+
+        this.setState( {
+            weight_plate: Number( value )
         } )
     }
 
@@ -123,7 +161,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                     name="set_weight"
                                     placeholder="중량을 입력해주세요."
                                     onChange={ this.handleChange }
-                                    defaultValue={ data.set_weight }
+                                    value={ data.set_weight }
                                 />
 
                                 <InputGroup.Append>
@@ -153,7 +191,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             name="set_reps"
                                             placeholder="횟수를 입력해주세요."
                                             onChange={ this.handleChange }
-                                            defaultValue={ data.set_reps }
+                                            value={ data.set_reps }
                                         />
 
                                         <InputGroup.Append>
@@ -171,7 +209,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( "set_max_reps", -1 ) } }>
+                                            <Button type="button" variant="outline-secondary" title="감소" onClick={ () => { this.handleIncrease( "set_max_reps", -1 ) } } disabled={ data.set_disable_range }>
                                                 <FontAwesomeIcon icon={ faAngleDown } />                                                    
                                             </Button>
                                         </InputGroup.Prepend>
@@ -182,11 +220,12 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             name="set_max_reps"
                                             placeholder="횟수를 입력해주세요."
                                             onChange={ this.handleChange }
-                                            defaultValue={ data.set_max_reps }
+                                            value={ data.set_max_reps }
+                                            disabled={ data.set_disable_range }
                                         />
 
                                         <InputGroup.Append>
-                                            <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( "set_max_reps", 1 ) } }>
+                                            <Button type="button" variant="outline-secondary" title="증가" onClick={ () => { this.handleIncrease( "set_max_reps", 1 ) } } disabled={ data.set_disable_range }>
                                                 <FontAwesomeIcon icon={ faAngleUp } />                                                    
                                             </Button>
                                         </InputGroup.Append>
@@ -194,13 +233,13 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                                     <Form.Check
                                         type="checkbox"
-                                        name="disable_range"
-                                        id="disable_range"
+                                        name="set_disable_range"
+                                        id="set_disable_range"
                                         className="label-checkbox"
                                         onChange={ this.handleChange }
-                                        checked={ data.set_disable_range ? true : false }
+                                        checked={ ! data.set_disable_range ? true : false }
                                     />
-                                    <label htmlFor="disable_range" className="label-text">최대 횟수 사용</label>
+                                    <label htmlFor="set_disable_range" className="label-text">최대 횟수 사용</label>
                                 </Form.Group>
                             </Col>
                         </Form.Row>
@@ -212,7 +251,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                 name="set_rir"
                                 id="set_rir"
                                 onChange={ this.handleChange }
-                                defaultValue={ data.set_rir }
+                                value={ data.set_rir }
                             >
                                 {
                                     [ ...Array( 11 ) ].map( ( v, i ) => {
@@ -243,7 +282,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                             name="set_rest_minute"
                                             id="set_rest_minute"
                                             onChange={ this.handleChange }
-                                            defaultValue={ data.set_rest_minute }
+                                            value={ data.set_rest_minute }
                                         />
 
                                         <InputGroup.Append>
@@ -266,7 +305,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                                         name="set_rest_second"
                                         id="set_rest_second"
                                         onChange={ this.handleChange }
-                                        defaultValue={ data.set_rest_second }
+                                        value={ data.set_rest_second }
                                     >
                                         {
                                             [ ...Array( 60 ) ].map( ( v, i ) => {

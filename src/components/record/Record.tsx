@@ -74,7 +74,7 @@ function Record() {
         setEditData( {
             ID: ID,
             set_number: set_number,
-            set_weight: set_weight,
+            set_weight: Number( set_weight ),
             set_reps: set_reps,
             set_max_reps: set_max_reps,
             set_disable_range: set_disable_range,
