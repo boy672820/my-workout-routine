@@ -29,6 +29,7 @@ function Record() {
 
     const [ editData, setEditData ] = useState<any>( {
         ID: -1,
+        exercise_id: -1,
         set_number: 0,
         weight: 0,
         reps: 0,
@@ -63,16 +64,19 @@ function Record() {
      * Open edit modal popover.
      * @param data 
      */
-    const handleEdit = ( index: number, data: any ) => {
+    const handleEdit = ( data: any ) => {
         setModal( true )
 
-        const { ID, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
+        console.log(data)
+
+        const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
 
         const set_rest_minute = Math.floor( set_rest / 60 )
         const set_rest_second = set_rest - ( set_rest_minute * 60 )
 
         setEditData( {
             ID: ID,
+            exercise_id: exercise_id,
             set_number: set_number,
             set_weight: Number( set_weight ),
             set_reps: set_reps,
@@ -104,6 +108,22 @@ function Record() {
             ...update
         } )
     };
+
+    const updateExerciseData = ( update: any ) => {
+        const updateData = data.map( ( exercise: any ) => {
+            if ( exercise.ID === update.exercise_id ) {
+                const sets = exercise.sets.map( ( set: any ) => set.ID === update.ID ? { ...set, ...update } : set )
+
+                return {
+                    ...exercise,
+                    ...sets
+                }
+            }
+            else return exercise
+        } )
+
+        return updateData
+    }
 
 
     return (
@@ -168,7 +188,7 @@ function Record() {
                                                             } )( set.set_rest ) }
                                                         </td>
                                                         <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set_index, set ) } }>
+                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set ) } }>
                                                                 <FontAwesomeIcon icon={faEdit} />
                                                             </Button>
                                                         </td>
@@ -184,7 +204,7 @@ function Record() {
                     
                 </Container>
 
-                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } updateData={updateEditData} />
+                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } updateData={ updateEditData } submitData={ updateExerciseData } />
             </main>
         </>
     )

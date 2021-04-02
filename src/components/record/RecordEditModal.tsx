@@ -18,6 +18,7 @@ interface PropsInterface {
     setModal: any
     data: any
     updateData: ( update: any ) => void
+    submitData: ( update: any ) => void
 }
 interface StateInterface {
     weight_plate: number
@@ -37,6 +38,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         this.handlePlateToggle = this.handlePlateToggle.bind( this )
         this.handleIncrease = this.handleIncrease.bind( this )
         this.validate = this.validate.bind( this )
+        this.handleSubmit = this.handleSubmit.bind( this )
     }
 
 
@@ -49,16 +51,37 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         const { name, value } = target
         const update: any = {};
 
+        const negativeValid = ( value: number ) => {
+            return value < 0 ? 0 : value
+        }
+
         switch( name ) {
             case "set_disable_range":
                 update[ name ] = ! target.checked
+
                 break
 
+            case "set_reps":
+                if ( value >= this.props.data.set_max_reps ) update[ "set_max_reps" ] = Number( value ) + 1
+
+                update[ name ] = negativeValid( Number( value ) )
+
+                break
+
+            case "set_max_reps":
+                const max_value = Number( value ) <= 2 ? 2 : Number( value )
+                
+                if ( max_value <= this.props.data.set_reps ) update[ "set_reps" ] = max_value - 1
+
+                update[ name ] = max_value
+
+                break
+            
             default:
                 const default_value = Number( value )
 
                 if ( ! isNaN( default_value ) )
-                    update[ name ] = default_value
+                    update[ name ] = negativeValid( default_value )
 
                 break
         }
@@ -83,11 +106,12 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
     */ 
     async handleIncrease( target: string, increment: number ) {
         const { updateData, data } = this.props
+
         const value = data[ target ] + increment
 
-        updateData( {
-            [ target ]: value
-        } )
+        const valid_update = await this.validate( { name: target, value: value } )
+
+        updateData( valid_update )
     }
 
     /**
@@ -100,6 +124,10 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         this.setState( {
             weight_plate: Number( value )
         } )
+    }
+
+    async handleSubmit() {
+
     }
 
 
@@ -324,7 +352,15 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
 
                     <Modal.Footer>
                         <Button variant="secondary" onClick={ () => { setModal( false ) } }>닫기</Button>
-                        <Button variant="primary" onClick={ () => { setModal( false ) } }>저장</Button>
+                        <Button
+                            variant="primary"
+                            onClick={
+                                () => {
+                                    setModal( false )
+                                    this.handleSubmit()
+                                }
+                            }
+                        >저장</Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
