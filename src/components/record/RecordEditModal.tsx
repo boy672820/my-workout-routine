@@ -17,8 +17,8 @@ interface PropsInterface {
     modal: boolean
     setModal: any
     data: any
-    updateData: ( update: any ) => void
-    submitData: ( update: any ) => void
+    updateEditData: ( update: any ) => void
+    updateExerciseData: ( update: any ) => void
 }
 interface StateInterface {
     weight_plate: number
@@ -96,7 +96,7 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
     async handleChange( e: React.ChangeEvent<HTMLInputElement> ) {
         const update = await this.validate( e.target )
 
-        this.props.updateData( update )
+        this.props.updateEditData( update )
     }
 
    /**
@@ -105,13 +105,13 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
     * @param increment 
     */ 
     async handleIncrease( target: string, increment: number ) {
-        const { updateData, data } = this.props
+        const { updateEditData, data } = this.props
 
         const value = data[ target ] + increment
 
         const valid_update = await this.validate( { name: target, value: value } )
 
-        updateData( valid_update )
+        updateEditData( valid_update )
     }
 
     /**
@@ -126,8 +126,26 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         } )
     }
 
+    /**
+     * Handle submit form component.
+     */
     async handleSubmit() {
+        const { updateExerciseData, data } = this.props
 
+        const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir } = data
+        const update = {
+            ID: ID,
+            exercise_id: exercise_id,
+            set_number: set_number,
+            set_weight: set_weight,
+            set_reps: set_reps,
+            set_max_reps: set_max_reps,
+            set_disable_range: set_disable_range,
+            set_rir: set_rir,
+            set_rest: ( data.set_rest_minute * 60 ) + data.set_rest_second
+        }
+
+        updateExerciseData( update )
     }
 
 

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { RecordItemCreateDTO } from './dto/record.item.create.dto';
 import { RecordCreateDTO } from './dto/record.create.dto';
 
 
@@ -15,6 +16,14 @@ export class RecordAPI {
         return axios( {
             method: 'get',
             url: `/record/with-block/${record_id}`
+        } )
+    }
+
+    public static createRecordItem( data: RecordItemCreateDTO ): Promise<AxiosResponse> {
+        return axios( {
+            method: 'post',
+            url: `/record-item`,
+            data: data
         } )
     }
 }

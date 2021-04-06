@@ -67,8 +67,6 @@ function Record() {
     const handleEdit = ( data: any ) => {
         setModal( true )
 
-        console.log(data)
-
         const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
 
         const set_rest_minute = Math.floor( set_rest / 60 )
@@ -116,13 +114,13 @@ function Record() {
 
                 return {
                     ...exercise,
-                    ...sets
+                    sets: sets
                 }
             }
             else return exercise
         } )
 
-        return updateData
+        setData( updateData )
     }
 
 
@@ -204,7 +202,13 @@ function Record() {
                     
                 </Container>
 
-                <RecordEditModal modal={ modal } setModal={ setModal } data={ editData } updateData={ updateEditData } submitData={ updateExerciseData } />
+                <RecordEditModal
+                    modal={ modal }
+                    setModal={ setModal }
+                    data={ editData }
+                    updateEditData={ updateEditData }
+                    updateExerciseData={ updateExerciseData }
+                />
             </main>
         </>
     )
