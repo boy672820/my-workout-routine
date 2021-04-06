@@ -176,10 +176,14 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                         const today = new Date( Date.now() )
 
                                         for ( i; i <= last_date; i += 1 ) {
-                                            const day = new Date( year, month, i ).getDay()
-                                            const week = that.week[ day ][ 0 ]
                                             const ymd = `${year}/${month}/${i}`
+
+                                            const day = new Date( ymd ).getDay()
+
+                                            const week = typeof that.week[ day ] === "string" ? that.week[ day ].charAt( 0 ) : ""
+
                                             const is_today = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}` === ymd ? 'today' : ''
+
                                             const is_weekend = day === 0 || day === 6 ? 'weekend ' : ''
 
                                             const key_index = keys.indexOf( ymd )
@@ -235,7 +239,7 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                         </Card.Body>
                     </Card>
 
-                    <Modal show={ this.state.modal } onHide={ this.handleModal } animation={ true }>
+                    <Modal show={ this.state.modal } onHide={ this.handleModal } animation={ true } centered>
                         <Form onSubmit={ this.handleSubmit }>
                             <Modal.Header closeButton>
                                 <Modal.Title>{ this.state.modal_title }</Modal.Title>

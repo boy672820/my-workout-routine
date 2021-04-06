@@ -35,7 +35,7 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
             block_id: Number( block_id ),
             exercise_name: '',
             set_number: 3,
-            set_weight: 0,
+            set_weight: 20,
             set_reps: 8,
             set_max_reps: 10,
             set_disable_range: true,

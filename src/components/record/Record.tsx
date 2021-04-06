@@ -176,7 +176,7 @@ function Record() {
                                                                 </Form.Label>
                                                             </div>
                                                         </td>
-                                                        <td className="vertical align middle">{ set.set_weight }kg</td>
+                                                        <td className="vertical align middle">{ Number( set.set_weight ) }kg</td>
                                                         <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
                                                         <td className="vertical align middle">{ set.set_rir }RIR</td>
                                                         <td className="vertical align middle">
