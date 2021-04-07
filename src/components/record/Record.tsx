@@ -205,6 +205,7 @@ function Record() {
                 <RecordEditModal
                     modal={ modal }
                     setModal={ setModal }
+                    record_id={ record_id }
                     data={ editData }
                     updateEditData={ updateEditData }
                     updateExerciseData={ updateExerciseData }

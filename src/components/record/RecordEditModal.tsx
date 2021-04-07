@@ -12,10 +12,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
 
+import { RecordAPI } from '../../api/record/record.api'
+
 
 interface PropsInterface {
     modal: boolean
     setModal: any
+    record_id: number
     data: any
     updateEditData: ( update: any ) => void
     updateExerciseData: ( update: any ) => void
@@ -133,7 +136,26 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         const { updateExerciseData, data } = this.props
 
         const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir } = data
-        const update = {
+
+        const set_rest = ( data.set_rest_minute * 60 ) + data.set_rest_second
+
+        const updateData = {
+            record_id: Number( this.props.record_id ),
+            set_id: ID,
+            record_item_number: set_number,
+            record_item_weight: set_weight,
+            record_item_reps: set_reps,
+            record_item_max_reps: set_max_reps,
+            record_item_disable_range: set_disable_range,
+            record_item_rir: set_rir,
+            record_item_rest: set_rest
+        }
+
+        RecordAPI.createRecordItem( updateData ).then( response => {
+            console.log(response)
+        } )
+
+        updateExerciseData( {
             ID: ID,
             exercise_id: exercise_id,
             set_number: set_number,
@@ -142,10 +164,8 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
             set_max_reps: set_max_reps,
             set_disable_range: set_disable_range,
             set_rir: set_rir,
-            set_rest: ( data.set_rest_minute * 60 ) + data.set_rest_second
-        }
-
-        updateExerciseData( update )
+            set_rest: set_rest
+        } )
     }
 
 

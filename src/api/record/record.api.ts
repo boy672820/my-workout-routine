@@ -22,7 +22,7 @@ export class RecordAPI {
     public static createRecordItem( data: RecordItemCreateDTO ): Promise<AxiosResponse> {
         return axios( {
             method: 'post',
-            url: `/record-item`,
+            url: `/record/record-item`,
             data: data
         } )
     }
