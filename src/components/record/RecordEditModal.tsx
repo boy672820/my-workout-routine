@@ -152,19 +152,19 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
         }
 
         RecordAPI.createRecordItem( updateData ).then( response => {
-            console.log(response)
-        } )
-
-        updateExerciseData( {
-            ID: ID,
-            exercise_id: exercise_id,
-            set_number: set_number,
-            set_weight: set_weight,
-            set_reps: set_reps,
-            set_max_reps: set_max_reps,
-            set_disable_range: set_disable_range,
-            set_rir: set_rir,
-            set_rest: set_rest
+            if ( response.status === 201 ) {
+                updateExerciseData( {
+                    ID: ID,
+                    exercise_id: exercise_id,
+                    set_number: set_number,
+                    set_weight: set_weight,
+                    set_reps: set_reps,
+                    set_max_reps: set_max_reps,
+                    set_disable_range: set_disable_range,
+                    set_rir: set_rir,
+                    set_rest: set_rest
+                } )
+            }
         } )
     }
 
