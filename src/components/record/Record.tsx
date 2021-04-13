@@ -57,6 +57,10 @@ function Record() {
             setData( exercises )
         } )
 
+        RecordAPI.getRecordItemsByRecordId( record_id ).then( response => {
+            console.log( response )
+        } )
+
     }, [ record_id ] )
 
 
@@ -88,6 +92,10 @@ function Record() {
 
     const handleComplete = ( e: React.ChangeEvent<HTMLInputElement> ) => {
         const { value, checked } = e.target
+
+        RecordAPI.updateComplete( checked ).then( response => {
+            console.log( response )
+        } )
 
         if ( checked ) setComplete( [ ...complete, Number( value ) ] )
 

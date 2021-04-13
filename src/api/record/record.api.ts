@@ -19,11 +19,28 @@ export class RecordAPI {
         } )
     }
 
+    public static getRecordItemsByRecordId( record_id: number ): Promise<AxiosResponse> {
+        return axios( {
+            method: 'get',
+            url: `/record/record-item/${record_id}`
+        } )
+    }
+
     public static createRecordItem( data: RecordItemCreateDTO ): Promise<AxiosResponse> {
         return axios( {
             method: 'post',
             url: `/record/record-item`,
             data: data
+        } )
+    }
+
+    public static updateComplete( checked: boolean ): Promise<AxiosResponse> {
+        return axios( {
+            method: 'patch',
+            url: `/record/record-item/complete`,
+            data: {
+                record_item_complete: checked
+            }
         } )
     }
 }
