@@ -53,12 +53,70 @@ function Record() {
             setRoutineDate( date_routine_date )
             setTitle( block_block_title )
 
-            // Set exercises.
-            setData( exercises )
-        } )
+            // Get record item and update sets in data..
+            RecordAPI.getRecordItemsByRecordId( record_id ).then( response => {
+                const { data } = response
 
-        RecordAPI.getRecordItemsByRecordId( record_id ).then( response => {
-            console.log( response )
+                // Exercises data
+                const updateExercises = exercises.map( ( exercise: any ) => {
+                    // Sets in exercise data
+                    const updateSets = exercise.sets.map( ( set: any ) => {
+                        let updateSet = set
+
+                        // Record item data
+                        data.forEach( ( item: any ) => {
+                            const set_id = Number( item.set_id )
+
+                            if ( set_id === updateSet.ID ) {
+                                // Record item data
+                                const {
+                                    set_id,
+                                    record_id,
+                                    record_item_disable_range,
+                                    record_item_number,
+                                    record_item_max_reps,
+                                    record_item_reps,
+                                    record_item_rest,
+                                    record_item_rir,
+                                    record_item_weight
+                                } = item
+
+                                // Block set data
+                                const {
+                                    exercise_id,
+                                } = updateSet
+
+                                // Rendering data
+                                updateSet = {
+                                    ID: Number( set_id ),
+                                    exercise_id: exercise_id,
+                                    set_disable_range: record_item_disable_range,
+                                    set_number: record_item_number,
+                                    set_max_reps: record_item_max_reps,
+                                    set_reps: record_item_reps,
+                                    set_rest: record_item_rest,
+                                    set_rir: record_item_rir,
+                                    set_weight: record_item_weight,
+                                    record_id: Number( record_id )
+                                }
+                            }
+                        } )
+
+                        return updateSet
+                    } )
+
+                    return {
+                        ...exercise,
+                        sets: updateSets
+                    }
+                } )
+
+                console.log( updateExercises )
+                setData( updateExercises )
+            } )
+
+            // Set exercises.
+            // setData( exercises )
         } )
 
     }, [ record_id ] )
