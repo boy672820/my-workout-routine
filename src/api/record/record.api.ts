@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { RecordItemCreateDTO } from './dto/record.item.create.dto';
 import { RecordCreateDTO } from './dto/record.create.dto';
 import { RecordItemCompleteDTO } from './dto/record.item.complete.dto';
+import { RecordItemUpdateDTO } from './dto/record.item.update.dto';
 
 
 export class RecordAPI {
@@ -31,6 +32,14 @@ export class RecordAPI {
         return axios( {
             method: 'post',
             url: `/record/record-item`,
+            data: data
+        } )
+    }
+
+    public static updateRecordItem( record_item_id: number, data: RecordItemUpdateDTO ): Promise<AxiosResponse> {
+        return axios( {
+            method: 'patch',
+            url: `/record/record-item/${record_item_id}`,
             data: data
         } )
     }

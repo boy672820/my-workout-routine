@@ -30,6 +30,7 @@ function Record() {
 
     const [ editData, setEditData ] = useState<any>( {
         ID: -1,
+        record_item_id: -1,
         exercise_id: -1,
         set_number: 0,
         weight: 0,
@@ -71,6 +72,7 @@ function Record() {
                             if ( set_id === updateSet.ID ) {
                                 // Record item data
                                 const {
+                                    ID,
                                     set_id,
                                     record_id,
                                     record_item_disable_range,
@@ -98,7 +100,8 @@ function Record() {
                                     set_rest: record_item_rest,
                                     set_rir: record_item_rir,
                                     set_weight: record_item_weight,
-                                    record_id: Number( record_id )
+                                    record_id: Number( record_id ),
+                                    record_item_id: Number( ID )
                                 }
                             }
                         } )
@@ -127,13 +130,15 @@ function Record() {
     const handleEdit = ( data: any ) => {
         setModal( true )
 
-        const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
+        const { ID, record_id, record_item_id, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir, set_rest } = data
 
         const set_rest_minute = Math.floor( set_rest / 60 )
         const set_rest_second = set_rest - ( set_rest_minute * 60 )
 
         setEditData( {
             ID: ID,
+            record_id: record_id,
+            record_item_id: record_item_id,
             exercise_id: exercise_id,
             set_number: set_number,
             set_weight: Number( set_weight ),

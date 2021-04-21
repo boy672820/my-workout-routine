@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
 
 import { RecordAPI } from '../../api/record/record.api'
+import { RecordItemUpdateDTO } from '../../api/record/dto/record.item.update.dto'
 
 
 interface PropsInterface {
@@ -134,27 +135,60 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
      */
     async handleSubmit() {
         const { updateExerciseData, data } = this.props
+        const record_id = Number( this.props.record_id )
 
-        const { ID, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir } = data
+        const { ID, record_item_id, exercise_id, set_number, set_weight, set_reps, set_max_reps, set_disable_range, set_rir } = data
 
         const set_rest = ( data.set_rest_minute * 60 ) + data.set_rest_second
 
-        const updateData = {
-            record_id: Number( this.props.record_id ),
-            set_id: ID,
-            record_item_number: set_number,
-            record_item_weight: set_weight,
-            record_item_reps: set_reps,
-            record_item_max_reps: set_max_reps,
-            record_item_disable_range: set_disable_range,
-            record_item_rir: set_rir,
-            record_item_rest: set_rest
+        if ( typeof record_item_id === "undefined" ) {
+            const updateData = {
+                record_id: record_id,
+                set_id: ID,
+                record_item_number: set_number,
+                record_item_weight: set_weight,
+                record_item_reps: set_reps,
+                record_item_max_reps: set_max_reps,
+                record_item_disable_range: set_disable_range,
+                record_item_rir: set_rir,
+                record_item_rest: set_rest,
+                record_item_complete: false
+            }
+
+            RecordAPI.createRecordItem( updateData ).then( response => {
+                if ( response.status === 201 ) {
+                    updateExerciseData( {
+                        ID: ID,
+                        record_id: record_id,
+                        record_item_id: response.data.ID,
+                        exercise_id: exercise_id,
+                        set_number: set_number,
+                        set_weight: set_weight,
+                        set_reps: set_reps,
+                        set_max_reps: set_max_reps,
+                        set_disable_range: set_disable_range,
+                        set_rir: set_rir,
+                        set_rest: set_rest,
+                    } )
+                }
+            } )            
         }
 
-        RecordAPI.createRecordItem( updateData ).then( response => {
-            if ( response.status === 201 ) {
+        else {
+            const updateData: RecordItemUpdateDTO = {
+                record_item_weight: set_weight,
+                record_item_reps: set_reps,
+                record_item_max_reps: set_max_reps,
+                record_item_disable_range: set_disable_range,
+                record_item_rir: set_rir,
+                record_item_rest: set_rest
+            }
+
+            RecordAPI.updateRecordItem( record_item_id, updateData ).then( response => {
                 updateExerciseData( {
                     ID: ID,
+                    record_id: record_id,
+                    record_item_id: record_item_id,
                     exercise_id: exercise_id,
                     set_number: set_number,
                     set_weight: set_weight,
@@ -162,10 +196,11 @@ class RecordEditModal extends React.Component<PropsInterface, StateInterface> {
                     set_max_reps: set_max_reps,
                     set_disable_range: set_disable_range,
                     set_rir: set_rir,
-                    set_rest: set_rest
+                    set_rest: set_rest,
                 } )
-            }
-        } )
+            } )
+        }
+
     }
 
 
