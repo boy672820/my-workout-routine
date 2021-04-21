@@ -14,6 +14,7 @@ import { RecordAPI } from '../../api/record/record.api'
 
 import './record.css'
 import RecordEditModal from './RecordEditModal'
+import { RecordItemCompleteDTO } from '../../api/record/dto/record.item.complete.dto'
 
 
 function Record() {
@@ -111,12 +112,9 @@ function Record() {
                     }
                 } )
 
-                console.log( updateExercises )
+                // Set exercises.
                 setData( updateExercises )
             } )
-
-            // Set exercises.
-            // setData( exercises )
         } )
 
     }, [ record_id ] )
@@ -148,10 +146,16 @@ function Record() {
         } )
     }
 
-    const handleComplete = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+    const handleComplete = ( e: React.ChangeEvent<HTMLInputElement>, set_id: number, record_id: number) => {
         const { value, checked } = e.target
 
-        RecordAPI.updateComplete( checked ).then( response => {
+        const data: RecordItemCompleteDTO = {
+            record_id,
+            set_id,
+            complete: checked
+        }
+
+        RecordAPI.updateComplete( data ).then( response => {
             console.log( response )
         } )
 
@@ -232,7 +236,12 @@ function Record() {
                                                     <tr key={ set_index } className={ completeClass }>
                                                         <td className="vertical align middle">
                                                             <div className="vertical align middle display inline block">
-                                                                <Form.Check type="checkbox" name="complete" id={ `complete-${set.ID}` } onChange={ handleComplete } value={ set.ID } />
+                                                                <Form.Check
+                                                                    type="checkbox"
+                                                                    name="complete"
+                                                                    id={ `complete-${set.ID}` }
+                                                                    onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => handleComplete( e, set.ID, set.record_id ? set.record_id : -1 ) }
+                                                                    value={ set.ID } />
                                                             </div>&nbsp;
                                                             <div className="record-item-set-title vertical align middle display inline block">
                                                                 <Form.Label htmlFor={ `complete-${set.ID}` } className="no margin">

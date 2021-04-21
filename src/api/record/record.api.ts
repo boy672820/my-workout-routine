@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { RecordItemCreateDTO } from './dto/record.item.create.dto';
 import { RecordCreateDTO } from './dto/record.create.dto';
+import { RecordItemCompleteDTO } from './dto/record.item.complete.dto';
 
 
 export class RecordAPI {
@@ -34,13 +35,11 @@ export class RecordAPI {
         } )
     }
 
-    public static updateComplete( checked: boolean ): Promise<AxiosResponse> {
+    public static updateComplete( data: RecordItemCompleteDTO ): Promise<AxiosResponse> {
         return axios( {
             method: 'patch',
             url: `/record/record-item/complete`,
-            data: {
-                record_item_complete: checked
-            }
+            data: data
         } )
     }
 }
