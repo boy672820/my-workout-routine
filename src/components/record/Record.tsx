@@ -58,6 +58,7 @@ function Record() {
             // Get record item and update sets in data..
             RecordAPI.getRecordItemsByRecordId( record_id ).then( response => {
                 const { data } = response
+                const recordCompleteArr: number[] = []
 
                 // Exercises data
                 const updateExercises = exercises.map( ( exercise: any ) => {
@@ -81,7 +82,8 @@ function Record() {
                                     record_item_reps,
                                     record_item_rest,
                                     record_item_rir,
-                                    record_item_weight
+                                    record_item_weight,
+                                    record_item_complete
                                 } = item
 
                                 // Block set data
@@ -101,8 +103,12 @@ function Record() {
                                     set_rir: record_item_rir,
                                     set_weight: record_item_weight,
                                     record_id: Number( record_id ),
-                                    record_item_id: Number( ID )
+                                    record_item_id: Number( ID ),
+                                    record_item_complete: record_item_complete
                                 }
+
+                                // Complete record..
+                                if ( record_item_complete ) recordCompleteArr.push( Number( set_id ) )
                             }
                         } )
 
@@ -117,6 +123,7 @@ function Record() {
 
                 // Set exercises.
                 setData( updateExercises )
+                setComplete( recordCompleteArr )
             } )
         } )
 
@@ -151,7 +158,12 @@ function Record() {
         } )
     }
 
-    const handleComplete = ( e: React.ChangeEvent<HTMLInputElement>, set_id: number, record_id: number) => {
+    /**
+     * Check complete
+     * @param e 
+     * @param set_id 
+     */
+    const handleComplete = ( e: React.ChangeEvent<HTMLInputElement>, set_id: number ) => {
         const { value, checked } = e.target
 
         const data: RecordItemCompleteDTO = {
@@ -161,18 +173,19 @@ function Record() {
         }
 
         RecordAPI.updateComplete( data ).then( response => {
-            console.log( response )
+            if ( response.status === 200 ) {
+
+                if ( checked ) setComplete( [ ...complete, Number( value ) ] )
+
+                else {
+                    const index = complete.indexOf( Number( value ) )
+        
+                    complete.splice( index, 1 )
+        
+                    setComplete( [ ...complete ] )
+                }
+            }
         } )
-
-        if ( checked ) setComplete( [ ...complete, Number( value ) ] )
-
-        else {
-            const index = complete.indexOf( Number( value ) )
-
-            complete.splice( index, 1 )
-
-            setComplete( [ ...complete ] )
-        }
     }
 
     const updateEditData = ( update: any ) => {
@@ -235,7 +248,8 @@ function Record() {
                                     <Table className="record-item-table no margin text align center">
                                         <tbody>
                                             { item.sets.map( ( set: any, set_index: number ) => {
-                                                const completeClass = complete.indexOf( set.ID ) < 0 ? '' : 'record-item-complete-set'
+                                                const is_complete = complete.indexOf( set.ID ) < 0
+                                                const completeClass = is_complete ? '' : 'record-item-complete-set'
 
                                                 return (
                                                     <tr key={ set_index } className={ completeClass }>
@@ -245,8 +259,10 @@ function Record() {
                                                                     type="checkbox"
                                                                     name="complete"
                                                                     id={ `complete-${set.ID}` }
-                                                                    onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => handleComplete( e, set.ID, set.record_id ? set.record_id : -1 ) }
-                                                                    value={ set.ID } />
+                                                                    onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => handleComplete( e, set.ID ) }
+                                                                    value={ set.ID }
+                                                                    checked={ ! is_complete }
+                                                                />
                                                             </div>&nbsp;
                                                             <div className="record-item-set-title vertical align middle display inline block">
                                                                 <Form.Label htmlFor={ `complete-${set.ID}` } className="no margin">
