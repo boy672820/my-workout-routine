@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
     Container,
     Table,
     Button,
     Form,
     Card,
+    Col,
+    Row
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBurn, faEdit } from "@fortawesome/free-solid-svg-icons"
+import { faBurn, faEdit, faBan, faDumbbell } from "@fortawesome/free-solid-svg-icons"
 
 import { useParams } from 'react-router-dom'
 import { RecordAPI } from '../../api/record/record.api'
@@ -18,9 +21,11 @@ import { RecordItemCompleteDTO } from '../../api/record/dto/record.item.complete
 
 
 function Record() {
+    const history = useHistory()
     const { record_id }: any = useParams()
 
     const [ modal, setModal ] = useState( false )
+    const [ blockId, setBlockId ] = useState( -1 )
     const [ title, setTitle ] = useState( '' )
     const [ routineDate, setRoutineDate ] = useState( '...' )
 
@@ -49,8 +54,11 @@ function Record() {
             const {
                 block_block_title,
                 date_routine_date,
-                exercises
+                exercises,
+                block_ID
             } = response.data
+
+            setBlockId( block_ID )
 
             setRoutineDate( date_routine_date )
             setTitle( block_block_title )
@@ -83,7 +91,8 @@ function Record() {
                                     record_item_rest,
                                     record_item_rir,
                                     record_item_weight,
-                                    record_item_complete
+                                    record_item_complete,
+                                    record_item_set_disable,
                                 } = item
 
                                 // Block set data
@@ -104,7 +113,8 @@ function Record() {
                                     set_weight: record_item_weight,
                                     record_id: Number( record_id ),
                                     record_item_id: Number( ID ),
-                                    record_item_complete: record_item_complete
+                                    record_item_complete: record_item_complete,
+                                    record_item_set_disable: record_item_set_disable,
                                 }
 
                                 // Complete record..
@@ -211,39 +221,90 @@ function Record() {
         setData( updateData )
     }
 
+    const handleRemoveSet = ( exercise_id: number, set_id: number ) => {
+        const disableRecordItemData = {
+            record_id: record_id,
+            set_id: set_id,
+            disable: true
+        }
+
+        RecordAPI.disableRecordItem( disableRecordItemData ).then( response => {
+
+            if ( response.status === 200 ) {
+
+                const exercises = data.map( ( row ) => {
+
+                    if ( exercise_id === row.ID ) {
+
+                        const sets = row.sets.map( ( set: any ) => {
+                            return set.ID !== set_id ? set : { ...set, record_item_set_disable: 1 }
+                        } )
+
+                        return { ...row, sets: sets }
+                    }
+                    else {
+                        return row
+                    }
+                } )
+
+                setData( exercises )
+            }
+        } )
+    }
+
 
     return (
         <>
-            <div className="record-date">
+            {/* <div className="record-date">
                 <Container>
-                    <h2 className="record-date-title">
-                        <strong>(토)</strong><span>{ title }</span>
-                    </h2>
-                    <p className="record-date-desc">
-                        {
-                            ( ( date ) => {
-                                const split = date.split( '/' )
-
-                                return `${split[ 0 ]}년 ${split[ 1 ]}월 ${split[ 2 ]}일`
-                            } )( routineDate )
-                        }
+                    <p className="record-date-link">
                     </p>
                 </Container>
-            </div>
+            </div> */}
 
             <main className="main record-main">
+                <div className="record-title">
+                    <Container>
+                        <Row>
+                            <Col xs={7}>
+                                <h2 className="record-date-title">
+                                    <strong>(토)</strong><span>{ title }</span>
+                                </h2>
+                                <p className="record-date-desc">
+                                    {
+                                        ( ( date ) => {
+                                            const split = date.split( '/' )
+
+                                            return `${split[ 0 ]}년 ${split[ 1 ]}월 ${split[ 2 ]}일`
+                                        } )( routineDate )
+                                    }
+                                </p>
+                            </Col>
+                            <Col xs={5} style={{ textAlign: 'right' }}>
+                                <Button variant="warning" onClick={ () => {
+                                    history.push( `/create/exercise/${blockId}` )
+                                } } className="icon-button">
+                                    <FontAwesomeIcon icon={faDumbbell} className="button-icon" />
+                                    운동 목표 수정
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+
                 <Container>
                     { data.map( ( item, index ) => {
                         return (
                             <Card className="record-item" key={ index }>
                                 <Card.Header>
                                     <div className="record-item-header">
-                                        <h4>
+                                        <h4 className="create-exercise-header no margin">
                                             <FontAwesomeIcon icon={faBurn} style={{color: '#dc3545'}} />&nbsp;&nbsp;
                                             { item.exercise_name }
                                         </h4>
                                     </div>
                                 </Card.Header>
+
                                 <Card.Body className="no padding">
                                     <Table className="record-item-table no margin text align center">
                                         <tbody>
@@ -251,43 +312,58 @@ function Record() {
                                                 const is_complete = complete.indexOf( set.ID ) < 0
                                                 const completeClass = is_complete ? '' : 'record-item-complete-set'
 
-                                                return (
-                                                    <tr key={ set_index } className={ completeClass }>
-                                                        <td className="vertical align middle">
-                                                            <div className="vertical align middle display inline block">
-                                                                <Form.Check
-                                                                    type="checkbox"
-                                                                    name="complete"
-                                                                    id={ `complete-${set.ID}` }
-                                                                    onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => handleComplete( e, set.ID ) }
-                                                                    value={ set.ID }
-                                                                    checked={ ! is_complete }
-                                                                />
-                                                            </div>&nbsp;
-                                                            <div className="record-item-set-title vertical align middle display inline block">
-                                                                <Form.Label htmlFor={ `complete-${set.ID}` } className="no margin">
-                                                                    { set.set_number }세트
-                                                                </Form.Label>
-                                                            </div>
-                                                        </td>
-                                                        <td className="vertical align middle">{ Number( set.set_weight ) }kg</td>
-                                                        <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
-                                                        <td className="vertical align middle">{ set.set_rir }RIR</td>
-                                                        <td className="vertical align middle">
-                                                            { ( ( rest ) => {
-                                                                const minute = Math.floor( rest / 60 )
-                                                                const second = rest - ( minute * 60 )
+                                                const { record_item_set_disable } = set
 
-                                                                return `${minute}분 ${second}초`
-                                                            } )( set.set_rest ) }
-                                                        </td>
-                                                        <td className="vertical align middle">
-                                                            <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set ) } }>
-                                                                <FontAwesomeIcon icon={faEdit} />
-                                                            </Button>
-                                                        </td>
-                                                    </tr>
-                                                )
+                                                if ( typeof record_item_set_disable === "number" && record_item_set_disable ) {
+                                                    return null
+                                                }
+                                                else {
+                                                    return (
+                                                        <tr key={ set_index } className={ completeClass }>
+                                                            <td className="vertical align middle">
+                                                                <div className="vertical align middle display inline block">
+                                                                    <Form.Check
+                                                                        type="checkbox"
+                                                                        name="complete"
+                                                                        id={ `complete-${set.ID}` }
+                                                                        onChange={ ( e: React.ChangeEvent<HTMLInputElement> ) => handleComplete( e, set.ID ) }
+                                                                        value={ set.ID }
+                                                                        checked={ ! is_complete }
+                                                                    />
+                                                                </div>
+                                                                {/*
+                                                                &nbsp;
+                                                                <div className="record-item-set-title vertical align middle display inline block">
+                                                                    <Form.Label htmlFor={ `complete-${set.ID}` } className="no margin">
+                                                                        { set.set_number }세트
+                                                                    </Form.Label>
+                                                                </div>
+                                                                */}
+                                                            </td>
+                                                            <td className="vertical align middle">{ Number( set.set_weight ) }kg</td>
+                                                            <td className="vertical align middle">{ set.set_reps }{ set.set_disable_range ? '' : `~${set.set_max_reps}` }회</td>
+                                                            <td className="vertical align middle">{ set.set_rir }R</td>
+                                                            <td className="vertical align middle">
+                                                                { ( ( rest ) => {
+                                                                    const minute = Math.floor( rest / 60 )
+                                                                    const second = rest - ( minute * 60 )
+
+                                                                    return `${minute}.${second}`
+                                                                } )( set.set_rest ) }초
+                                                            </td>
+                                                            <td className="vertical align middle" width="1">
+                                                                <Button variant="link" title="수정하기" onClick={ () => { handleEdit( set ) } }>
+                                                                    <FontAwesomeIcon icon={faEdit} />
+                                                                </Button>
+                                                            </td>
+                                                            <td className="vertical align middle set-td last-td" width="1">
+                                                                <Button variant="link" onClick={ () => { handleRemoveSet( item.ID, set.ID ) } }>
+                                                                    <FontAwesomeIcon icon={faBan} style={{ color: '#dc3545' }} />
+                                                                </Button>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                }
                                             } ) }
                                         </tbody>
                                     </Table>
@@ -295,7 +371,6 @@ function Record() {
                             </Card>
                         )
                     } ) }
-                    
                 </Container>
 
                 <RecordEditModal

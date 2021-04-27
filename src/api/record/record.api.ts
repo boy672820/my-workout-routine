@@ -3,6 +3,7 @@ import { RecordItemCreateDTO } from './dto/record.item.create.dto';
 import { RecordCreateDTO } from './dto/record.create.dto';
 import { RecordItemCompleteDTO } from './dto/record.item.complete.dto';
 import { RecordItemUpdateDTO } from './dto/record.item.update.dto';
+import { RecordItemDisableDTO } from './dto/record.item.disable.dto';
 
 
 export class RecordAPI {
@@ -47,7 +48,15 @@ export class RecordAPI {
     public static updateComplete( data: RecordItemCompleteDTO ): Promise<AxiosResponse> {
         return axios( {
             method: 'patch',
-            url: `/record/record-item/complete`,
+            url: '/record/record-item/complete',
+            data: data
+        } )
+    }
+
+    public static disableRecordItem( data: RecordItemDisableDTO ): Promise<AxiosResponse> {
+        return axios( {
+            method: 'patch',
+            url: '/record/record-item/disable',
             data: data
         } )
     }

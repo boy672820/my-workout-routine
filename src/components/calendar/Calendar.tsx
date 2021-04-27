@@ -8,7 +8,7 @@ import {
     Button
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBurn, faEdit, faPlusCircle } from "@fortawesome/free-solid-svg-icons"
+import { faBurn, faPlusCircle, faChevronCircleRight } from "@fortawesome/free-solid-svg-icons"
 
 import { CalendarPropsInterface, CalendarStateInterface } from './calendar.interface'
 import { LoginAPI } from '../../api/users/login.api'
@@ -224,7 +224,8 @@ class Calendar extends Component<CalendarPropsInterface, CalendarStateInterface>
                                                         </td>
                                                         <td className={ "vertical text align middle center td " + is_weekend + is_today }>
                                                             <Button variant="link" className="no padding" title="운동 기록하기" onClick={ () => { that.handleCreateRecord( block.block_id ) } }>
-                                                                <FontAwesomeIcon icon={faEdit} className={ block.record_id !== null ? "success-edit" : ""} />
+                                                                {/* <FontAwesomeIcon icon={faEdit} className={ block.record_id !== null ? "success-edit" : ""} /> */}
+                                                                <FontAwesomeIcon icon={faChevronCircleRight} className={ block.record_id !== null ? "success-edit" : ""} />
                                                             </Button>
                                                         </td>
                                                     </tr>

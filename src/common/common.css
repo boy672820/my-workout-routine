@@ -85,5 +85,12 @@ fieldset {
 }
 
 .success-edit {
-    color: #28a745;
+    color: #ffc107;
+}
+
+.icon-button {
+    vertical-align: middle;
+}
+.button-icon {
+    padding-right: 3px;
 }
