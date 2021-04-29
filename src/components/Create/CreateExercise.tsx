@@ -292,22 +292,23 @@ class CreateExercise extends Component<CreatePropsInterface, CreateStateInterfac
 
     render() {
         return (
-            <main className="create-main">
+            <>
                 <CreateExerciseBlockTitle block_id={ this.state.block_id } history={ this.props.history } />
 
-                {/** Exercise list. */}
-                <CreateExerciseList parent={ this } />
+                <main className="create-main">
+                    {/** Exercise list. */}
+                    <CreateExerciseList parent={ this } />
 
-                {/** Edit set modal. */}
-                <CreateEditSetModal parent={ this } prefix="edit_" />
+                    {/** Edit set modal. */}
+                    <CreateEditSetModal parent={ this } prefix="edit_" />
 
-                {/** Create exercise modal. */}
-                <CreateExerciseModal parent={ this } prefix="" />
+                    {/** Create exercise modal. */}
+                    <CreateExerciseModal parent={ this } prefix="" />
 
-                {/** Remove exercise modal. */}
-                <CreateRemoveExerciseModal parent={ this } />
-
-            </main>
+                    {/** Remove exercise modal. */}
+                    <CreateRemoveExerciseModal parent={ this } />
+                </main>
+            </>
         )
     }
 }

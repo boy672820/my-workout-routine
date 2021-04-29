@@ -10,7 +10,7 @@ import {
     Popover
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit } from "@fortawesome/free-solid-svg-icons"
+import { faEdit, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 
 import { RoutineAPI } from '../../api/routine/routine.api'
 import { RoutineUpdateBlockDTO } from '../../api/routine/dto/routine.update.block.dto'
@@ -116,16 +116,22 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
 
     render() {
         return (
-            <>
+            <div className="create-exercise-nav">
                 <div className="create-exercise-block-title">
                     <Container>
                         <Row>
-                            <Col xs="8" className="text align left">
+                            <Col xs="3" sm="3" md="4" lg="4">
+                                <Button variant="link" className="nav-previous icon-button">
+                                    <FontAwesomeIcon icon={faChevronLeft} className="button-icon" />
+                                    뒤로
+                                </Button>
+                            </Col>
+                            <Col xs="6" sm="6" md="4" lg="4" className="text align center">
                                 <h4 className="create-exercise-block-h">
                                     { this.state.block_title }
                                 </h4>
                             </Col>
-                            <Col xs="4" className="text align right">
+                            <Col xs="3" sm="3" md="4" lg="4" className="text align right">
                                 <Button variant="link" title="블럭 제목 수정하기" onClick={ this.handleModal }>
                                     <FontAwesomeIcon icon={faEdit} />
                                 </Button>
@@ -134,8 +140,8 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
                     </Container>
                 </div>
 
-                 <Modal show={ this.state.modal } onHide={ this.handleModal } centered>
-                     <form onSubmit={ this.handleSubmit }>
+                <Modal show={ this.state.modal } onHide={ this.handleModal } centered>
+                    <form onSubmit={ this.handleSubmit }>
                         <Modal.Header>
                             <Modal.Title>"{ this.state.block_title }" 수정</Modal.Title>
                         </Modal.Header>
@@ -165,9 +171,9 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
                             </OverlayTrigger>
                             <Button type="submit" size="lg">수정하기</Button>
                         </Modal.Footer>
-                     </form>
-                 </Modal>
-            </>
+                    </form>
+                </Modal>
+            </div>
         )
     }
 }

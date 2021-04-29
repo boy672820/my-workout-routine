@@ -94,3 +94,8 @@ fieldset {
 .button-icon {
     padding-right: 3px;
 }
+
+.nav-previous {
+    font-size: 1.3rem !important;
+    color: #6c757d !important;
+}
