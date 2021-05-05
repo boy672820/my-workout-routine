@@ -45,6 +45,7 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
         this.handleChange = this.handleChange.bind( this )
         this.handleSubmit = this.handleSubmit.bind( this )
         this.handleRemove = this.handleRemove.bind( this )
+        this.handlePrevious = this.handlePrevious.bind( this )
     }
 
     componentDidMount() {
@@ -114,6 +115,10 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
         } )
     }
 
+    async handlePrevious() {
+        this.props.history.goBack()
+    }
+
     render() {
         return (
             <div className="create-exercise-nav">
@@ -121,7 +126,7 @@ class CreateExerciseBlockTitle extends Component<PropsInterface, StateInterface>
                     <Container>
                         <Row>
                             <Col xs="3" sm="3" md="4" lg="4">
-                                <Button variant="link" className="nav-previous icon-button">
+                                <Button variant="link" className="nav-previous icon-button" onClick={this.handlePrevious}>
                                     <FontAwesomeIcon icon={faChevronLeft} className="button-icon" />
                                     뒤로
                                 </Button>
