@@ -22,14 +22,14 @@ function App() {
         // Testing..
         dispatch( { type: 'LOGIN' } )
         
-        LoginAPI.refresh(
-            () => {
-                dispatch( { type: 'LOGIN' } )
-            },
-            error => {
-                dispatch( { type: 'LOGOUT' } )
-            }
-        )
+        // LoginAPI.refresh(
+        //     () => {
+        //         dispatch( { type: 'LOGIN' } )
+        //     },
+        //     error => {
+        //         dispatch( { type: 'LOGOUT' } )
+        //     }
+        // )
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] )
 
