@@ -19,6 +19,9 @@ function App() {
     const location = useLocation()
 
     React.useEffect( () => {
+        // Testing..
+        dispatch( { type: 'LOGIN' } )
+        
         LoginAPI.refresh(
             () => {
                 dispatch( { type: 'LOGIN' } )
