@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/my-workout-routine/static/css/main.ca82280c.chunk.css",
-    "main.js": "/my-workout-routine/static/js/main.040e9205.chunk.js",
-    "main.js.map": "/my-workout-routine/static/js/main.040e9205.chunk.js.map",
+    "main.js": "/my-workout-routine/static/js/main.b5b164f0.chunk.js",
+    "main.js.map": "/my-workout-routine/static/js/main.b5b164f0.chunk.js.map",
     "runtime-main.js": "/my-workout-routine/static/js/runtime-main.9291b017.js",
     "runtime-main.js.map": "/my-workout-routine/static/js/runtime-main.9291b017.js.map",
     "static/css/2.150d169a.chunk.css": "/my-workout-routine/static/css/2.150d169a.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.150d169a.chunk.css",
     "static/js/2.895d4c77.chunk.js",
     "static/css/main.ca82280c.chunk.css",
-    "static/js/main.040e9205.chunk.js"
+    "static/js/main.b5b164f0.chunk.js"
   ]
 }
