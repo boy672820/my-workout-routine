@@ -19,17 +19,14 @@ function App() {
     const location = useLocation()
 
     React.useEffect( () => {
-        // Testing..
-        dispatch( { type: 'LOGIN' } )
-        
-        // LoginAPI.refresh(
-        //     () => {
-        //         dispatch( { type: 'LOGIN' } )
-        //     },
-        //     error => {
-        //         dispatch( { type: 'LOGOUT' } )
-        //     }
-        // )
+        LoginAPI.refresh(
+            () => {
+                dispatch( { type: 'LOGIN' } )
+            },
+            error => {
+                dispatch( { type: 'LOGOUT' } )
+            }
+        )
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] )
 
@@ -48,7 +45,7 @@ function App() {
                         path="/"
                         render={ props => <Calendar { ...props } /> }
                         exact={ true }
-                    />
+                    />ㅋ₩
 
                     <AuthRoute
                         path="/create/exercise/:block_id"
